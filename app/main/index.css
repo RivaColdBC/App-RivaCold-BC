@@ -1,0 +1,12 @@
+img.card-img-top {
+    border: 2px solid grey
+}
+
+div.card {
+    width: 18rem;
+    margin: 5px
+}
+
+img {
+    image-resolution: 50dpi;
+}

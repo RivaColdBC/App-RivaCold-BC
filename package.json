@@ -1,0 +1,54 @@
+{
+  "name": "rivacoldselect",
+  "version": "1.2.8",
+  "CompanyName": "Basic Conection Systems S.L.",
+  "description": "RivaColdSelect Program from Basic Conection Systems",
+  "main": "Main.js",
+  "copyright": "Copyright © 2023 Basic Conection Systems S.L.",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "author": "Basic Conection Systems S.L.",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^23.1.3",
+    "electron-builder": "^23.6.0",
+    "yarn": "^1.22.19"
+  },
+  "dependencies": {
+    "electron-log": "^5.0.0-beta.16",
+    "electron-updater": "^5.3.0",
+    "localforage": "^1.10.0",
+    "node-adodb": "^5.0.3",
+    "tedious": "^15.1.3"
+  },
+  "build": {
+    "appId": "com.electron.rivacoldselect",
+    "win": {
+      "target": "nsis",
+      "icon": "./resources/icono RIVA.jpg"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "./resources/icono.tif"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner":"Hu1a1a",
+        "repo":"RivaColdSelect"
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "./node_modules/node-adodb/lib/adodb.js",
+        "to": "adodb.js"
+      },
+      {
+        "from": "\\\\call-bc\\Carpetas Publicas\\TECNIC\\RivaColdSelect\\RivaColdSelect.accdb",
+        "to": "./BaseDatos/RivaColdSelect.accdb"
+      }
+    ]
+  }
+}

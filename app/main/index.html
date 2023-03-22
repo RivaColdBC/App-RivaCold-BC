@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <title>RivaColdSelect - BC SYSTEMS - RIVACOLD</title>
+</head>
+
+<body>
+    <center>
+        <label>Seleccionar el base de datos a cargar: </label>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="btnradio" id="Servidor" autocomplete="off"
+                onclick="SQL('Servidor')" disabled />
+            <label class="btn btn-outline-primary" for="Servidor" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                data-bs-title="Base de datos de la red interna BC SYSTEMS.">Servidor
+                Oficina</label>
+            <input type="radio" class="btn-check" name="btnradio" id="Local" autocomplete="off" onclick="SQL('Local')"
+                disabled />
+            <label class="btn btn-outline-primary" for="Local" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                data-bs-title="Base de datos local propia.">Local</label>
+            <input type="radio" class="btn-check" name="btnradio" id="AzureSQL" autocomplete="off"
+                onclick="SQL('AzureSQL')" />
+            <label class="btn btn-outline-primary" for="AzureSQL" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                data-bs-title="Base de datos Azure Microsoft.">Azure SQL</label>
+        </div>
+        <h2 class="display-2">RivaColdSelect - BC SYSTEMS</h2>
+        <div class="progress" id="divprogressbar" style="height: 30px;
+                margin: 20px; display: none">
+            <div id="progressbar" class="progress-bar progress-bar-striped
+                    progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100">0%
+            </div>
+        </div>
+        <div class="card-group">
+            <div class="card">
+                <img src="../../resources/RIVACOLD.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Consulta de ficha técnica</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary"
+                            onclick="newWindow('./app/functFichaTecnica/main.html')">
+                            Acceder
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class=" card">
+                <img src="../../resources/RIVACOLD.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Consulta de equivalencia</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary"
+                            onclick="newWindow('./app/functEquivalencia/main.html')">
+                            Por Equipo
+                        </button>
+                        <button class="btn btn-outline-success"
+                            onclick="newWindow('./app/functEquivalenciaGama/main.html')">
+                            Por Gama
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/BCSYSTEMS_small.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Oferta</h5>
+                    <p class="card-text">
+                        Gestión de oferta.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary" onclick="newWindow('./app/functOferta/main.html')">
+                            Acceder
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/BCSYSTEMS_small.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Consulta de Stock</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary" onclick="newWindow('./app/functStock/main.html')">
+                            Acceder
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/RAV.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Calculadora</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary" onclick="newWindow('./app/functCalcCamara/main.html')">
+                            Calculadora de Càmara
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="newWindow('./app/functCalcConsumo/main.html')">
+                            Calculadora de Consumo
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/RAV.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Selector de equipo</h5>
+                    <p class="card-text">
+                        Wizard de selección de equipo.
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary"
+                            onclick="newWindow('./app/functSelectorEquipo/main.html')">
+                            Acceder
+                        </button>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-group">
+            <div class="card">
+                <img src="../../resources/RAV.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Proyecto</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-primary"
+                            onclick="newWindow('./app/functCentralChiller/main.html')">
+                            Chiller
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/functProyecto/main.html')">
+                            Proyecto
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/BCSYSTEMS_small.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Web BC Systems</h5>
+                    <p class="card-text"></p>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/functWeb/main.html')">
+                            Pendiente
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/BCSYSTEMS_small.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">KPI Comercial</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/KPICliente/main.html')">
+                            Cliente
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/KPIEquipo/main.html')">
+                            Equipo
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/BCSYSTEMS_small.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">KPI Admin</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/KPIAdminCompra/main.html')"
+                            style="display:none">
+                            Compra
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/KPIAdminVenta/main.html')">
+                            Venta
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/KPIFactura/main.html')"
+                            style="display:none">
+                            Factura
+                        </button>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <img src="../../resources/RAV.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">Mantenimiento</h5>
+                </div>
+                <div class="card-footer">
+                    <ul class="list-group list-group-flush">
+                        <button class="btn btn-outline-danger" onclick="newWindow('./app/functLogging/main.html')">
+                            Logging
+                        </button>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </center>
+    <div class="text-center">
+        <img src="../../resources/BC.jpg" class="img-fluid" />
+    </div>
+    <div style="font: bolder 8pt Arial">
+        Licencia de uso:
+    </div>
+    <div style="font: normal 5pt Arial">
+        El contenido de este software es así como toda documentación
+        incluida,
+        constituye una obra protegida por derechos de autor cuyo titular es
+        Yang
+        Ye y Basic Conection Systems S.L. y/o sus proveedores, clientes o
+        colaboradores.
+        <br>
+        El software y su documentación están disponibles solamente para su
+        uso por
+        los usuarios. SE PROHIBE EXPRESAMENTE LA COPIA O LA REPRODUCCIÓN DEL
+        SOFTWARE EN CUALQUIER OTRO SERVIDOR O UBICACIÓN PARA SU POSTERIOR
+        REPRODUCCIÓN O REDISTRIBUCIÓN.
+        <br>
+        El presente software hace uso de las siguientes librerías y
+        subrutinas
+        bajo MIT License (MIT):
+        Copyright © 2021 OpenJS Foundation and Electron contributors.
+    </div>
+    <div style="font:bolder 8pt Arial">
+        Exención de responsabilidad:
+    </div>
+    <div style="font:normal 5pt Arial">
+        Los documentos y software relacionados que se publican en este
+        programa
+        podrían incluir imprecisiones técnias o errores tipográficos.
+        RivaColdSelect se reserva el derecho a efectuar sin previo aviso las
+        modificaciones que considere oportunas, pudiendo cambiar, suprimir o
+        añadir tanto los contenidos y servicios que se presten a través de
+        la
+        misma como la forma en la que estos aparezcan presentados o
+        localizados en
+        sus servidores.
+        <br>
+        RivaColdSelect declina toda responsabilidad de las consecuencias de
+        cualquiera que sea el uso del software e información contenida en la
+        aplicación, siendo en todo caso responsabilidad del Usuario su
+        verificación y contrastación. EN NINGÚN CASO RIVACOLDSELECT Y/O SUS
+        RESPECTIVOS PROVEEDORES SERÁN RESPONSABLES POR NINGÚN DAÑO ESPECIAL,
+        INDIRECTO O CONSECUENCIAL NI POR NINGÚN OTRO DAÑO CONSECUENCIA DE
+        UNA
+        FALTA DE USO, PERDIDA DE BENEFICIOS, QUE PUEDAN DERIVARSE DE UNA
+        ACCIÓN
+        CONTRACTUAL O EXTRACONTRACTUAL EN RELACION CON EL USO O EJECUCIÓN
+        DEL
+        SOFTWARE, DOCUMENTOS, PRESTACIÓN O FALTA DE PRESTACIÓN DE SERVICIOS
+        O DE
+        INFORMACIÓN DISPONIBLE EN ESTE SERVIDOR.
+    </div>
+    <div style="text-align: end; font: bolder 9pt Arial">
+        ©2023 Basic Connection Systems, S.L. Todos los derechos reservados.
+    </div>
+</body>
+
+
+<script src="../functAux/Funct_SQL.js" async></script>
+<script src="../functAux/Funct_newWindow.js" async></script>
+
+
+</html>
