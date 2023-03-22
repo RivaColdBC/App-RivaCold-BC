@@ -20,27 +20,11 @@ ipcMain.on('newWindow', function (event, data) {
     createWindow(data)
 })
 
-const { autoUpdater } = require('electron-updater')
-const log = require('electron-log')
 app.on('ready', () => {
     createWindow()
-    autoUpdater.checkForUpdatesAndNotify()
 })
 
 app.on("window-all-closed", () => { app.quit() });
-
-autoUpdater.on("update-available", () => {
-    log.info("update-available")
-})
-autoUpdater.on("checking-for-update", () => {
-    log.info("checking-for-update")
-})
-autoUpdater.on("download-progress", () => {
-    log.info("download-progress")
-})
-autoUpdater.on("update-downloaded", () => {
-    log.info("update-downloaded")
-})
 
 async function checkfs() {
     const fs = require("fs");
