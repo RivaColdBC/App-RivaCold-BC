@@ -1,19 +1,20 @@
-const Carga_Termica = document.getElementById("Carga_Termica")
-const Carga_Interna = document.getElementById("Carga_Interna")
-const Carga_Producto = document.getElementById("Carga_Producto")
-const Carga_Aire = document.getElementById("Carga_Aire")
-const Carga_Resp = document.getElementById("Carga_Resp")
-const Carga_Fan = document.getElementById("Carga_Fan")
-const Carga_Otra = document.getElementById("Carga_Otra")
-const Carga_Total = document.getElementById("Carga_Total")
+const dCarga_Termica = document.getElementById("Carga_Termica")
+const dCarga_Interna = document.getElementById("Carga_Interna")
+const dCarga_Producto = document.getElementById("Carga_Producto")
+const dCarga_Aire = document.getElementById("Carga_Aire")
+const dCarga_Resp = document.getElementById("Carga_Resp")
+const dCarga_Fan = document.getElementById("Carga_Fan")
+const dCarga_Otra = document.getElementById("Carga_Otra")
+const dCarga_Total = document.getElementById("Carga_Total")
+
 const Dimensión = document.getElementById("Dimensión")
-const Select_Product = document.getElementById("Select_Product")
+const dSelect_Product = document.getElementById("Select_Product")
 const dTemp_Cong = document.getElementById("Temp_Cong")
 const dCP_NCong = document.getElementById("CP_NCong")
 const dCP_Cong = document.getElementById("CP_Cong")
 const dCP_Latente = document.getElementById("CP_Latente")
 const dCP_Resp = document.getElementById("CP_Resp")
-const Select_Prederminado = document.getElementById("Select_Prederminado")
+const dSelect_Prederminado = document.getElementById("Select_Prederminado")
 const dTemp_Camara = document.getElementById("Temp_Camara")
 const dTemp_Carga = document.getElementById("Temp_Carga")
 const dRen_Diario = document.getElementById("Ren_Diario")
@@ -54,8 +55,8 @@ const dPuerta_Check3 = document.getElementById("Puerta_Check3")
 const dPuerta_Ancho3 = document.getElementById("Puerta_Ancho3")
 const dPuerta_Altura3 = document.getElementById("Puerta_Altura3")
 const dSelect_Trafico3 = document.getElementById("Select_Trafico3")
-const dWarning_SeparadorAceite = document.getElementById("Warning_SeparadorAceite")
 const dDistanciaEVUC = document.getElementById("DistanciaEVUC")
+const dAbatimiento = document.getElementById("Abatimiento")
 
 const TablaProducto = [
     ["CATALOGO", 0, 1670, 3220, 155, 0],
@@ -70,20 +71,21 @@ const TablaProducto = [
     ["VINE", -2, 1464, 3765, 293, 0]
 ]
 const TablaPrederminado = [
-    [-20, -7, 10, 100],
-    [0, 25, 10, 80],
-    [12, 25, 1, 60]
+    [-20, -7, 10, 100, 5],
+    [0, 25, 10, 80, 10],
+    [12, 25, 1, 60, 16]
 ]
 function CatalogoPreterminado() {
-    dTemp_Camara.value = TablaPrederminado[Select_Prederminado.value][0]
-    dTemp_Carga.value = TablaPrederminado[Select_Prederminado.value][1]
-    dRen_Diario.value = TablaPrederminado[Select_Prederminado.value][2]
-    dDelta_A.value = TablaPrederminado[Select_Prederminado.value][3]
-    dDelta_B.value = TablaPrederminado[Select_Prederminado.value][3]
-    dDelta_C.value = TablaPrederminado[Select_Prederminado.value][3]
-    dDelta_D.value = TablaPrederminado[Select_Prederminado.value][3]
-    dDelta_Ceiling.value = TablaPrederminado[Select_Prederminado.value][3]
-    dDelta_Floor.value = TablaPrederminado[Select_Prederminado.value][3]
+    Select_Prederminado = dSelect_Prederminado.value
+    dTemp_Camara.value = TablaPrederminado[Select_Prederminado][0]
+    dTemp_Carga.value = TablaPrederminado[Select_Prederminado][1]
+    dRen_Diario.value = TablaPrederminado[Select_Prederminado][2]
+    dDelta_A.value = TablaPrederminado[Select_Prederminado][3]
+    dDelta_B.value = TablaPrederminado[Select_Prederminado][3]
+    dDelta_C.value = TablaPrederminado[Select_Prederminado][3]
+    dDelta_D.value = TablaPrederminado[Select_Prederminado][3]
+    dDelta_Ceiling.value = TablaPrederminado[Select_Prederminado][3]
+    dDelta_Floor.value = TablaPrederminado[Select_Prederminado][3]
     CalcPotencia()
     Unidad()
 }
@@ -97,11 +99,12 @@ function CatalogProduct() {
 }
 
 function PreterminadoProducto() {
-    dTemp_Cong.value = TablaProducto[Select_Product.value][1]
-    dCP_Cong.value = TablaProducto[Select_Product.value][2]
-    dCP_NCong.value = TablaProducto[Select_Product.value][3]
-    dCP_Latente.value = TablaProducto[Select_Product.value][4]
-    dCP_Resp.value = TablaProducto[Select_Product.value][5]
+    Select_Product = dSelect_Product.value
+    dTemp_Cong.value = TablaProducto[Select_Product][1]
+    dCP_Cong.value = TablaProducto[Select_Product][2]
+    dCP_NCong.value = TablaProducto[Select_Product][3]
+    dCP_Latente.value = TablaProducto[Select_Product][4]
+    dCP_Resp.value = TablaProducto[Select_Product][5]
     CalcPotencia()
     Unidad()
 }
@@ -143,93 +146,96 @@ function CalcPotencia() {
     CP_Latente = parseFloat(dCP_Latente.value) * 1000
     Envoltorio = parseFloat(dEnvoltorio.value) / 100
     Volumen = Length_A_C * Length_B_D * Height
-    Dimensión.value = parseFloat(Volumen).toFixed(2) + " m3"
+    Dimensión.value = (Volumen).toFixed(2)
     PesoDiario = Densidad * Volumen * Vol_Util * Ren_Diario
     Otras_Cargas = parseFloat(dOtras_Cargas.value) / 100
-
     AirAmb = CalcAirParameter(Temp_Amb, HR_Amb)
     AirCamara = CalcAirParameter(Temp_Camara, HR_Camara)
-
+    Select_Prederminado = dSelect_Prederminado.value
     //Selector puertas 
     Puerta_Check1 = dPuerta_Check1.checked
+    dPuerta_Ancho1.value = Volumen > 12 ? (Length_A_C / 3).toFixed(2) : Length_A_C / 3 > 0.8 ? (Length_A_C / 3).toFixed(2) : 0.8
     Puerta_Ancho1 = parseFloat(dPuerta_Ancho1.value)
+    dPuerta_Altura1.value = Volumen > 12 ? 2.2 : (0.733 * Height).toFixed(2)
     Puerta_Altura1 = parseFloat(dPuerta_Altura1.value)
+    dSelect_Trafico1.value = dAbatimiento.checked ? "75_110_110" : Select_Prederminado == 2 ? "300_365_365" : "150_200_200"
     Select_Trafico1 = dSelect_Trafico1.value
     Puerta_Check2 = dPuerta_Check2.checked
     Puerta_Ancho2 = parseFloat(dPuerta_Ancho2.value)
     Puerta_Altura2 = parseFloat(dPuerta_Altura2.value)
+    dAbatimiento.checked ? dSelect_Trafico2.value = "75_110_110" : null
     Select_Trafico2 = dSelect_Trafico2.value
     Puerta_Check3 = dPuerta_Check3.checked
     Puerta_Ancho3 = parseFloat(dPuerta_Ancho3.value)
     Puerta_Altura3 = parseFloat(dPuerta_Altura3.value)
+    dAbatimiento.checked ? dSelect_Trafico3.value = "75_110_110" : null
     Select_Trafico3 = dSelect_Trafico3.value
-
     //Distancia entre el evaporador y la unidad condensadora
-    DistanciaEVUC = parseFloat(dDistanciaEVUC.value) * 0.003
-    DistanciaEVUC < 0.06 ? DistanciaEVUC = 0 : null
-    dWarning_SeparadorAceite.style.display = DistanciaEVUC < 0.09 ? "none" : ""
+    DistanciaEVUC = parseFloat(dDistanciaEVUC.value) * 0.003 < 0.06 ? 0 : parseFloat(dDistanciaEVUC.value) * 0.003
     //Sumatorio total de las potencias
-    Carga_Resp.value = Temp_Camara > Temp_Cong ? Select_Prederminado.value == 2 ? (CP_Resp * Densidad * Volumen * Vol_Util * (24 / Time_Cong) / 50).toFixed(0) : (CP_Resp * Densidad * Volumen * Vol_Util * (24 / Time_Cong)).toFixed(0) : 0;
-    Carga_Interna.value = (Length_A_C * Length_B_D * (parseFloat(Select_Prederminado.value) + 1) * 20 / 3).toFixed(0)
-    Carga_Termica.value = ((
+    Carga_Resp = Temp_Camara > Temp_Cong ? Select_Prederminado == 2 ? CP_Resp * Densidad * Volumen * Vol_Util * (24 / Time_Cong) / 50 : CP_Resp * Densidad * Volumen * Vol_Util * (24 / Time_Cong) : 0;
+    Carga_Interna = Length_A_C * Length_B_D * TablaPrederminado[Select_Prederminado][4]
+    Carga_Termica = (
         (Length_A_C + Delta_B + Delta_D) * (Height + Delta_Ceiling + Delta_Floor) / (Material_A * Delta_A) +
         (Length_B_D + Delta_A + Delta_C) * (Height + Delta_Ceiling + Delta_Floor) / (Material_B * Delta_B) +
         (Length_A_C + Delta_B + Delta_D) * (Height + Delta_Ceiling + Delta_Floor) / (Material_C * Delta_C) +
         (Length_B_D + Delta_A + Delta_C) * (Height + Delta_Ceiling + Delta_Floor) / (Material_D * Delta_D) +
         (Length_A_C + Delta_B + Delta_D) * (Length_B_D + Delta_A + Delta_C) / (Material_Ceiling * Delta_Ceiling) +
         (Length_A_C + Delta_B + Delta_D) * (Length_B_D + Delta_A + Delta_C) / (Material_Floor * Delta_Floor))
-        * (Temp_Amb - Temp_Camara) * (24 / Time_Cong)).toFixed(0)
+        * (Temp_Amb - Temp_Camara) * (24 / Time_Cong)
     CargaProducto = Temp_Carga > Temp_Cong ? Temp_Cong > Temp_Camara ? CP_NCong * (Temp_Carga - Temp_Cong) + CP_Cong * (Temp_Cong - Temp_Camara) + CP_Latente : CP_NCong * (Temp_Carga - Temp_Camara) : CP_Cong * (Temp_Carga - Temp_Camara)
-    Carga_Producto.value = ((PesoDiario * CargaProducto + PesoDiario * Envoltorio * CP_Envoltorio * (Temp_Carga - Temp_Camara)) / (24 * 3600) * (24 / Time_Cong) * (24 / Time_Comp)).toFixed(0)
-
-    Carga_Aire.value = ((Puerta_Check1 * (Puerta_Ancho1 * Math.pow(Puerta_Altura1, 1.5) * Select_Trafico1.toString().split("_")[Select_Prederminado.value]) + Puerta_Check2 * (Puerta_Ancho2 * Math.pow(Puerta_Altura2, 1.5) * Select_Trafico2.toString().split("_")[Select_Prederminado.value]) + Puerta_Check3 * (Puerta_Ancho3 * Math.pow(Puerta_Altura3, 1.5) * Select_Trafico3.toString().split("_")[Select_Prederminado.value])) * (AirAmb[1] / AirAmb[0] - AirCamara[1] / AirCamara[0]) / (24 * 3600)).toFixed(0)
-
-    Carga_Fan.value = (Volumen * 5).toFixed(0)
-    Carga_Total.value = ((parseFloat(Carga_Termica.value) + parseFloat(Carga_Interna.value) + parseFloat(Carga_Producto.value) + parseFloat(Carga_Aire.value) + parseFloat(Carga_Resp.value) + parseFloat(Carga_Fan.value)) * (1 + Otras_Cargas + DistanciaEVUC)).toFixed(0)
-    Carga_Otra.value = (parseFloat(Carga_Total.value) / (1 + Otras_Cargas + DistanciaEVUC) * (Otras_Cargas + DistanciaEVUC)).toFixed(0)
+    Carga_Producto = (PesoDiario * CargaProducto + PesoDiario * Envoltorio * CP_Envoltorio * (Temp_Carga - Temp_Camara)) / (24 * 3600) * (24 / Time_Cong) * (24 / Time_Comp)
+    Carga_Aire = (Puerta_Check1 * (Puerta_Ancho1 * Math.pow(Puerta_Altura1, 1.5) * Select_Trafico1.toString().split("_")[Select_Prederminado]) + Puerta_Check2 * (Puerta_Ancho2 * Math.pow(Puerta_Altura2, 1.5) * Select_Trafico2.toString().split("_")[Select_Prederminado]) + Puerta_Check3 * (Puerta_Ancho3 * Math.pow(Puerta_Altura3, 1.5) * Select_Trafico3.toString().split("_")[Select_Prederminado])) * (AirAmb[1] / AirAmb[0] - AirCamara[1] / AirCamara[0]) / (24 * 3600)
+    Carga_Fan = Volumen * 5
+    Carga_Total = (parseFloat(Carga_Termica) + parseFloat(Carga_Interna) + parseFloat(Carga_Producto) + parseFloat(Carga_Aire) + parseFloat(Carga_Resp) + parseFloat(Carga_Fan)) * (1 + Otras_Cargas + DistanciaEVUC)
+    Carga_Otra = Carga_Total / (1 + Otras_Cargas + DistanciaEVUC) * (Otras_Cargas + DistanciaEVUC)
+    dCarga_Termica.value = Carga_Termica.toFixed(0)
+    dCarga_Interna.value = Carga_Interna.toFixed(0)
+    dCarga_Producto.value = Carga_Producto.toFixed(0)
+    dCarga_Aire.value = Carga_Aire.toFixed(0)
+    dCarga_Resp.value = Carga_Resp.toFixed(0)
+    dCarga_Fan.value = Carga_Fan.toFixed(0)
+    dCarga_Otra.value = Carga_Otra.toFixed(0)
+    dCarga_Total.value = Carga_Total.toFixed(0)
     //Graficas de las potencias
-    yArray = [parseFloat(Carga_Termica.value), parseFloat(Carga_Aire.value), parseFloat(Carga_Interna.value), parseFloat(Carga_Producto.value), parseFloat(Carga_Resp.value), parseFloat(Carga_Fan.value), parseFloat(Carga_Otra.value)];
+    yArray = [Carga_Termica, Carga_Aire, Carga_Interna, Carga_Producto, Carga_Resp, Carga_Fan, Carga_Otra];
     data = [{ labels: xArray, values: yArray, hole: .3, type: "pie", textinfo: "label+percent", textposition: 'inside' }];
     Plotly.newPlot("myPlotPotencia", data, layout)
     //Control de las cámaras de ColdKit.
-    document.getElementById("Table_seleccion_camara").style.display = "none"
-    document.getElementById("Seleccion_camara").style.display = "none"
-    document.getElementById("dropdown_camara").innerHTML = ""
+    dTable_seleccion_camara.style.display = "none"
+    dSeleccion_camara.style.display = "none"
+    ddropdown_camara.innerHTML = ""
     document.getElementById("Suelo_Aislamiento_Check").checked ? RivaColdCamaraFilter = RivaColdCamara.filter(item => item.Suelo == "NO") : RivaColdCamaraFilter = RivaColdCamara.filter(item => item.Suelo == "SI")
     CamaraColdkit(RivaColdCamaraFilter, 10, 0)
     //Control de los equipos segun seleccion.
-    Select_Prederminado.value == 0 ? Aplicacion = "LBP" : Select_Prederminado.value == 1 ? Aplicacion = "MBP" : Select_Prederminado.value == 2 ? Aplicacion = "HBP" : null
+    Select_Prederminado == 0 ? Aplicacion = "LBP" : Select_Prederminado == 1 ? Aplicacion = "MBP" : Select_Prederminado == 2 ? Aplicacion = "HBP" : null
     RivaColdEqFilter = RivaColdEq.filter(item => item.Marca == "RivaCold").filter(item => item["Ficha producto_Stock"] == "Si").filter(item => item.Aplicación == Aplicacion)
-    document.getElementById("Table_seleccion_equipo").style.display = "none"
-    document.getElementById("Seleccion_equipo").style.display = "none"
-    document.getElementById("dropdown_equipo").innerHTML = ""
+    dTable_seleccion_equipo.style.display = "none"
+    dSeleccion_equipo.style.display = "none"
+    ddropdown_equipo.innerHTML = ""
     EquipoRivaCold(RivaColdEqFilter, 10, 0)
 }
 
 function EquipoRivaCold(RivaColdEqFilter, n, num) {
     const DBField = Object.getOwnPropertyNames(RivaColdEqFilter[0]);
+    Tamb = Temp_Amb
+    Tcamara = Temp_Camara
     for (i = 0, len = RivaColdEqFilter.length; i < len; i++) {
-        if (true) {
-            Tamb = parseFloat(Temp_Amb)
-            Tcamara = parseFloat(Temp_Camara)
-            PFSelect = parseFloat(Carga_Total.value)
-            PFList = Interpol(Tamb, Tcamara, RivaColdEqFilter, DBField, i)
-            Diff = (parseFloat(PFList) / parseFloat(Carga_Total.value) - 1) * 100
-            if (Diff > 0 && Diff < n) {
-                TextoPerfil = ""
-                for (j = 1; j < 10; j++) {
-                    RivaColdEqFilter[i]["Config" + j] ? TextoPerfil = TextoPerfil + "Caracterítica: " + RivaColdEqFilter[i]["Config" + j] + "<br>" : null
-                }
-                RivaColdEqFilter[i]["Precio"] ? TextoPerfil = TextoPerfil + "P.V.: " + new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(RivaColdEqFilter[i]["Precio"])) + "<br>" : null
-                document.getElementById("dropdown_equipo").insertAdjacentHTML("beforeend",
-                    "<li><a class='dropdown-item' onclick='ShowSelectionEquipo(" + num + ")'>" +
-                    "Código: " + RivaColdEqFilter[i]["Ref"] + "<br>" +
-                    TextoPerfil +
-                    "Potencia frigorifica: " + PFList + " (" + Diff.toFixed(2) + " %)" +
-                    "</a></li>"
-                )
-                num += 1
+        PFList = Interpol(Tamb, Tcamara, RivaColdEqFilter, DBField, i)
+        Diff = (parseFloat(PFList) / Carga_Total - 1) * 100
+        if (Diff > 0 && Diff < n) {
+            TextoPerfil = ""
+            for (j = 1; j < 10; j++) {
+                RivaColdEqFilter[i]["Config" + j] ? TextoPerfil = TextoPerfil + "Caracterítica: " + RivaColdEqFilter[i]["Config" + j] + "<br>" : null
             }
+            RivaColdEqFilter[i]["Precio"] ? TextoPerfil = TextoPerfil + "P.V.: " + new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(RivaColdEqFilter[i]["Precio"])) + "<br>" : null
+            ddropdown_equipo.insertAdjacentHTML("beforeend",
+                "<li><a class='dropdown-item' onclick='ShowSelectionEquipo(" + num + ")'>" +
+                "Código: " + RivaColdEqFilter[i]["Ref"] + "<br>" + TextoPerfil +
+                "Potencia frigorifica: " + PFList + " (" + Diff.toFixed(2) + " %)" +
+                "</a></li>"
+            )
+            num += 1
         }
     }
     num < 5 && n < 100 ? EquipoRivaCold(RivaColdEqFilter, n + 5, num) : null
@@ -273,15 +279,22 @@ function CamaraColdkit(RivaColdCamaraFilter, n, num) {
     num < 5 && n < 100 ? CamaraColdkit(RivaColdCamaraFilter, n + 5, num) : null
 }
 
+const dTable_seleccion_camara = document.getElementById("Table_seleccion_camara")
+const dSeleccion_camara = document.getElementById("Seleccion_camara")
+const ddropdown_camara = document.getElementById("dropdown_camara")
+const dTable_seleccion_equipo = document.getElementById("Table_seleccion_equipo")
+const dSeleccion_equipo = document.getElementById("Seleccion_equipo")
+const ddropdown_equipo = document.getElementById("dropdown_equipo")
+
 function ShowSelectionCamara(num) {
-    document.getElementById("Table_seleccion_camara").style.display = ""
-    document.getElementById("Seleccion_camara").style.display = ""
-    document.getElementById("Seleccion_camara").innerHTML = document.getElementById("dropdown_camara").getElementsByTagName('a')[num].innerHTML
+    dTable_seleccion_camara.style.display = ""
+    dSeleccion_camara.style.display = ""
+    dSeleccion_camara.innerHTML = ddropdown_camara.getElementsByTagName('a')[num].innerHTML
 }
 function ShowSelectionEquipo(num) {
-    document.getElementById("Table_seleccion_equipo").style.display = ""
-    document.getElementById("Seleccion_equipo").style.display = ""
-    document.getElementById("Seleccion_equipo").innerHTML = document.getElementById("dropdown_equipo").getElementsByTagName('a')[num].innerHTML
+    dTable_seleccion_equipo.style.display = ""
+    dSeleccion_equipo.style.display = ""
+    dSeleccion_equipo.innerHTML = ddropdown_equipo.getElementsByTagName('a')[num].innerHTML
 }
 
 const dInput = document.getElementsByTagName("input")
@@ -292,8 +305,8 @@ function Unidad() {
 }
 function Aislamiento_Suelo() {
     if (document.getElementById("Suelo_Aislamiento_Check").checked) {
-        dDelta_Floor.value = "300 mm"
-        dMaterial_Floor.value = "6.66"
+        dDelta_Floor.value = 300
+        dMaterial_Floor.value = 6.66
     } else {
         dDelta_Floor.value = dDelta_Ceiling.value
         dMaterial_Floor.value = dMaterial_Ceiling.value
@@ -330,6 +343,7 @@ function Material() {
     dMaterial_Ceiling.value = dMaterial_A.value
     dMaterial_Floor.value = dMaterial_A.value
 }
+
 var RivaColdCamara = []
 const localforage = require("localforage");
 localforage.getItem("RivaColdCamara").then(function (value) {

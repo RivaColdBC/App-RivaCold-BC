@@ -4,7 +4,7 @@ const List_Type = document.getElementById("List_Type");
 const List_Gama = document.getElementById("List_Gama");
 const List_Modelo = document.getElementById("List_Modelo");
 const List_Equiv = document.getElementById("List_Equiv");
-var DB
+var DB, ConfiguracionArray
 const localforage = require("localforage");
 
 function SeleccionarMarca() {
@@ -59,6 +59,7 @@ function SeleccionarProveedor() {
     Opcion.value = DBDuplicate[i];
     List_Gama.add(Opcion);
   }
+  Delta_T()
   SeleccionarGama();
 }
 
@@ -72,24 +73,75 @@ function SeleccionarGama() {
     Opcion.value = DBDuplicate[i];
     List_Modelo.add(Opcion);
   }
+  TextoConfiguracion()
   SeleccionarModelo();
 }
+function Delta_T() {
+  document.getElementById("Delta_T").value = List_MarcaA.value == "RivaCold" ? List_MarcaB.value != "RivaCold" ? 3 : 0 : List_MarcaB.value == "RivaCold" ? -3 : 0
+}
 
+function TextoConfiguracion() {
+  DBFilterA = DB.filter(item => item.Ref == List_Modelo.value)
+  ConfiguracionTexto = ""
+  for (j = 1; j < 10; j++) {
+    Object.getOwnPropertyNames(DBFilterA[0]).includes("Config" + j) ? DBFilterA[0]["Config" + j] ? ConfiguracionTexto = ConfiguracionTexto + "<tr id='buttonConfig" + j + "'><th>" + DBFilterA[0]["Config" + j] + "</th><th><button onclick='DisableConfig(buttonConfig" + j + ")'><i class='bi bi-backspace'></i></button></th></tr>" : null : null;
+  }
+  ConfiguracionTexto += DBFilterA[0]["Aplicación"] ? "<tr id='buttonAplicacion'><th>" + "Aplicación: " + DBFilterA[0]["Aplicación"] + "</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>" : ""
+  ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? "<tr><th>" + "Refrigerante: " + DBFilterA[0]["Refrigerante"] + "</th><th></th></tr>" : ""
+  ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? "<tr><th>" + "Expansión: " + DBFilterA[0]["Ficha producto_Expansión"] + "</th><th></th></tr>" : ""
+  ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? "<tr><th>" + "Desescarche: " + DBFilterA[0]["Desescarche_Tipo"] + "</th><th></th></tr>" : ""
+  ConfiguracionTexto += DBFilterA[0]["Motoventilador_Núm#ventilador"] ? "<tr><th>" + "Núm de ventilador: " + DBFilterA[0]["Motoventilador_Núm#ventilador"] + "</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>" : ""
+  document.getElementById("Table_Type_Body").innerHTML = ConfiguracionTexto
+  ConfiguracionArray = {
+    "buttonConfig1": false,
+    "buttonConfig2": false,
+    "buttonConfig3": false,
+    "buttonConfig4": false,
+    "buttonConfig5": false,
+    "buttonConfig6": false,
+    "buttonConfig7": false,
+    "buttonConfig8": false,
+    "buttonConfig9": false,
+    "buttonConfig10": false,
+    "buttonVentilador": false,
+    "buttonAplicacion": false
+  }
+}
 function SeleccionarModelo() {
+  document.getElementById("Delta_T").value = parseFloat(document.getElementById("Delta_T").value) + " K"
   List_Equiv.innerHTML = "";
   DBFilterA = DB.filter(item => item.Ref == List_Modelo.value)
   MarcaAField = Object.getOwnPropertyNames(DBFilterA[0]).sort().reverse();
   DBFilterB = DB.filter(item => item.Marca == List_MarcaB.value)
   MarcaBField = Object.getOwnPropertyNames(DBFilterB[0]).sort().reverse();
   PDiffStorage = 999999, PRefStorage = "", NDiffStorage = -999999, NRefStorage = ""
-  for (j = 0, DBFilterBlength = DBFilterB.length; j < DBFilterBlength; j++) {
-    if (DBFilterA[0]["Config1"] == DBFilterB[j]["Config1"] || (!DBFilterB[j]["Config1"] && !DBFilterA[0]["Config1"])) {
-      if (DBFilterA[0]["Config2"] == DBFilterB[j]["Config2"] || (!DBFilterB[j]["Config2"] && !DBFilterA[0]["Config2"]) || (DBFilterA[0]["Config6"] && DBFilterB[j]["Config2"] == "Silencioso") || (DBFilterA[0]["Config2"] == "Horizontal" && DBFilterB[j]["Config2"] == "Silencioso")) {
-        if (DBFilterA[0]["Config3"] == DBFilterB[j]["Config3"] || (!DBFilterB[j]["Config3"] && !DBFilterA[0]["Config3"])) {
-          if (DBFilterA[0]["Config4"] == DBFilterB[j]["Config4"] || !DBFilterA[0]["Config4"]) {
-            if ((DBFilterA[0]["Config6"]=="Centrifugo" && DBFilterB[j]["Centrifugo"]) || DBFilterA[0]["Config6"] == DBFilterB[j]["Config6"] || DBFilterA[0]["Config6"]!="Centrifugo") {
-              if (DBFilterA[0]["Aplicación"] == DBFilterB[j]["Aplicación"] || (!DBFilterB[j]["Aplicación"] && !DBFilterA[0]["Aplicación"]) || (DBFilterA[0]["Aplicación"] == "Dual" && (DBFilterB[j]["Aplicación"] == "MBP" || DBFilterB[j]["Aplicación"] == "LBP")) || (DBFilterB[j]["Aplicación"] == "Dual" && (DBFilterA[0]["Aplicación"] == "MBP" || DBFilterA[0]["Aplicación"] == "LBP"))) {
-                if (DBFilterA[0]["Motoventilador_Núm#ventilador"] == DBFilterB[j]["Motoventilador_Núm#ventilador"] || !DBFilterB[j]["Motoventilador_Núm#ventilador"] || !DBFilterA[0]["Motoventilador_Núm#ventilador"]) {
+  for (j = 0, jlen = DBFilterB.length; j < jlen; j++) {
+    if (ConfiguracionArray["buttonConfig1"] ||
+      DBFilterA[0]["Config1"] == DBFilterB[j]["Config1"] ||
+      (!DBFilterB[j]["Config1"] && !DBFilterA[0]["Config1"])) {
+      if (ConfiguracionArray["buttonConfig2"] ||
+        DBFilterA[0]["Config2"] == DBFilterB[j]["Config2"] ||
+        (!DBFilterB[j]["Config2"] && !DBFilterA[0]["Config2"])) {
+        if (ConfiguracionArray["buttonConfig3"] ||
+          DBFilterA[0]["Config3"] == DBFilterB[j]["Config3"] ||
+          (!DBFilterB[j]["Config3"] && !DBFilterA[0]["Config3"])) {
+          if (ConfiguracionArray["buttonConfig4"] ||
+            DBFilterA[0]["Config4"] == DBFilterB[j]["Config4"] ||
+            !DBFilterA[0]["Config4"]) {
+            if (ConfiguracionArray["buttonConfig6"] ||
+              (DBFilterA[0]["Config6"] == "Centrifugo" && DBFilterB[j]["Centrifugo"]) ||
+              DBFilterA[0]["Config6"] == DBFilterB[j]["Config6"] ||
+              DBFilterA[0]["Config6"] != "Centrifugo") {
+              if (ConfiguracionArray["buttonAplicacion"] ||
+                DBFilterA[0]["Aplicación"] == DBFilterB[j]["Aplicación"] ||
+                (!DBFilterB[j]["Aplicación"] && !DBFilterA[0]["Aplicación"]) ||
+                (DBFilterA[0]["Aplicación"] == "Dual" && (DBFilterB[j]["Aplicación"] == "MBP" ||
+                  DBFilterB[j]["Aplicación"] == "LBP")) ||
+                (DBFilterB[j]["Aplicación"] == "Dual" && (DBFilterA[0]["Aplicación"] == "MBP" ||
+                  DBFilterA[0]["Aplicación"] == "LBP"))) {
+                if (ConfiguracionArray["buttonVentilador"] ||
+                  DBFilterA[0]["Motoventilador_Núm#ventilador"] == DBFilterB[j]["Motoventilador_Núm#ventilador"] ||
+                  !DBFilterB[j]["Motoventilador_Núm#ventilador"] || !DBFilterA[0]["Motoventilador_Núm#ventilador"]) {
                   Diff = ListadoEquivalencia(DBFilterA[0], DBFilterB, MarcaAField, MarcaBField, j);
                   if (parseFloat(Diff) >= 0) {
                     if (parseFloat(Diff) <= PDiffStorage) {
@@ -118,15 +170,6 @@ function SeleccionarModelo() {
       }
     }
   }
-  ConfiguracionTexto = ""
-  for (j = 1; j < 10; j++) {
-    Object.getOwnPropertyNames(DBFilterA[0]).includes("Config" + j) ? DBFilterA[0]["Config" + j] ? ConfiguracionTexto = ConfiguracionTexto + " " + DBFilterA[0]["Config" + j] : null : null;
-  }
-  ConfiguracionTexto += DBFilterA[0]["Aplicación"] ? "<br>" + "Aplicación: " + DBFilterA[0]["Aplicación"] : ""
-  ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? "<br>" + "Refrigerante: " + DBFilterA[0]["Refrigerante"] : ""
-  ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? "<br>" + "Expansión: " + DBFilterA[0]["Ficha producto_Expansión"] : ""
-  ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? "<br>" + "Desescarche: " + DBFilterA[0]["Desescarche_Tipo"] : ""
-  document.getElementById("Table_Type_Body").getElementsByTagName("th")[0].innerHTML = ConfiguracionTexto
   if (List_Equiv.length == 0) {
     if (PRefStorage) {
       PStockStorage ? option_modelo.style.backgroundColor = "lime" : null
@@ -163,19 +206,30 @@ function SeleccionarModelo() {
 }
 
 function ListadoEquivalencia(DBFilterA, DBFilterB, MarcaAField, MarcaBField, j) {
-  PFModelo = 0; PFEq = 0;
+  PFEq1 = 0; PFEq2 = 0; PFEq3 = 0;
+  PFModelo1 = 0; PFModelo2 = 0; PFModelo3 = 0;
   for (k = 0, len = MarcaAField.length; k < len; k++) {
     if (MarcaAField[k].startsWith("PC_") && DBFilterA[MarcaAField[k]]) {
       Tamb = parseFloat(MarcaAField[k].split("_")[1]);
       Tcamara = parseFloat(MarcaAField[k].split("_")[2]);
-      Interp = Interpol(Tamb, Tcamara, DBFilterB, MarcaBField, j);
-      if (Interp != "-") {
-        PFModelo = PFModelo + parseFloat(DBFilterA[MarcaAField[k]]);
-        PFEq = PFEq + parseFloat(Interp);
+      Interp = Interpol(Tamb + parseFloat(document.getElementById("Delta_T").value), Tcamara, DBFilterB, MarcaBField, j);
+      if (parseFloat(Interp) > 0) {
+        if (Interp.split(" ").length == 2) {
+          PFEq1 = PFEq1 + parseFloat(Interp)
+          PFModelo1 = PFModelo1 + parseFloat(DBFilterA[MarcaAField[k]])
+        } else if (Interp.split(" ")[2] == "(*)") {
+          PFEq2 = PFEq2 + parseFloat(Interp)
+          PFModelo2 = PFModelo2 + parseFloat(DBFilterA[MarcaAField[k]])
+        } else {
+          PFEq3 = PFEq3 + parseFloat(Interp)
+          PFModelo3 = PFModelo3 + parseFloat(DBFilterA[MarcaAField[k]])
+        }
       }
     }
   }
-  return ((PFEq / PFModelo - 1) * 100).toFixed(2) + "%";
+  if (PFEq1) { return ((PFEq1 / PFModelo1 - 1) * 100).toFixed(2) + "%"; }
+  else if (PFEq2) { return ((PFEq2 / PFModelo2 - 1) * 100).toFixed(2) + "%"; }
+  else { return ((PFEq3 / PFModelo3 - 1) * 100).toFixed(2) + "%"; }
 }
 
 const Tabla_PF_tbody = document.getElementById("Table_PF").getElementsByTagName("tbody")
@@ -209,7 +263,7 @@ function DatosEquivalencia() {
         PFModelo = parseFloat(DBFilterA[0][MarcaAField[k]]).toFixed(0) + " W";
         Tamb = parseFloat(MarcaAField[k].split("_")[1]);
         Tcamara = parseFloat(MarcaAField[k].split("_")[2]);
-        PFEq = Interpol(Tamb, Tcamara, DBFilterB, MarcaBField, 0);
+        PFEq = Interpol(Tamb + parseFloat(document.getElementById("Delta_T").value), Tcamara, DBFilterB, MarcaBField, 0);
         Tamb = MarcaAField[k].split("_")[1];
         Tcamara = MarcaAField[k].split("_")[2];
         Diff = ((parseFloat(PFEq) / parseFloat(PFModelo) - 1) * 100).toFixed(2) + " %";
@@ -240,4 +294,14 @@ function RangoEq(Direccion, Rango) {
   SeleccionarModelo();
 }
 
+
+function DisableConfig(id) {
+  document.getElementById(id.id).outerHTML = ""
+  ConfiguracionArray[id.id] = true
+
+  SeleccionarModelo()
+}
+
+
+Delta_T()
 SeleccionarMarca();

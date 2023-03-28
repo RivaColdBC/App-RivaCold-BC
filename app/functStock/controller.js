@@ -171,7 +171,8 @@ function ActualizacionGoManage() {
     connection = oledb.open(
         "DRIVER={Progress OpenEdge 11.7 Driver};Dsn=tlmplusV11;uid=userSQL;pwd=userSQL;host=servidor;port=2611;db=tlmplus",
         process.arch.includes("64"));
-    connection.query("SELECT galardel_0.cod_art,galardel_0.sre_art-galardel_0.crs_art,galardel_0.spr_art+galardel_0.crs_art-galardel_0.sps_art-galardel_0.srr_art FROM TLMPLUS.PUB.galardel galardel_0 WHERE galardel_0.sre_art+galardel_0.srr_art+galardel_0.spr_art+galardel_0.sps_art+galardel_0.srr_art+galardel_0.crs_art > 0")
+    connection
+        .query("SELECT galardel_0.cod_art,galardel_0.sre_art-galardel_0.crs_art,galardel_0.spr_art+galardel_0.crs_art-galardel_0.sps_art-galardel_0.srr_art FROM TLMPLUS.PUB.galardel galardel_0 WHERE galardel_0.sre_art+galardel_0.srr_art+galardel_0.spr_art+galardel_0.sps_art+galardel_0.srr_art+galardel_0.crs_art > 0")
         .then(data1 => {
             localforage.setItem("RivaColdStock", JSON.stringify(data1).replaceAll("cod_art", "Cod").replaceAll("sre_art-crs_art", "Stock").replaceAll("spr_art+crs_art-sps_art-srr_art", "Reserva"))
             connection = oledb.open("DRIVER={Progress OpenEdge 11.7 Driver};Dsn=tlmplus1V11;uid=userSQL;pwd=userSQL;host=servidor;port=2613;db=tlmplus1", process.arch.includes("64"));

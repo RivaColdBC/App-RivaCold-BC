@@ -117,6 +117,7 @@ function Aplicar1(idresult) {
         document.getElementById("List_Gama").value = Didresult.split("_A_")[2];
         SeleccionarGama();
         document.getElementById("List_Modelo").value = Didresult.split("_A_")[3];
+        TextoConfiguracion()
         SeleccionarModelo();
     })
 }

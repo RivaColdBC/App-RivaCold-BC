@@ -40,6 +40,7 @@ function SeleccionarTipo(Modelo) {
   SeleccionarGama(Modelo);
 }
 function SeleccionarGama(Modelo) {
+  document.getElementById("Delta_T").value = S_Marca_A.value == "RivaCold" ? S_Marca_B.value != "RivaCold" ? "3 K" : "0 K" : S_Marca_B.value == "RivaCold" ? "-3 K" : "0 K"
   DBFilter = eval("DB_" + Modelo).filter((item) => item.Marca == eval("S_Marca_" + Modelo).value).map((item) => item.Gama);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index).sort()
   eval("S_Gama_" + Modelo).innerHTML = "";
@@ -262,9 +263,15 @@ function Delta_T() {
 }
 
 function RegistroFavorito() {
-  document.getElementById("table_favorito").getElementsByTagName("tbody")[0].innerHTML = ""
-  for (i = 0, RivaColdComparativalength = RivaColdComparativa.length; i < RivaColdComparativalength; i++) {
-    document.getElementById("table_favorito").getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", "<tr><th>" + RivaColdComparativa[i]["Descripción"] + "</th><th>" + RivaColdComparativa[i]["Marca1"] + "</th><th>" + RivaColdComparativa[i]["Gama1"] + "</th><th>" + RivaColdComparativa[i]["Aplicación1"] + "</th><th>" + RivaColdComparativa[i]["Refrigerante1"] + "</th><th>" + RivaColdComparativa[i]["Marca2"] + "</th><th>" + RivaColdComparativa[i]["Gama2"] + "</th><th>" + RivaColdComparativa[i]["Aplicación2"] + "</th><th>" + RivaColdComparativa[i]["Refrigerante2"] + "</th><th>" + "<button onclick='AplicarFavorito(" + i + ")' data-bs-dismiss='modal'><i class='bi bi-subtract'/></button>" + "</th></tr>")
+  document.getElementById("accordion_Marca").innerHTML = ""
+  ComparativaFilter = RivaColdComparativa.map((item) => item.Marca2);
+  ComparativaDuplicate = ComparativaFilter.filter((item, index) => ComparativaFilter.indexOf(item) === index).sort()
+  for (j = 0, jlen = ComparativaDuplicate.length; j < jlen; j++) {
+    document.getElementById("accordion_Marca").insertAdjacentHTML("beforeend", '<div class="accordion-item"><h2 class="accordion-header" id="heading' + ComparativaDuplicate[j] + '"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' + ComparativaDuplicate[j] + '" aria-expanded="false" aria-controls="collapse' + ComparativaDuplicate[j] + '">' + ComparativaDuplicate[j] + '</button></h2><div id="collapse' + ComparativaDuplicate[j] + '" class="accordion-collapse collapse" aria-labelledby="heading' + ComparativaDuplicate[j] + '" data-bs-parent="#accordionExample"><div class="accordion-body"><table class="table"><thead><tr><th>Descripción</th><th>Marca A</th><th>Gama A</th><th>Apl.A</th><th>Refr.A</th><th>Marca B</th><th>Gama B</th><th>Apl.B</th><th>Refr.B</th><th>Aplicar</th></tr></thead><tbody></tbody></table></div></div></div>')
+    RivaColdComparativaX = RivaColdComparativa.filter(item => item.Marca2 == ComparativaDuplicate[j])
+    for (i = 0, ilen = RivaColdComparativaX.length; i < ilen; i++) {
+      document.getElementById("accordion_Marca").getElementsByTagName("tbody")[j].insertAdjacentHTML("beforeend", "<tr><th>" + RivaColdComparativaX[i]["Descripción"] + "</th><th>" + RivaColdComparativaX[i]["Marca1"] + "</th><th>" + RivaColdComparativaX[i]["Gama1"] + "</th><th>" + RivaColdComparativaX[i]["Aplicación1"] + "</th><th>" + RivaColdComparativaX[i]["Refrigerante1"] + "</th><th>" + RivaColdComparativaX[i]["Marca2"] + "</th><th>" + RivaColdComparativaX[i]["Gama2"] + "</th><th>" + RivaColdComparativaX[i]["Aplicación2"] + "</th><th>" + RivaColdComparativaX[i]["Refrigerante2"] + "</th><th>" + "<button onclick='AplicarFavorito(" + i + ")' data-bs-dismiss='modal'><i class='bi bi-subtract'/></button>" + "</th></tr>")
+    }
   }
 }
 
@@ -299,31 +306,17 @@ function AplicarFavorito(i) {
     TempoArray = TempoArray + document.getElementById("Table_body").innerHTML
   })
 }
-TempoArray = ""
-function ExportTable() {
-  TempoArray = ""
-  ii = 0
-  RivaColdComparativalength = RivaColdComparativa.length
-  Loop(ii)
-}
-function Loop(ii) {
-  return AplicarFavorito(ii).then(() => {
-    if (ii + 1 < RivaColdComparativalength) { return Loop(ii + 1) } else {
-      document.getElementById("Table_body").innerHTML = TempoArray
-      return ListadoOptimizar()
-    }
-  })
-}
 
 function ExchangingSelect() {
   select = document.getElementById("TablaEq").getElementsByTagName("select")
-   for (i = 0, len = select.length; i < len; i++) {
+  for (i = 0, len = select.length; i < len; i++) {
     select[0].outerHTML = select[0].length > 0 ? select[0].getElementsByTagName("option")[select[0].selectedIndex].innerHTML : "No disponible"
   }
 }
 
-
 SeleccionarMarca();
 localforage.getItem("RivaColdComparativa").then(function (value) {
   RivaColdComparativa = JSON.parse(JSON.stringify(JSON.parse(value), (key, value) => (value == null) ? '' : value))
+  $('#Registro').modal("show")
+  RegistroFavorito()
 })

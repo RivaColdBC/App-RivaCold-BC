@@ -186,12 +186,12 @@ function ClearProyect() {
     location.reload()
 }
 
-localforage.getItem("RivaColdEvapGlicol", function (err, value) { DBEvapGlicol = JSON.parse(value) }).then(
-
-    thead("table_evaporador_glicol", TablaEvaporador),
-    thead("table_equipo_glicol", TablaEquipo),
-    writeHTML("saveZone", "RivaColdCentralChiller"),
-    tbodyComp = document.getElementById("tabla_componente").getElementsByTagName("tbody")[0],
-    tbodyEvap = document.getElementById("table_evaporador_glicol").getElementsByTagName("tbody")[0],
-    tbodyEquip = document.getElementById("table_equipo_glicol").getElementsByTagName("tbody")[0],
-)
+localforage.getItem("RivaColdEvapGlicol", function (err, value) { DBEvapGlicol = JSON.parse(value) })
+    .then(
+        thead("table_evaporador_glicol", TablaEvaporador),
+        thead("table_equipo_glicol", TablaEquipo),
+        writeHTML("saveZone", "RivaColdCentralChiller"),
+        tbodyComp = document.getElementById("tabla_componente").getElementsByTagName("tbody")[0],
+        tbodyEvap = document.getElementById("table_evaporador_glicol").getElementsByTagName("tbody")[0],
+        tbodyEquip = document.getElementById("table_equipo_glicol").getElementsByTagName("tbody")[0],
+    )
