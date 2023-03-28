@@ -54,7 +54,6 @@ function FichaTecnica() {
   CountPF = 0
   RegPF = []
   RivaColdDBF = RivaColdDB.filter(item => item.Ref == List_Modelo.value)
-  console.log(List_Modelo.value)
   RivaColdField = Object.getOwnPropertyNames(RivaColdDB[0])
     .sort(function (a, b) {
       if (parseFloat(a.split("_")[1]) > parseFloat(b.split("_")[1])) { return +1; } else if (parseFloat(a.split("_")[1]) < parseFloat(b.split("_")[1])) { return -1; } else {

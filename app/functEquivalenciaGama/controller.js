@@ -302,14 +302,12 @@ function AplicarFavorito(i) {
   SeleccionarFreon("B");
   S_Refrigerante_B.value = RivaColdComparativa[i]["Refrigerante2"] ? RivaColdComparativa[i]["Refrigerante2"] : 0
   S_Aplicación_B.value = RivaColdComparativa[i]["Aplicación2"] ? RivaColdComparativa[i]["Aplicación2"] : 0
-  return ListadoModelo().then(() => {
-    TempoArray = TempoArray + document.getElementById("Table_body").innerHTML
-  })
+  return ListadoModelo()
 }
 
 function ExchangingSelect() {
   select = document.getElementById("TablaEq").getElementsByTagName("select")
-  for (i = 0, len = select.length; i < len; i++) {
+  for (i = 0, ilen = select.length; i < ilen; i++) {
     select[0].outerHTML = select[0].length > 0 ? select[0].getElementsByTagName("option")[select[0].selectedIndex].innerHTML : "No disponible"
   }
 }
