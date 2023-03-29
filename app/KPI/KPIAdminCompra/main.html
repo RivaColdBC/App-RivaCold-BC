@@ -11,9 +11,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../main/style.css" />
+    <link rel="stylesheet" href="../../style.css" />
     <link rel="stylesheet" href="./style.css" />
-    <title>RivaColdSelect - KPI Admin Venta</title>
+    <title>RivaColdSelect - KPI Admin Compra</title>
 </head>
 
 <body>
@@ -21,9 +21,9 @@
         <div class="row">
             <div class="col">
                 <div class="row">
-                    <img src="../../resources/BCSYSTEMS.png" style="height:
+                    <img src="../../../resources/BCSYSTEMS.png" style="height:
                             100px;width: auto;" />
-                    <img src="../../resources/RIVACOLD.jpg" style="height:
+                    <img src="../../../resources/RIVACOLD.jpg" style="height:
                             100px;width: auto;" />
                 </div>
             </div>
@@ -40,12 +40,18 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <td>Fecha</td>
+                    <td rowspan="2">Fecha</td>
+                    <td colspan="2">Total</td>
+                    <td colspan="2">Sujeto Pasivo</td>
+                    <td colspan="2">Nacional</td>
+                </tr>
+                <tr>
                     <td>Importe Bruto</td>
-                    <td>Aumento%</td>
                     <td>Total Importe</td>
-                    <td>Aumento%</td>
-                    <td>Detalle</td>
+                    <td>Importe Bruto</td>
+                    <td>Total Importe</td>
+                    <td>Importe Bruto</td>
+                    <td>Total Importe</td>
                 </tr>
             </thead>
             <tbody id="div_table">
@@ -63,10 +69,10 @@
         </div>
     </nav>
 
-    <script src="../functAux/Funct_Formate.js" async></script>
-    <script src="../functAux/Funct_Hash.js" async></script>
+    <script src="../../functAux/Funct_Formate.js" async></script>
+    <script src="../../functAux/Funct_Hash.js" async></script>
     <script src="./controller.js" async></script>
-    <script src="../functAux/Funct_Print.js" async></script>
+    <script src="../../functAux/Funct_Print.js" async></script>
 </body>
 
 </html>

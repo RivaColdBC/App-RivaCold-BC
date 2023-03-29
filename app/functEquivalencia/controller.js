@@ -83,15 +83,6 @@ function Delta_T() {
 function TextoConfiguracion() {
   DBFilterA = DB.filter(item => item.Ref == List_Modelo.value)
   ConfiguracionTexto = ""
-  for (j = 1; j < 10; j++) {
-    Object.getOwnPropertyNames(DBFilterA[0]).includes("Config" + j) ? DBFilterA[0]["Config" + j] ? ConfiguracionTexto = ConfiguracionTexto + "<tr id='buttonConfig" + j + "'><th>" + DBFilterA[0]["Config" + j] + "</th><th><button onclick='DisableConfig(buttonConfig" + j + ")'><i class='bi bi-backspace'></i></button></th></tr>" : null : null;
-  }
-  ConfiguracionTexto += DBFilterA[0]["Aplicación"] ? "<tr id='buttonAplicacion'><th>" + "Aplicación: " + DBFilterA[0]["Aplicación"] + "</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>" : ""
-  ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? "<tr><th>" + "Refrigerante: " + DBFilterA[0]["Refrigerante"] + "</th><th></th></tr>" : ""
-  ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? "<tr><th>" + "Expansión: " + DBFilterA[0]["Ficha producto_Expansión"] + "</th><th></th></tr>" : ""
-  ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? "<tr><th>" + "Desescarche: " + DBFilterA[0]["Desescarche_Tipo"] + "</th><th></th></tr>" : ""
-  ConfiguracionTexto += DBFilterA[0]["Motoventilador_Núm#ventilador"] ? "<tr><th>" + "Núm de ventilador: " + DBFilterA[0]["Motoventilador_Núm#ventilador"] + "</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>" : ""
-  document.getElementById("Table_Type_Body").innerHTML = ConfiguracionTexto
   ConfiguracionArray = {
     "buttonConfig1": false,
     "buttonConfig2": false,
@@ -106,6 +97,16 @@ function TextoConfiguracion() {
     "buttonVentilador": false,
     "buttonAplicacion": false
   }
+  for (j = 1; j < 10; j++) {
+    Object.getOwnPropertyNames(DBFilterA[0]).includes("Config" + j) ? DBFilterA[0]["Config" + j] ? ConfiguracionTexto = ConfiguracionTexto + "<tr id='buttonConfig" + j + "'><th>" + DBFilterA[0]["Config" + j] + "</th><th><button onclick='DisableConfig(buttonConfig" + j + ")'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonConfig" + j] = true : ConfiguracionArray["buttonConfig" + j] = true;
+  }
+  DBFilterA[0]["Aplicación"] ? ConfiguracionTexto += "<tr id='buttonAplicacion'><th>" + "Aplicación: " + DBFilterA[0]["Aplicación"] + "</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonAplicacion"] = true
+  ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? "<tr><th>" + "Refrigerante: " + DBFilterA[0]["Refrigerante"] + "</th><th></th></tr>" : ""
+  ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? "<tr><th>" + "Expansión: " + DBFilterA[0]["Ficha producto_Expansión"] + "</th><th></th></tr>" : ""
+  ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? "<tr><th>" + "Desescarche: " + DBFilterA[0]["Desescarche_Tipo"] + "</th><th></th></tr>" : ""
+  DBFilterA[0]["Motoventilador_Núm#ventilador"] ? ConfiguracionTexto += "<tr><th>" + "Núm de ventilador: " + DBFilterA[0]["Motoventilador_Núm#ventilador"] + "</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonVentilador"] = true
+  document.getElementById("Table_Type_Body").innerHTML = ConfiguracionTexto
+
 }
 function SeleccionarModelo() {
   document.getElementById("Delta_T").value = parseFloat(document.getElementById("Delta_T").value) + " K"
@@ -125,43 +126,39 @@ function SeleccionarModelo() {
         if (ConfiguracionArray["buttonConfig3"] ||
           DBFilterA[0]["Config3"] == DBFilterB[j]["Config3"] ||
           (!DBFilterB[j]["Config3"] && !DBFilterA[0]["Config3"])) {
-          if (ConfiguracionArray["buttonConfig4"] ||
-            DBFilterA[0]["Config4"] == DBFilterB[j]["Config4"] ||
-            !DBFilterA[0]["Config4"]) {
-            if (ConfiguracionArray["buttonConfig6"] ||
-              (DBFilterA[0]["Config6"] == "Centrifugo" && DBFilterB[j]["Centrifugo"]) ||
-              DBFilterA[0]["Config6"] == DBFilterB[j]["Config6"] ||
-              DBFilterA[0]["Config6"] != "Centrifugo") {
-              if (ConfiguracionArray["buttonAplicacion"] ||
-                DBFilterA[0]["Aplicación"] == DBFilterB[j]["Aplicación"] ||
-                (!DBFilterB[j]["Aplicación"] && !DBFilterA[0]["Aplicación"]) ||
-                (DBFilterA[0]["Aplicación"] == "Dual" && (DBFilterB[j]["Aplicación"] == "MBP" ||
-                  DBFilterB[j]["Aplicación"] == "LBP")) ||
-                (DBFilterB[j]["Aplicación"] == "Dual" && (DBFilterA[0]["Aplicación"] == "MBP" ||
-                  DBFilterA[0]["Aplicación"] == "LBP"))) {
-                if (ConfiguracionArray["buttonVentilador"] ||
-                  DBFilterA[0]["Motoventilador_Núm#ventilador"] == DBFilterB[j]["Motoventilador_Núm#ventilador"] ||
-                  !DBFilterB[j]["Motoventilador_Núm#ventilador"] || !DBFilterA[0]["Motoventilador_Núm#ventilador"]) {
-                  Diff = ListadoEquivalencia(DBFilterA[0], DBFilterB, MarcaAField, MarcaBField, j);
-                  if (parseFloat(Diff) >= 0) {
-                    if (parseFloat(Diff) <= PDiffStorage) {
-                      PDiffStorage = parseFloat(Diff)
-                      PRefStorage = DBFilterB[j]["Ref"]
-                      PStockStorage = DBFilterB[j]["Ficha producto_Stock"] == "Si" ? true : false;
-                    }
-                  } else {
-                    if (parseFloat(Diff) >= NDiffStorage) {
-                      NDiffStorage = parseFloat(Diff)
-                      NRefStorage = DBFilterB[j]["Ref"]
-                      NStockStorage = DBFilterB[j]["Ficha producto_Stock"] == "Si" ? true : false;
-                    }
+          if (ConfiguracionArray["buttonConfig6"] ||
+            (DBFilterA[0]["Config6"] == "Centrifugo" && DBFilterB[j]["Centrifugo"]) ||
+            DBFilterA[0]["Config6"] == DBFilterB[j]["Config6"] ||
+            DBFilterA[0]["Config6"] != "Centrifugo") {
+            if (ConfiguracionArray["buttonAplicacion"] ||
+              DBFilterA[0]["Aplicación"] == DBFilterB[j]["Aplicación"] ||
+              (!DBFilterB[j]["Aplicación"] && !DBFilterA[0]["Aplicación"]) ||
+              (DBFilterA[0]["Aplicación"] == "Dual" && (DBFilterB[j]["Aplicación"] == "MBP" ||
+                DBFilterB[j]["Aplicación"] == "LBP")) ||
+              (DBFilterB[j]["Aplicación"] == "Dual" && (DBFilterA[0]["Aplicación"] == "MBP" ||
+                DBFilterA[0]["Aplicación"] == "LBP"))) {
+              if (ConfiguracionArray["buttonVentilador"] ||
+                DBFilterA[0]["Motoventilador_Núm#ventilador"] == DBFilterB[j]["Motoventilador_Núm#ventilador"] ||
+                !DBFilterB[j]["Motoventilador_Núm#ventilador"] || !DBFilterA[0]["Motoventilador_Núm#ventilador"]) {
+                Diff = ListadoEquivalencia(DBFilterA[0], DBFilterB, MarcaAField, MarcaBField, j);
+                if (parseFloat(Diff) >= 0) {
+                  if (parseFloat(Diff) <= PDiffStorage) {
+                    PDiffStorage = parseFloat(Diff)
+                    PRefStorage = DBFilterB[j]["Ref"]
+                    PStockStorage = DBFilterB[j]["Ficha producto_Stock"] == "Si" ? true : false;
                   }
-                  if (parseFloat(document.getElementById("RangoNeg").value) <= parseFloat(Diff) && parseFloat(document.getElementById("RangoPos").value) >= parseFloat(Diff)) {
-                    option_modelo = document.createElement("option");
-                    DBFilterB[j]["Ficha producto_Stock"] == "Si" ? option_modelo.style.backgroundColor = "lime" : null
-                    option_modelo.text = DBFilterB[j]["Ref"] + " " + Diff;
-                    List_Equiv.add(option_modelo);
+                } else {
+                  if (parseFloat(Diff) >= NDiffStorage) {
+                    NDiffStorage = parseFloat(Diff)
+                    NRefStorage = DBFilterB[j]["Ref"]
+                    NStockStorage = DBFilterB[j]["Ficha producto_Stock"] == "Si" ? true : false;
                   }
+                }
+                if (parseFloat(document.getElementById("RangoNeg").value) <= parseFloat(Diff) && parseFloat(document.getElementById("RangoPos").value) >= parseFloat(Diff)) {
+                  option_modelo = document.createElement("option");
+                  DBFilterB[j]["Ficha producto_Stock"] == "Si" ? option_modelo.style.backgroundColor = "lime" : null
+                  option_modelo.text = DBFilterB[j]["Ref"] + " " + Diff;
+                  List_Equiv.add(option_modelo);
                 }
               }
             }

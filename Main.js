@@ -13,7 +13,7 @@ function createWindow(url) {
     !process.defaultApp && os.userInfo().username != "YYZ" ? win.removeMenu() : null
     win.maximize();
     win.setTitle("RivaColdSelect");
-    url ? win.loadFile(url) : win.loadFile("./app/main/index.html");
+    url ? win.loadFile(url) : win.loadFile("./app/index.html");
     return
 }
 ipcMain.on('newWindow', function (event, data) {
