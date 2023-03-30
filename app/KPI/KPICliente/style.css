@@ -7,7 +7,7 @@ th,
 tr {
     font: bolder 12pt Arial;
     print-color-adjust: exact;
-    vertical-align: bottom;
+    vertical-align: middle;
 }
 
 input {
@@ -32,4 +32,14 @@ table {
 
 tr#headTotal {
     color: white;
+}
+
+body {
+    vertical-align: middle;
+
+}
+
+nav button,
+nav input,
+nav select {    height: 40px;
 }

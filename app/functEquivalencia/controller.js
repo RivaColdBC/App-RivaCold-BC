@@ -100,11 +100,11 @@ function TextoConfiguracion() {
   for (j = 1; j < 10; j++) {
     Object.getOwnPropertyNames(DBFilterA[0]).includes("Config" + j) ? DBFilterA[0]["Config" + j] ? ConfiguracionTexto = ConfiguracionTexto + "<tr id='buttonConfig" + j + "'><th>" + DBFilterA[0]["Config" + j] + "</th><th><button onclick='DisableConfig(buttonConfig" + j + ")'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonConfig" + j] = true : ConfiguracionArray["buttonConfig" + j] = true;
   }
-  DBFilterA[0]["Aplicación"] ? ConfiguracionTexto += "<tr id='buttonAplicacion'><th>" + "Aplicación: " + DBFilterA[0]["Aplicación"] + "</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonAplicacion"] = true
-  ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? "<tr><th>" + "Refrigerante: " + DBFilterA[0]["Refrigerante"] + "</th><th></th></tr>" : ""
-  ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? "<tr><th>" + "Expansión: " + DBFilterA[0]["Ficha producto_Expansión"] + "</th><th></th></tr>" : ""
-  ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? "<tr><th>" + "Desescarche: " + DBFilterA[0]["Desescarche_Tipo"] + "</th><th></th></tr>" : ""
-  DBFilterA[0]["Motoventilador_Núm#ventilador"] ? ConfiguracionTexto += "<tr><th>" + "Núm de ventilador: " + DBFilterA[0]["Motoventilador_Núm#ventilador"] + "</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonVentilador"] = true
+  DBFilterA[0]["Aplicación"] ? ConfiguracionTexto += `<tr id='buttonAplicacion'><th>Aplicación:${DBFilterA[0]["Aplicación"]}</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonAplicacion"] = true
+  ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? `<tr><th>Refrigerante: ${DBFilterA[0]["Refrigerante"]}</th><th></th></tr>` : ""
+  ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? `<tr><th>Expansión: ${DBFilterA[0]["Ficha producto_Expansión"]}</th><th></th></tr>` : ""
+  ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? `<tr><th>Desescarche: ${DBFilterA[0]["Desescarche_Tipo"]}</th><th></th></tr>` : ""
+  DBFilterA[0]["Motoventilador_Núm#ventilador"] ? ConfiguracionTexto += `<tr><th>Núm de ventilador: ${DBFilterA[0]["Motoventilador_Núm#ventilador"]}</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonVentilador"] = true
   document.getElementById("Table_Type_Body").innerHTML = ConfiguracionTexto
 
 }

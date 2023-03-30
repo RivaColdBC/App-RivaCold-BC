@@ -70,28 +70,24 @@
             </div>
             <div class="row">
                 <label style="width: 20%;">Periodo: </label>
-                <input type="text" style="width: 37.5%;" id="FechaInicio" onchange="tablekpi()" disabled />
-                <input type="text" style="width: 37.5%;" id="FechaFinal" onchange="tablekpi()" disabled />
+                <input type="text" style="width: 25%;" id="FechaInicio" onchange="tablekpi()" disabled />
+                <input type="text" style="width: 25%;" id="FechaFinal" onchange="tablekpi()" disabled />
             </div>
             <div class="row">
                 <input class="btn btn-primary" style="width: 35%;" type="button" id="MostrarCliente"
                     value="Mostrar/ocultar cliente" onclick="MostrarCliente()">
                 <select class="form-select" id="Select_Provincia" style="width: 60%;" onchange="tablekpi()" disabled>
-                    <option value=""></option>
+                    <option value="">Provincia</option>
                 </select>
             </div>
         </div>
         <div class="col-1"> </div>
-
+    </nav>
+    <center>
         <table class="table table-striped" style="margin: 0;">
             <thead>
                 <tr id="headFecha"></tr>
             </thead>
-        </table>
-    </nav>
-
-    <center>
-        <table class="table table-striped">
             <thead>
                 <tr id="headTotal"></tr>
             </thead>

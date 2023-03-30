@@ -12,6 +12,7 @@
   "author": "Basic Conection Systems S.L.",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.32.1",
     "electron": "^23.2.0",
     "electron-builder": "^23.6.0",
     "yarn": "^1.22.19"

@@ -294,9 +294,9 @@ function ButtonStock(button_id, dropdown_id) {
         Servido = parseFloat(DBCompraFilter[k]["Servido"])
         NumPedido = parseFloat(DBCompraFilter[k]["NumPedido"])
         Disponible = Pedido - Servido
-        document.getElementById(dropdown_id).insertAdjacentHTML("beforeend", "<li><a class='dropdown-item'>Núm.Pedido: " + NumPedido + " Plazo de salida fábrica: " + FechaEntrega + " Disponible: " + Disponible + " (Servido: " + Servido + " Total: " + Pedido + ")</a></li>")
+        document.getElementById(dropdown_id).insertAdjacentHTML("beforeend", `<li><a class='dropdown-item'>Núm.Pedido: ${NumPedido} Plazo de salida fábrica: ${FechaEntrega} Disponible: ${Disponible} (Servido: ${Servido} Total: ${Pedido})</a></li>`)
     }
-    DBCompraFilter.length == 0 ? document.getElementById(button_id).outerHTML = "<button id='" + button_id + "'type='button'>" + StockDisp + " & " + StockRes + "</button>" : null
+    DBCompraFilter.length == 0 ? document.getElementById(button_id).outerHTML = `<button id='${button_id}' type='button'>${StockDisp} & ${StockRes}</button>` : null
     document.getElementById(button_id).className = DBCompraFilter.length > 0 ? StockDisp > 0 ? "btn btn-primary dropdown-toggle" : StockRes > 0 ? "btn btn-warning dropdown-toggle" : "btn btn-danger dropdown-toggle" : StockDisp > 0 ? "btn btn-primary" : StockRes > 0 ? "btn btn-warning" : "btn btn-danger"
     for (k = 0, klen = DBCompraFilter.length - 1; k <= klen; k++) {
         Disponible = parseFloat(DBCompraFilter[klen - k]["Pedido"]) - parseFloat(DBCompraFilter[klen - k]["Servido"])

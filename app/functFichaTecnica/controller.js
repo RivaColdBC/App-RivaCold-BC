@@ -49,10 +49,8 @@ const http = "https://select1.rivacold.com/media/immagini/"
 const Ignore = ["Foto", "Foto2", "Foto_Esquema1", "Foto_Esquema2", "Foto_Esquema3", "SSMA_TimeStamp", "Serie", "Ficha producto_Stock", "Vol"]
 function FichaTecnica() {
   ClearTable("table_PC", 0);
-  ClearTable("table_FT", 0);
-  document.getElementById("Div_Table_FT").innerHTML = ""
-  CountPF = 0
-  RegPF = []
+  document.getElementById("table_FT").innerHTML = '<thead><tr><th colspan="2">Ficha técnica</th></tr></thead><tbody></tbody>'
+  CountPF = 0; RegPF = []
   RivaColdDBF = RivaColdDB.filter(item => item.Ref == List_Modelo.value)
   RivaColdField = Object.getOwnPropertyNames(RivaColdDB[0])
     .sort(function (a, b) {
@@ -74,12 +72,12 @@ function FichaTecnica() {
         Propiedad = RivaColdField[j].split("_")
         if (Propiedad[1]) {
           if (!Placelabel.includes(Propiedad[0])) {
-            document.getElementById("Div_Table_FT").insertAdjacentHTML("beforeend", '<table class="table table-striped" id="table_FT_' + Propiedad[0] + '"><thead><tr><th colspan="2">' + Propiedad[0] + '</th></tr></thead><tbody/></table>')
+            document.getElementById("table_FT").insertAdjacentHTML("beforeend", `<thead><tr><th colspan="2">${Propiedad[0]}</th></tr></thead><tbody id="tbody_${Propiedad[0]}"></tbody>`)
             Placelabel.push(Propiedad[0])
           }
-          document.getElementById("table_FT_" + Propiedad[0]).getElementsByTagName("tbody")[0].insertRow().innerHTML = "<th class='TagTipo'>" + Propiedad[1] + "</th><td>" + RivaColdDBF[0][RivaColdField[j]] + "</td>"
+          document.getElementById("tbody_" + Propiedad[0]).insertAdjacentHTML("beforeend", `<th>${Propiedad[1]}</th><td>${RivaColdDBF[0][RivaColdField[j]]}</td>`)
         } else {
-          document.getElementById("table_FT").getElementsByTagName("tbody")[0].insertRow().innerHTML = "<th class='TagTipo'>" + RivaColdField[j] + "</th><td>" + RivaColdDBF[0][RivaColdField[j]] + "</td>";
+          document.getElementById("table_FT").getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", `<th>${RivaColdField[j]}</th><td>${RivaColdDBF[0][RivaColdField[j]]}</td>`)
         }
       }
     }
@@ -99,7 +97,7 @@ function FichaTecnica() {
   RegTc.sort(function (a, b) { if (parseFloat(a) >= parseFloat(b)) { return 1; } else { return -1 } })
   RegTamb.sort(function (a, b) { if (parseFloat(a) >= parseFloat(b)) { return 1; } else { return -1 } })
   for (j = 0, jlen = RegTc.length; j < jlen; j++) {
-    document.getElementById("table_PC").getElementsByTagName("tr")[0].insertAdjacentHTML("beforeend", "<th scope='col'>" + parseFloat(RegTc[j]) + " °C</th>");
+    document.getElementById("table_PC").getElementsByTagName("tr")[0].insertAdjacentHTML("beforeend", "<td>" + parseFloat(RegTc[j]) + " °C</td>");
   } for (j = 0, jlen = RegTamb.length; j < jlen; j++) {
     TempAmb = document.getElementById("list_type").value == "Evap" || document.getElementById("list_type").value == "Cond" ? " K" : " °C"
     document.getElementById("table_PC").getElementsByTagName("tbody")[0].insertRow().innerHTML = "<th>" + RegTamb[j] + TempAmb + "</th>";
@@ -111,12 +109,12 @@ function FichaTecnica() {
       for (j = 0, jlen = RivaColdField.length; j < jlen; j++) {
         if (parseFloat(RivaColdField[j].split("_")[1]) == parseFloat(RegTamb[row]) && parseFloat(RivaColdField[j].split("_")[2]) == parseFloat(RegTc[col])) {
           if (RivaColdDBF[0][RivaColdField[j]]) {
-            document.getElementById("table_PC").getElementsByTagName("tr")[row + 1].insertAdjacentHTML("beforeend", "<th>" + parseFloat(RivaColdDBF[0][RivaColdField[j]]).toFixed(0) + "W</th>");
+            document.getElementById("table_PC").getElementsByTagName("tr")[row + 1].insertAdjacentHTML("beforeend", "<td>" + parseFloat(RivaColdDBF[0][RivaColdField[j]]).toFixed(0) + "W</td>");
             done = false
           }
         }
       }
-      done ? document.getElementById("table_PC").getElementsByTagName("tr")[row + 1].insertAdjacentHTML("beforeend", "<th>-</th>") : null
+      done ? document.getElementById("table_PC").getElementsByTagName("tr")[row + 1].insertAdjacentHTML("beforeend", "<td>-</td>") : null
     }
   }
 }
