@@ -11,10 +11,10 @@ function SeleccionarGama() {
     DBFilter = RivaColdDB.map((item) => item.Marca);
     DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index);
     List_Marca.innerHTML = "";
-    for (i = 0, ilen = DBDuplicate.length; i < ilen; i++) {
-      if (DBDuplicate[i] != null) {
+    for (Marca of DBDuplicate) {
+      if (Marca != null) {
         Opcion = document.createElement("option");
-        Opcion.text = DBDuplicate[i];
+        Opcion.text = Marca;
         List_Marca.add(Opcion);
       }
     }
@@ -25,9 +25,9 @@ function SeleccionarMarca() {
   DBFilter = RivaColdDB.filter((item) => item.Marca == List_Marca.value).map((item) => item.Gama);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index).sort()
   List_Gama.innerHTML = "";
-  for (i = 0, ilen = DBDuplicate.length; i < ilen; i++) {
+  for (Gama of DBDuplicate) {
     Opcion = document.createElement("option");
-    Opcion.text = DBDuplicate[i]
+    Opcion.text = Gama
     List_Gama.add(Opcion);
   }
   SeleccionarModelo();
@@ -37,9 +37,9 @@ function SeleccionarModelo() {
   DBFilter = RivaColdDB.filter((item) => item.Marca == List_Marca.value).filter((item) => item.Gama == List_Gama.value).map((item) => item.Ref);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index).sort()
   List_Modelo.innerHTML = "";
-  for (i = 0, ilen = DBDuplicate.length; i < ilen; i++) {
+  for (Modelo of DBDuplicate) {
     Opcion = document.createElement("option");
-    Opcion.text = DBDuplicate[i];
+    Opcion.text = Modelo;
     List_Modelo.add(Opcion);
   }
   FichaTecnica();
@@ -63,7 +63,7 @@ function FichaTecnica() {
   document.getElementById("imagenEsquema2").src = RivaColdDBF[0]["Foto_Esquema2"] ? http + RivaColdDBF[0]["Foto_Esquema2"] : ""
   document.getElementById("imagenEsquema3").src = RivaColdDBF[0]["Foto_Esquema3"] ? http + RivaColdDBF[0]["Foto_Esquema3"] : ""
   Placelabel = []
-  for (j = 0, jlen = RivaColdField.length; j < jlen; j++) {
+  for (j in RivaColdField) {
     if (RivaColdDBF[0][RivaColdField[j]] && !Ignore.includes(RivaColdField[j])) {
       if (RivaColdField[j].startsWith("PC_")) {
         RegPF[CountPF] = j;
@@ -96,7 +96,7 @@ function FichaTecnica() {
   }
   RegTc.sort(function (a, b) { if (parseFloat(a) >= parseFloat(b)) { return 1; } else { return -1 } })
   RegTamb.sort(function (a, b) { if (parseFloat(a) >= parseFloat(b)) { return 1; } else { return -1 } })
-  for (j = 0, jlen = RegTc.length; j < jlen; j++) {
+  for (j in RegTc) {
     document.getElementById("table_PC").getElementsByTagName("tr")[0].insertAdjacentHTML("beforeend", "<td>" + parseFloat(RegTc[j]) + " °C</td>");
   } for (j = 0, jlen = RegTamb.length; j < jlen; j++) {
     TempAmb = document.getElementById("list_type").value == "Evap" || document.getElementById("list_type").value == "Cond" ? " K" : " °C"
@@ -106,7 +106,7 @@ function FichaTecnica() {
   for (col = 0; col < CountRegTc; col++) {
     for (row = 0; row < CountRegTamb; row++) {
       done = true
-      for (j = 0, jlen = RivaColdField.length; j < jlen; j++) {
+      for (j in RivaColdField) {
         if (parseFloat(RivaColdField[j].split("_")[1]) == parseFloat(RegTamb[row]) && parseFloat(RivaColdField[j].split("_")[2]) == parseFloat(RegTc[col])) {
           if (RivaColdDBF[0][RivaColdField[j]]) {
             document.getElementById("table_PC").getElementsByTagName("tr")[row + 1].insertAdjacentHTML("beforeend", "<td>" + parseFloat(RivaColdDBF[0][RivaColdField[j]]).toFixed(0) + "W</td>");

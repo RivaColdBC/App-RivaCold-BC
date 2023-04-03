@@ -57,11 +57,11 @@ function SeleccionarGama() {
             if (List_Catalogo.value != "Buscador") {
                 List_Gama.innerHTML = ""
                 const DBDuplicate = DBFilterGama.filter((item, index) => DBFilterGama.indexOf(item) === index).filter((item) => item != null).sort();
-                for (i = 0, ilen = DBDuplicate.length; i < ilen; i++) {
+                for (Gama of DBDuplicate) {
                     Opcion = document.createElement("option");
-                    Opcion.text = DBDuplicate[i];
-                    Opcion.value = DBDuplicate[i];
-                    Opcion.id = DBDuplicate[i];
+                    Opcion.text = Gama;
+                    Opcion.value = Gama;
+                    Opcion.id = Gama;
                     List_Gama.add(Opcion);
                 }
             }
@@ -74,10 +74,10 @@ function SeleccionarCatalogo() {
     if (List_Catalogo.value == "0") {
         DBFilter = DBCustom.filter((item) => item.Gama == List_Gama.value).map((item) => item.Ref1);
         DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index).sort();
-        for (i = 0, ilen = DBDuplicate.length; i < ilen; i++) {
+        for (Modelo of DBDuplicate) {
             Opcion = document.createElement("option");
-            Opcion.text = DBDuplicate[i];
-            Opcion.value = DBDuplicate[i];
+            Opcion.text = Modelo;
+            Opcion.value = Modelo;
             List_Mod.add(Opcion);
         }
     }
@@ -91,28 +91,30 @@ function SeleccionarModelo() {
         const DBFilter = DBCustom.filter((item) => item.Ref1 == List_Mod.value).filter((item) => item.Gama == List_Gama.value)
         Table_Modelo_Head[0].innerText = DBFilter[0]["Ref1"]
         ImportacionCodigo = DBFilter[0]["Ref1"]
-        for (i = 0, ilen = DBFilter.length; i < ilen; i++) {
-            if (DBFilter[0]["Descripció1"]) {
-                Table_Modelo_Head[1].innerText = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(DBFilter[0]["Precio1"]))
-                Table_Modelo_Head[2].innerText = DBFilter[0]["Descripció1"]
-                ImportacionPrecio = parseFloat(DBFilter[0]["Precio1"])
-                ImportacionDescripcion = DBFilter[0]["Descripció1"]
+        for (DBF of DBFilter) {
+            if (DBF["Descripció1"]) {
+                Table_Modelo_Head[1].innerText = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(DBF["Precio1"]))
+                Table_Modelo_Head[2].innerText = DBF["Descripció1"]
+                ImportacionPrecio = parseFloat(DBF["Precio1"])
+                ImportacionDescripcion = DBF["Descripció1"]
                 break
             }
         }
         const DBFilter1 = DBFilter.sort().sort(function (a) { if (a.Opcional) { return 1; } else { return -1 } }).map((item) => item.Descripció2);
         const DBDuplicate = DBFilter1.filter((item, index) => DBFilter1.indexOf(item) === index);
-        for (i = 0, ilen = DBDuplicate.length; i < ilen; i++) {
+        for (i in DBDuplicate) {
             DBFilter2 = DBFilter.filter((item) => item.Descripció2 == DBDuplicate[i]).sort();
             Opcional = DBFilter2[0]["Opcional"] ? " (OPCIONAL)" : ""
             Table_Recambio.getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", "<tr><th/><th class='TagTipo'>" + DBDuplicate[i] + Opcional + "</th><th/><th/></tr>")
-            for (j = 0, jlen = DBFilter2.length; j < jlen; j++) {
-                for (k = 0, klen = DBTarifa.length, Check = false; k < klen; k++) {
+            for (j in DBFilter2) {
+                Check = false
+                for (k in DBTarifa) {
                     if (DBTarifa[k]["Ref"] == DBFilter2[j]["Ref2"]) {
                         DBStockFilter = DBStock.filter(item => item.Cod == DBTarifa[k]["Ref2"])
-                        for (m = 0, mlen = DBStockFilter.length, StockDisp = 0, StockRes = 0; m < mlen; m++) {
-                            StockDisp = StockDisp + parseFloat(DBStockFilter[m]["Stock"])
-                            StockRes = StockRes + parseFloat(DBStockFilter[m]["Reserva"])
+                        StockDisp = 0, StockRes = 0
+                        for (Stock of DBStockFilter) {
+                            StockDisp = StockDisp + parseFloat(Stock["Stock"])
+                            StockRes = StockRes + parseFloat(Stock["Reserva"])
                         }
                         StockRes < 0 ? StockRes = StockRes + " ?" : null
                         StockDisp < 0 ? StockDisp = StockDisp + " ?" : null
@@ -139,15 +141,16 @@ function SeleccionarModelo() {
         Busqueda()
     } else {
         DBFilter = DBCustom.filter(item => item.Gama == List_Gama.value)
-        for (i = 0, ilen = DBTarifa.length; i < ilen; i++) {
-            for (j = 0, jlen = DBFilter.length; j < jlen; j++) {
+        for (i in DBTarifa) {
+            for (j in DBFilter) {
                 if (DBTarifa[i]["Ref"]) {
                     if (DBTarifa[i]["Ref"].startsWith(DBFilter[j]["Ref"].split(/([0-9]+)/)[0]) && DBTarifa[i]["Gama"].startsWith("RIVACOLD")) {
                         DBStockFilter = DBStock.filter(item => item.Cod == DBTarifa[i]["Ref2"])
-                        for (k = 0, klen = DBStockFilter.length, StockDisp = 0, StockRes = 0; k < klen; k++) {
-                            StockDisp = StockDisp + parseFloat(DBStockFilter[k]["Stock"])
-                            StockRes = StockRes + parseFloat(DBStockFilter[k]["Reserva"])
-                        } if (klen > 0) {
+                        StockDisp = 0, StockRes = 0;
+                        for (Stock of DBStockFilter) {
+                            StockDisp = StockDisp + parseFloat(Stock["Stock"])
+                            StockRes = StockRes + parseFloat(Stock["Reserva"])
+                        } if (DBStockFilter.length > 0) {
                             StockRes < 0 ? StockRes = StockRes + " ?" : null
                             StockDisp < 0 ? StockDisp = StockDisp + " ?" : null
                             Observación = DBTarifa[i]["Observación"] != null ? "<br>" + DBTarifa[i]["Observación"] : ""
@@ -223,8 +226,8 @@ function SQLrequestInsert(j, data, data2, connection) {
     StringData = ""
     data.length < 999 + j * 1000 ? len = data.length : len = 999 + j * 1000
     Slice = data.slice(0 + j * 1000, len)
-    for (i = 0, Slicelength = Slice.length; i < Slicelength; i++) {
-        StringData = StringData + ",('" + Slice[i]["cod_art"] + "'," + Slice[i]["sre_art-crs_art"] + "," + Slice[i]["spr_art+crs_art-sps_art-srr_art"] + ")"
+    for (item of Slice) {
+        StringData = StringData + ",('" + item["cod_art"] + "'," + item["sre_art-crs_art"] + "," + item["spr_art+crs_art-sps_art-srr_art"] + ")"
     }
     requestInsert = new Request("INSERT INTO dbo.RivaColdStock VALUES " + StringData.replace(",", ""), function (error) {
         error ? console.log(error) : null
@@ -245,8 +248,8 @@ function SQLrequestInsert2(j, data, connection) {
     StringData = ""
     data.length < 999 + j * 1000 ? len = data.length : len = 999 + j * 1000
     Slice = data.slice(0 + j * 1000, len)
-    for (i = 0, Slicelength = Slice.length; i < Slicelength; i++) {
-        StringData = StringData + ",('" + Slice[i]["num_cpp"] + "','" + Slice[i]["cod_art"] + "','" + Slice[i]["fee_lpp"].slice(0, 10) + "'," + Slice[i]["cpe_lpp"] + "," + Slice[i]["cse_lpp"] + ")"
+    for (item of Slice) {
+        StringData = StringData + ",('" + item["num_cpp"] + "','" + item["cod_art"] + "','" + item["fee_lpp"].slice(0, 10) + "'," + item["cpe_lpp"] + "," + item["cse_lpp"] + ")"
     }
     requestInsert1 = new Request("INSERT INTO dbo.RivaColdCompra VALUES " + StringData.replace(",", ""), function (error) {
         error ? console.log(error) : null
@@ -269,13 +272,13 @@ function Busqueda() {
     Table_Recambio_body.innerHTML = "";
     if (sp) {
         DBTarifaX = DBTarifa.filter(item => (item.Ref2 + item.Ref + item.Descripción + item.Observación).toUpperCase().indexOf(sp) > -1)
-        for (j = 0, DBTarifalength = DBTarifaX.length; j < DBTarifalength; j++) {
+        for (j in DBTarifaX) {
             StockDisp = 0
             StockRes = 0
             DBStockFilter = DBStock.filter(item => item.Cod == DBTarifaX[j]["Ref2"])
-            for (k = 0, klen = DBStockFilter.length; k < klen; k++) {
-                StockDisp = StockDisp + parseFloat(DBStockFilter[k]["Stock"])
-                StockRes = StockRes + parseFloat(DBStockFilter[k]["Reserva"])
+            for (Stock of DBStockFilter) {
+                StockDisp = StockDisp + parseFloat(Stock["Stock"])
+                StockRes = StockRes + parseFloat(Stock["Reserva"])
             }
             StockRes < 0 ? StockRes = StockRes + " ?" : null
             StockDisp < 0 ? StockDisp = StockDisp + " ?" : null
@@ -288,7 +291,7 @@ function Busqueda() {
 }
 
 function ButtonStock(button_id, dropdown_id) {
-    for (k = 0, klen = DBCompraFilter.length; k < klen; k++) {
+    for (k in DBCompraFilter) {
         (new Date() - new Date(DBCompraFilter[k]["Entrega"])) > 2000000000 ? FechaEntrega = "No disponible" : FechaEntrega = new Date(DBCompraFilter[k]["Entrega"]).toLocaleDateString('en-GB')
         Pedido = parseFloat(DBCompraFilter[k]["Pedido"])
         Servido = parseFloat(DBCompraFilter[k]["Servido"])

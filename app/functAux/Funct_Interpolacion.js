@@ -1,27 +1,23 @@
 function Interpol(Tamb, Tcamara, MarcaB, MarcaBField, i) {
     MarcaBFieldlength = MarcaBField.length
-    for (m = 0; m < MarcaBFieldlength; m++) {
-        if (MarcaB[i][MarcaBField[m]]) {
-            if (Tamb == parseFloat(MarcaBField[m].split("_")[1])) {
-                if (Tcamara == parseFloat(MarcaBField[m].split("_")[2])) {
-                    return parseFloat(MarcaB[i][MarcaBField[m]]).toFixed(0) + " W";
-                }
-            }
+    for (item of MarcaBField) {
+        if (MarcaB[i][item] && Tamb == parseFloat(item.split("_")[1]) && Tcamara == parseFloat(item.split("_")[2])) {
+            return parseFloat(MarcaB[i][item]).toFixed(0) + " W";
         }
     }
-    positive = 0, negative = 0;
-    for (Int = 0; Int < MarcaBFieldlength; Int++) {
-        if (Tcamara == parseFloat(MarcaBField[Int].split("_")[2]) && MarcaBField[Int].startsWith("PC_")) {
+    positive = false, negative = false;
+    for (item of MarcaBField) {
+        if (Tcamara == parseFloat(item.split("_")[2]) && item.startsWith("PC_")) {
             for (iamb = 1; iamb < 30; iamb++) {
-                if (Tamb + iamb == parseFloat(MarcaBField[Int].split("_")[1]) && MarcaB[i][MarcaBField[Int]] && !positive) {
+                if (Tamb + iamb == parseFloat(item.split("_")[1]) && MarcaB[i][item] && !positive) {
                     Tambip = Tamb + iamb;
-                    PFeqip = parseFloat(MarcaB[i][MarcaBField[Int]]);
-                    positive = 1;
+                    PFeqip = parseFloat(MarcaB[i][item]);
+                    positive = true;
                 }
-                if (Tamb - iamb == parseFloat(MarcaBField[Int].split("_")[1]) && MarcaB[i][MarcaBField[Int]] && !negative) {
+                if (Tamb - iamb == parseFloat(item.split("_")[1]) && MarcaB[i][item] && !negative) {
                     Tambin = Tamb - iamb;
-                    PFeqin = parseFloat(MarcaB[i][MarcaBField[Int]]);
-                    negative = 1;
+                    PFeqin = parseFloat(MarcaB[i][item]);
+                    negative = true;
                 }
             }
         }
@@ -29,68 +25,44 @@ function Interpol(Tamb, Tcamara, MarcaB, MarcaBField, i) {
     if (positive && negative) {
         return Interpolacion(Tamb, Tambip, Tambin, PFeqip, PFeqin) + " W (*)";
     } else if (positive && !negative) {
-        for (Int = 0; Int < MarcaBFieldlength; Int++) {
-            if (
-                Tcamara == parseFloat(MarcaBField[Int].split("_")[2]) &&
-                MarcaBField[Int].startsWith("PC_")
-            ) {
+        for (item of MarcaBField) {
+            if (Tcamara == parseFloat(item.split("_")[2]) && item.startsWith("PC_")) {
                 for (iamb = 1; iamb < 30; iamb++) {
-                    if (Tambip + iamb == parseFloat(MarcaBField[Int].split("_")[1]) && MarcaB[i][MarcaBField[Int]]) {
-                        return (
-                            Interpolacion(Tamb, Tambip, Tambip + iamb, PFeqip, parseFloat(MarcaB[i][MarcaBField[Int]])) + " W (+)"
-                        );
+                    if (Tambip + iamb == parseFloat(item.split("_")[1]) && MarcaB[i][item]) {
+                        return (Interpolacion(Tamb, Tambip, Tambip + iamb, PFeqip, parseFloat(MarcaB[i][item])) + " W (+)");
                     }
                 }
             }
         }
     } else if (!positive && negative) {
-        for (Int = 0; Int < MarcaBFieldlength; Int++) {
-            if (
-                Tcamara == parseFloat(MarcaBField[Int].split("_")[2]) &&
-                MarcaBField[Int].startsWith("PC_")
-            ) {
+        for (item of MarcaBField) {
+            if (Tcamara == parseFloat(item.split("_")[2]) && item.startsWith("PC_")) {
                 for (iamb = 1; iamb < 30; iamb++) {
-                    if (
-                        Tambin - iamb == parseFloat(MarcaBField[Int].split("_")[1]) &&
-                        MarcaB[i][MarcaBField[Int]]
-                    ) {
-                        return (
-                            Interpolacion(Tamb, Tambin - iamb, Tambin, parseFloat(MarcaB[i][MarcaBField[Int]]), PFeqin) + " W (-)"
-                        );
-                    }
+                    if (Tambin - iamb == parseFloat(item.split("_")[1]) && MarcaB[i][item]
+                    ) { return (Interpolacion(Tamb, Tambin - iamb, Tambin, parseFloat(MarcaB[i][item]), PFeqin) + " W (-)"); }
                 }
             }
         }
     } else {
-        for (Int = 0; Int < MarcaBFieldlength; Int++) {
-            if (
-                Tamb == parseFloat(MarcaBField[Int].split("_")[1]) &&
-                MarcaBField[Int].startsWith("PC_")
-            ) {
+        for (item of MarcaBField) {
+            if (Tamb == parseFloat(item.split("_")[1]) && item.startsWith("PC_")) {
                 for (icamara = 1; icamara < 30; icamara++) {
-                    if (
-                        Tcamara + icamara == parseFloat(MarcaBField[Int].split("_")[2]) &&
-                        MarcaB[i][MarcaBField[Int]] &&
-                        !positive
-                    ) {
+                    if (Tcamara + icamara == parseFloat(item.split("_")[2]) && MarcaB[i][item] && !positive) {
                         Tcamaraip = Tcamara + icamara;
-                        PFeqip = parseFloat(MarcaB[i][MarcaBField[Int]]);
+                        PFeqip = parseFloat(MarcaB[i][item]);
                         positive = 1;
                     }
                 }
             }
-            if (
-                Tamb == parseFloat(MarcaBField[Int].split("_")[1]) &&
-                MarcaBField[Int].startsWith("PC_")
-            ) {
+            if (Tamb == parseFloat(item.split("_")[1]) && item.startsWith("PC_")) {
                 for (icamara = 1; icamara < 30; icamara++) {
                     if (
-                        Tcamara - icamara == parseFloat(MarcaBField[Int].split("_")[2]) &&
-                        MarcaB[i][MarcaBField[Int]] &&
+                        Tcamara - icamara == parseFloat(item.split("_")[2]) &&
+                        MarcaB[i][item] &&
                         !negative
                     ) {
                         Tcamarain = Tcamara - icamara;
-                        PFeqin = parseFloat(MarcaB[i][MarcaBField[Int]]);
+                        PFeqin = parseFloat(MarcaB[i][item]);
                         negative = 1;
                     }
                 }
@@ -102,19 +74,19 @@ function Interpol(Tamb, Tcamara, MarcaB, MarcaBField, i) {
                 Interpolacion(Tcamara, Tcamaraip, Tcamarain, PFeqip, PFeqin) + "W (*)"
             );
         } else if (positive && !negative) {
-            for (Int = 0; Int < MarcaBFieldlength; Int++) {
+            for (item of MarcaBField) {
                 if (
-                    Tamb == parseFloat(MarcaBField[Int].split("_")[1]) &&
-                    MarcaBField[Int].startsWith("PC_")
+                    Tamb == parseFloat(item.split("_")[1]) &&
+                    item.startsWith("PC_")
                 ) {
                     for (icamara = 1; icamara < 30; icamara++) {
                         if (
                             parseFloat(Tcamaraip) + icamara ==
-                            parseFloat(MarcaBField[Int].split("_")[2]) &&
-                            MarcaB[i][MarcaBField[Int]]
+                            parseFloat(item.split("_")[2]) &&
+                            MarcaB[i][item]
                         ) {
                             Tcamarain = parseFloat(Tcamaraip) + icamara;
-                            PFeqin = parseFloat(MarcaB[i][MarcaBField[Int]]);
+                            PFeqin = parseFloat(MarcaB[i][item]);
                             return (
                                 Interpolacion(Tcamara, Tcamaraip, Tcamarain, PFeqip, PFeqin) +
                                 " W (+)"
@@ -124,19 +96,17 @@ function Interpol(Tamb, Tcamara, MarcaB, MarcaBField, i) {
                 }
             }
         } else if (!positive && negative) {
-            for (Int = 0; Int < MarcaBFieldlength; Int++) {
+            for (item of MarcaBField) {
                 if (
-                    Tamb == parseFloat(MarcaBField[Int].split("_")[1]) &&
-                    MarcaBField[Int].startsWith("PC_")
+                    Tamb == parseFloat(item.split("_")[1]) &&
+                    item.startsWith("PC_")
                 ) {
                     for (icamara = 1; icamara < 30; icamara++) {
                         if (
-                            parseFloat(Tcamarain) - icamara ==
-                            parseFloat(MarcaBField[Int].split("_")[2]) &&
-                            MarcaB[i][MarcaBField[Int]]
+                            parseFloat(Tcamarain) - icamara == parseFloat(item.split("_")[2]) && MarcaB[i][item]
                         ) {
                             Tcamaraip = parseFloat(Tcamarain) - icamara;
-                            PFeqip = parseFloat(MarcaB[i][MarcaBField[Int]]);
+                            PFeqip = parseFloat(MarcaB[i][item]);
                             return (
                                 Interpolacion(Tcamara, Tcamaraip, Tcamarain, PFeqip, PFeqin) +
                                 " W (-)"

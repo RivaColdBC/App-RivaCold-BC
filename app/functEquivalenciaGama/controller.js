@@ -29,11 +29,11 @@ function SeleccionarTipo(Modelo) {
   DBFilter = eval("DB_" + Modelo).map((item) => item.Marca);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index);
   eval("S_Marca_" + Modelo).innerHTML = "";
-  for (i = 0, len = DBDuplicate.length; i < len; i++) {
-    if (DBDuplicate[i] != null) {
+  for (Marca of DBDuplicate) {
+    if (Marca != null) {
       Opcion = document.createElement("option");
-      Opcion.text = DBDuplicate[i];
-      Opcion.value = DBDuplicate[i];
+      Opcion.text = Marca;
+      Opcion.value = Marca;
       eval("S_Marca_" + Modelo).add(Opcion);
     }
   }
@@ -44,10 +44,10 @@ function SeleccionarGama(Modelo) {
   DBFilter = eval("DB_" + Modelo).filter((item) => item.Marca == eval("S_Marca_" + Modelo).value).map((item) => item.Gama);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index).sort()
   eval("S_Gama_" + Modelo).innerHTML = "";
-  for (i = 0, len = DBDuplicate.length; i < len; i++) {
+  for (Gama of DBDuplicate) {
     Opcion = document.createElement("option");
-    Opcion.text = DBDuplicate[i];
-    Opcion.value = DBDuplicate[i];
+    Opcion.text = Gama;
+    Opcion.value = Gama;
     eval("S_Gama_" + Modelo).add(Opcion);
   }
   SeleccionarAplicación(Modelo);
@@ -60,10 +60,10 @@ function SeleccionarAplicación(Modelo) {
   eval("S_Aplicación_" + Modelo).disabled = false;
   eval("S_Aplicación_" + Modelo).innerHTML = "";
   if (eval("S_Tipo_" + Modelo).value == "Eq") {
-    for (i = 0, len = DBDuplicate.length; i < len; i++) {
+    for (Aplicacion of DBDuplicate) {
       Opcion = document.createElement("option");
-      Opcion.text = DBDuplicate[i];
-      Opcion.value = DBDuplicate[i];
+      Opcion.text = Aplicacion;
+      Opcion.value = Aplicacion;
       eval("S_Aplicación_" + Modelo).add(Opcion);
     }
   } else { eval("S_Aplicación_" + Modelo).disabled = true; }
@@ -79,10 +79,10 @@ function SeleccionarFreon(Modelo) {
   eval("S_Refrigerante_" + Modelo).innerHTML = "";
   DBFilter = eval("DB_" + Modelo).filter((item) => item.Gama == eval("S_Gama_" + Modelo).value).map((item) => item.Refrigerante);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index);
-  for (i = 0, len = DBDuplicate.length; i < len; i++) {
+  for (Refrigerante of DBDuplicate) {
     Opcion = document.createElement("option");
-    Opcion.text = DBDuplicate[i];
-    Opcion.value = DBDuplicate[i];
+    Opcion.text = Refrigerante;
+    Opcion.value = Refrigerante;
     eval("S_Refrigerante_" + Modelo).add(Opcion);
   }
   eval("S_Refrigerante_" + Modelo).innerHTML == "" ? eval("S_Refrigerante_" + Modelo).disabled = true : null
@@ -100,13 +100,13 @@ function ListadoModelo() {
   PFField = Object.getOwnPropertyNames(DBMarcaA[0]).sort().reverse();
   Row = 0
   Select_Tamb = []
-  for (i = 0, len = DBMarcaA.length; i < len; i++) {
+  for (i in DBMarcaA) {
     if (S_Aplicación_A.value == DBMarcaA[i]["Aplicación"] || S_Tipo_A.value != "Eq" || S_Aplicación_A.value == "0") {
       if (S_Refrigerante_A.value == DBMarcaA[i]["Refrigerante"] || S_Refrigerante_A.disabled || S_Refrigerante_A.value == "0") {
         DB_BFilter = DB_B.filter(item => item.Gama == S_Gama_B.value)
         DB_BFilter[0]["Config6"] == "Centrifugo" && DBMarcaA[i]["Centrifugo"] ? Precio = Precio + " + " + new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format((parseFloat(DBMarcaA[i]["Centrifugo"] * 0.85))) : null
         TablaEqBody.insertAdjacentHTML('beforeend', "<tr id='Row_" + i + "'><th/><th>" + DBMarcaA[i]["Ref"] + "</th><th><select/></th><th id='S_PF_" + DBMarcaA[i]["Ref"] + "'/><th><select/></th><th/><th/><th></th><th/><th/></tr>")
-        for (j = 0, PFFieldlength = PFField.length; j < PFFieldlength; j++) {
+        for (j in PFField) {
           if (PFField[j].startsWith("PC_") && DBMarcaA[i][PFField[j]] != null) {
             Opcion = document.createElement("option");
             Opcion.text = PFField[j].split("_")[1] + "  " + PFField[j].split("_")[2];
@@ -124,7 +124,7 @@ function ListadoModelo() {
         TablaEqBody.getElementsByTagName("tr")[Row].getElementsByTagName("th")[0].insertAdjacentHTML("afterbegin", "<button type='button' onclick='EliminarFila(" + Row + ")'><i class='bi bi-x-square' style='color:red'/></button>");
         list_gama = TablaEqBody.getElementsByTagName("tr")[Row].getElementsByTagName("select")[1];
         list_gama.innerHTML = "";
-        for (k = 0, len2 = DB_B.length; k < len2; k++) {
+        for (k in DB_B) {
           if (DB_B[k]["Gama"] == S_Gama_B.value) {
             if (S_Aplicación_B.value == DB_B[k]["Aplicación"] || S_Tipo_B.value != "Eq" || DB_B[k]["Aplicación"] == DBMarcaA[i]["Aplicación"] || DBMarcaA[i]["Aplicación"] == "Dual" || DB_B[k]["Aplicación"] == "Dual") {
               if (S_Refrigerante_B.value == DB_B[k]["Refrigerante"] || S_Refrigerante_B.disabled || S_Refrigerante_B.value == "0") {
@@ -256,9 +256,9 @@ function EliminarFila(i) {
   document.getElementById("Row_" + i).innerHTML = "";
 }
 
-var DT = 3
+var DT = 0
 function Delta_T() {
-  document.getElementById("Delta_T").value = parseFloat(document.getElementById("Delta_T").value) + " K"
+  document.getElementById("Delta_T").value = parseFloat(document.getElementById("Delta_T").value) ? parseFloat(document.getElementById("Delta_T").value) + " K" : "0 k"
   DT = parseFloat(document.getElementById("Delta_T").value)
 }
 
@@ -266,11 +266,11 @@ function RegistroFavorito() {
   document.getElementById("accordion_Marca").innerHTML = ""
   ComparativaFilter = RivaColdComparativa.map((item) => item.Marca2);
   ComparativaDuplicate = ComparativaFilter.filter((item, index) => ComparativaFilter.indexOf(item) === index).sort()
-  for (j = 0, jlen = ComparativaDuplicate.length; j < jlen; j++) {
+  for (j in ComparativaDuplicate) {
     document.getElementById("accordion_Marca").insertAdjacentHTML("beforeend", `<div class="accordion-item"><h2 class="accordion-header" id="heading${ComparativaDuplicate[j]}" ><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${ComparativaDuplicate[j]}" aria-expanded="false" aria-controls="collapse${ComparativaDuplicate[j]}">${ComparativaDuplicate[j]}</button></h2><div id="collapse${ComparativaDuplicate[j]}" class="accordion-collapse collapse" aria-labelledby="heading${ComparativaDuplicate[j]}" data-bs-parent="#accordionExample"><div class="accordion-body"><table class="table"><thead><tr><th>Descripción</th><th>Marca A</th><th>Gama A</th><th>Apl.A</th><th>Refr.A</th><th>Marca B</th><th>Gama B</th><th>Apl.B</th><th>Refr.B</th><th>Aplicar</th></tr></thead><tbody></tbody></table></div></div></div>`)
     RivaColdComparativaX = RivaColdComparativa.filter(item => item.Marca2 == ComparativaDuplicate[j])
-    for (i = 0, ilen = RivaColdComparativaX.length; i < ilen; i++) {
-      document.getElementById("accordion_Marca").getElementsByTagName("tbody")[j].insertAdjacentHTML("beforeend", "<tr><th>" + RivaColdComparativaX[i]["Descripción"] + "</th><th>" + RivaColdComparativaX[i]["Marca1"] + "</th><th>" + RivaColdComparativaX[i]["Gama1"] + "</th><th>" + RivaColdComparativaX[i]["Aplicación1"] + "</th><th>" + RivaColdComparativaX[i]["Refrigerante1"] + "</th><th>" + RivaColdComparativaX[i]["Marca2"] + "</th><th>" + RivaColdComparativaX[i]["Gama2"] + "</th><th>" + RivaColdComparativaX[i]["Aplicación2"] + "</th><th>" + RivaColdComparativaX[i]["Refrigerante2"] + "</th><th>" + "<button onclick='AplicarFavorito(" + i + ")' data-bs-dismiss='modal'><i class='bi bi-subtract'/></button>" + "</th></tr>")
+    for (i in RivaColdComparativaX) {
+      document.getElementById("accordion_Marca").getElementsByTagName("tbody")[j].insertAdjacentHTML("beforeend", `<tr><th>${RivaColdComparativaX[i]["Descripción"]}</th><th>${RivaColdComparativaX[i]["Marca1"]}</th><th>${RivaColdComparativaX[i]["Gama1"]}</th><th>${RivaColdComparativaX[i]["Aplicación1"]}</th><th>${RivaColdComparativaX[i]["Refrigerante1"]}</th><th>${RivaColdComparativaX[i]["Marca2"]}</th><th>${RivaColdComparativaX[i]["Gama2"]}</th><th>${RivaColdComparativaX[i]["Aplicación2"]}</th><th>${RivaColdComparativaX[i]["Refrigerante2"]}</th><th><button onclick='AplicarFavorito(${i})' data-bs-dismiss='modal'><i class='bi bi-subtract'/></button></th></tr>`)
     }
   }
 }

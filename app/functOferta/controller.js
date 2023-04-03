@@ -61,7 +61,7 @@ function SeleccionarModelo() {
     list_type.value == "Tarifa0000" ? DBFilter = RivaColdDB.map((item) => item.Gama) : DBFilter = RivaColdDB.filter(item => item.Marca == "RivaCold").map((item) => item.Gama);
     DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index).sort();
     list_gama.innerHTML = "";
-    for (i = 0, len = DBDuplicate.length; i < len; i++) {
+    for (i in DBDuplicate) {
       option_gama = document.createElement("option");
       option_gama.text = DBDuplicate[i];
       list_gama.add(option_gama);
@@ -192,10 +192,10 @@ function PushDB() {
         Table[i][5] = ""
       }
       Table_Detalle_tbody.insertRow().innerHTML = "<th>" + item + "</th><td><input></td><td><textarea></textarea></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td>";
-      Table_Detalle_th[i + 8].insertAdjacentHTML("beforeend", "<button><i class='bi bi-x-octagon'style='color:red;font-size:15px;vertical-align:bottom' onclick='BorrarLinea(" + [i] + ")'></i></button>");
+      Table_Detalle_th[i + 8].insertAdjacentHTML("beforeend", `<button><i class='bi bi-x-octagon'style='color:red;font-size:15px;vertical-align:bottom' onclick='BorrarLinea(${i})'></i></button>`);
       if (i) {
         document.getElementById("Table_Detalle").getElementsByTagName("td")[7 * i + 1].insertAdjacentHTML(
-          "beforeend", "<button><i class='bi bi-arrow-up-square'style='color: green;font-size:15px;margin-right:10px' onclick='MoveItem(" + [i] + ",+1)'/></button>");
+          "beforeend", `<button><i class='bi bi-arrow-up-square'style='color: green;font-size:15px;margin-right:10px' onclick='MoveItem(${i},+1)'/></button>`);
       }
       for (j = 0; j < 6; j++) { Table_Detalle_input[j + 6 * i].value = Table[i][j] }
       if (!isNaN(parseFloat(Table[i][5]))) { TotalOfertaPrecio += parseFloat(Table[i][5]) }
@@ -208,10 +208,15 @@ function PushDB() {
   }
   !dDescuentoPP.value ? dDescuentoPP.value = 0 + "%" : null
   !dIVA.value ? dIVA.value = 21 + "%" : null
-  dCoste_Portes.value = parseFloat(dCoste_Portes.value) ? parseFloat(dCoste_Portes.value).toFixed(2) + " €" : 0 + " €"
-  TotalOfertaPrecio += parseFloat(document.getElementById("Coste_Portes").value)
-  TotalOfertaPrecio < 300 ? document.getElementById("Coste_Portes").style.display = "" : null
-  TotalOfertaPrecio < 300 ? document.getElementById("label_Portes").style.display = "" : null
+
+  if (parseFloat(dCoste_Portes.value) > 0) {
+    dCoste_Portes.value = parseFloat(dCoste_Portes.value).toFixed(2) + " €"
+    TotalOfertaPrecio += parseFloat(document.getElementById("Coste_Portes").value)
+  } else {
+    dCoste_Portes.value = "0 €"
+  }
+  TotalOfertaPrecio < 300 ? document.getElementById("Coste_Portes").style.display = "" : "none"
+  TotalOfertaPrecio < 300 ? document.getElementById("label_Portes").style.display = "" : "none"
   dDescuentoPP.value = parseFloat(dDescuentoPP.value).toFixed(2) + "%";
   dIVA.value = parseFloat(dIVA.value).toFixed(0) + "%";
   document.getElementById("TotalOferta").textContent = TotalOfertaPrecio.toFixed(2) + " €";
@@ -237,13 +242,13 @@ function CheckStock(i) {
     }
   }
   if (Stock > 0) {
-    Table_Detalle_td[7 * i + 1].insertAdjacentHTML("beforeend", '<i class="bi bi-cart-check" style="color: green;font-size:15px">' + Stock + "u</i>");
+    Table_Detalle_td[7 * i + 1].insertAdjacentHTML("beforeend", `<i class="bi bi-cart-check" style="color: green;font-size:15px">${Stock}u</i>`);
   } else {
     Plazo = ""
     for (k = 0, len = DBGama.length; k < len; k++) {
       document.getElementById("Table_Detalle").getElementsByTagName("input")[6 * i].value.startsWith(DBGama[k]["Gama"]) ? Plazo = DBGama[k]["Plazo_Entrega"] + "S" : null
     }
-    Plazo ? Table_Detalle_td[7 * i + 1].insertAdjacentHTML("beforeend", '<i class="bi bi-cart-x" style="color: red;font-size:15px">' + Plazo + "</i>") : null
+    Plazo ? Table_Detalle_td[7 * i + 1].insertAdjacentHTML("beforeend", `<i class="bi bi-cart-x" style="color: red;font-size:15px">${Plazo}</i>`) : null
   }
 }
 

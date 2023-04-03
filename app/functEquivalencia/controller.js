@@ -8,20 +8,20 @@ var DB, ConfiguracionArray
 const localforage = require("localforage");
 
 function SeleccionarMarca() {
-  return localforage.getItem("RivaCold" + List_Type.value).then(function (value) {
+  return localforage.getItem(`RivaCold${List_Type.value}`).then(function (value) {
     DB = JSON.parse(value).filter(item => item.Marca != null).sort(function (a) { if (a.Vol) { return -1; } else return +1 })
     List_MarcaA.innerHTML = "";
     List_MarcaB.innerHTML = "";
     DBFilter = DB.map((item) => item.Marca);
     DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index);
-    for (i = 0, len = DBDuplicate.length; i < len; i++) {
+    for (Marca of DBDuplicate) {
       OpcionA = document.createElement("option");
-      OpcionA.text = DBDuplicate[i];
-      OpcionA.value = DBDuplicate[i];
+      OpcionA.text = Marca;
+      OpcionA.value = Marca;
       List_MarcaA.add(OpcionA);
       OpcionB = document.createElement("option");
-      OpcionB.text = DBDuplicate[i];
-      OpcionB.value = DBDuplicate[i];
+      OpcionB.text = Marca;
+      OpcionB.value = Marca;
       List_MarcaB.add(OpcionB);
     }
     document.getElementById("RangoPos").value = "+20%";
@@ -53,10 +53,10 @@ function SeleccionarProveedor() {
   List_Gama.innerHTML = "";
   DBFilter = DB.filter((item) => item.Marca == List_MarcaA.value).map((item) => item.Gama);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index).sort();
-  for (i = 0, len = DBDuplicate.length; i < len; i++) {
+  for (Gama of DBDuplicate) {
     Opcion = document.createElement("option");
-    Opcion.text = DBDuplicate[i];
-    Opcion.value = DBDuplicate[i];
+    Opcion.text = Gama;
+    Opcion.value = Gama;
     List_Gama.add(Opcion);
   }
   Delta_T()
@@ -67,10 +67,10 @@ function SeleccionarGama() {
   List_Modelo.innerHTML = "";
   DBFilter = DB.filter((item) => item.Marca == List_MarcaA.value).filter((item) => item.Gama == List_Gama.value).map((item) => item.Ref);
   DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index).sort();
-  for (i = 0, len = DBDuplicate.length; i < len; i++) {
+  for (Modelo of DBDuplicate) {
     Opcion = document.createElement("option");
-    Opcion.text = DBDuplicate[i];
-    Opcion.value = DBDuplicate[i];
+    Opcion.text = Modelo;
+    Opcion.value = Modelo;
     List_Modelo.add(Opcion);
   }
   TextoConfiguracion()
@@ -98,7 +98,8 @@ function TextoConfiguracion() {
     "buttonAplicacion": false
   }
   for (j = 1; j < 10; j++) {
-    Object.getOwnPropertyNames(DBFilterA[0]).includes("Config" + j) ? DBFilterA[0]["Config" + j] ? ConfiguracionTexto = ConfiguracionTexto + "<tr id='buttonConfig" + j + "'><th>" + DBFilterA[0]["Config" + j] + "</th><th><button onclick='DisableConfig(buttonConfig" + j + ")'><i class='bi bi-backspace'></i></button></th></tr>" : ConfiguracionArray["buttonConfig" + j] = true : ConfiguracionArray["buttonConfig" + j] = true;
+    Object.getOwnPropertyNames(DBFilterA[0]).includes(`Config${j}`) ? DBFilterA[0][`Config${j}`] ?
+      ConfiguracionTexto = `${ConfiguracionTexto}<tr id='buttonConfig${j}'><th>${DBFilterA[0][`Config${j}`]}</th><th><button onclick='DisableConfig(buttonConfig${j})'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray[`buttonConfig${j}`] = true : ConfiguracionArray[`buttonConfig${j}`] = true;
   }
   DBFilterA[0]["Aplicación"] ? ConfiguracionTexto += `<tr id='buttonAplicacion'><th>Aplicación:${DBFilterA[0]["Aplicación"]}</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonAplicacion"] = true
   ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? `<tr><th>Refrigerante: ${DBFilterA[0]["Refrigerante"]}</th><th></th></tr>` : ""
@@ -116,7 +117,7 @@ function SeleccionarModelo() {
   DBFilterB = DB.filter(item => item.Marca == List_MarcaB.value)
   MarcaBField = Object.getOwnPropertyNames(DBFilterB[0]).sort().reverse();
   PDiffStorage = 999999, PRefStorage = "", NDiffStorage = -999999, NRefStorage = ""
-  for (j = 0, jlen = DBFilterB.length; j < jlen; j++) {
+  for (j in DBFilterB) {
     if (ConfiguracionArray["buttonConfig1"] ||
       DBFilterA[0]["Config1"] == DBFilterB[j]["Config1"] ||
       (!DBFilterB[j]["Config1"] && !DBFilterA[0]["Config1"])) {
@@ -205,7 +206,7 @@ function SeleccionarModelo() {
 function ListadoEquivalencia(DBFilterA, DBFilterB, MarcaAField, MarcaBField, j) {
   PFEq1 = 0; PFEq2 = 0; PFEq3 = 0;
   PFModelo1 = 0; PFModelo2 = 0; PFModelo3 = 0;
-  for (k = 0, len = MarcaAField.length; k < len; k++) {
+  for (k in MarcaAField) {
     if (MarcaAField[k].startsWith("PC_") && DBFilterA[MarcaAField[k]]) {
       Tamb = parseFloat(MarcaAField[k].split("_")[1]);
       Tcamara = parseFloat(MarcaAField[k].split("_")[2]);
@@ -298,7 +299,6 @@ function DisableConfig(id) {
 
   SeleccionarModelo()
 }
-
 
 Delta_T()
 SeleccionarMarca();
