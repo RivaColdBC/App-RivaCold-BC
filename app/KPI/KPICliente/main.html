@@ -13,75 +13,77 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../style.css" />
     <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <title>RivaColdSelect - KPI Cliente</title>
 </head>
 
 <body>
     <nav class="navbar sticky-top bg-light">
-        <div class="col-5">
-            <img src="../../../resources/BCSYSTEMS.png" style="height:100px;width: auto;" />
-            <img src="../../../resources/RIVACOLD.jpg" style="height:100px;width: auto;" />
+        <div class="row justify-content-center">
+            <img src="../../../resources/A4-21 cm Logo nuevo+arbol.jpg" style="width: 100%;height: auto;" />
+            <div class="col-5">
+                <div class="row">
+                    <label style="width: 20%;">Password: </label>
+                    <input type="password" id="Password" onchange="PasswordX()" placeholder="***********"
+                        style="width: 75%;" />
+                </div>
+                <div class="row">
+                    <label style="width: 20%;">Search: </label>
+                    <select class="form-select" id="SearchDelegado" style="width: 25%;" onchange="tablekpi()" disabled>
+                        <option value=""></option>
+                        <option value="1">BC SYSTEMS</option>
+                        <option value="2">AB - ALBERT </option>
+                        <option value="3">APR - ANGEL </option>
+                        <option value="4">FELIX </option>
+                        <option value="5">E.F.C. </option>
+                        <option value="6">SANTOS INNOVA </option>
+                        <option value="7">JOAN </option>
+                        <option value="8">MISOYCA </option>
+                        <option value="9">DIONISIO AVILES </option>
+                        <option value="10">MMG - MIQUEL </option>
+                        <option value="11">JAVIER PEÑAS PIZARRO </option>
+                        <option value="12">AEY - ADRIAN </option>
+                        <option value="13">VITRIFRIGO </option>
+                        <option value="14">MERE - SRL </option>
+                        <option value="15">JORDI CLOTET </option>
+                        <option value="16">JOSÉ HERNÁNDEZ </option>
+                        <option value="17">NISHAL </option>
+                        <option value="18">18 </option>
+                        <option value="19">19 </option>
+                        <option value="20">20 </option>
+                        <option value="21">21 </option>
+                        <option value="22">22 </option>
+                        <option value="23">23 </option>
+                        <option value="24">24 </option>
+                        <option value="25">25 </option>
+                        <option value="26">26 </option>
+                        <option value="27">27 </option>
+                        <option value="28">28 </option>
+                        <option value="29">29 </option>
+                        <option value="30">30 </option>
+                    </select>
+                    <input type="text" style="width: 25%;" id="SearchCliente" onchange="tablekpi()"
+                        placeholder="Código cliente" disabled />
+                    <input type="text" style="width: 25%;" id="FechaAltaCliente" onchange="tablekpi()"
+                        placeholder="Fecha alta cliente" disabled />
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <label style="width: 30%;">Periodo: </label>
+                    <input type="text" style="width: 30%;" id="FechaInicio" onchange="tablekpi()" disabled />
+                    <input type="text" style="width: 30%;" id="FechaFinal" onchange="tablekpi()" disabled />
+                </div>
+                <div class="row">
+                    <input class="btn btn-primary" style="width: 30%;" type="button" id="MostrarCliente"
+                        value="Mostrar/ocultar cliente" onclick="MostrarCliente()">
+                    <select class="form-select" id="Select_Provincia" style="width: 60%;" onchange="tablekpi()"
+                        disabled>
+                        <option value="">Provincia</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="col-6">
-            <div class="row">
-                <label style="width: 20%;">Password: </label>
-                <input type="password" id="Password" onchange="PasswordX()" placeholder="***********"
-                    style="width: 75%;" />
-            </div>
-            <div class="row">
-                <label style="width: 20%;">Search: </label>
-                <select class="form-select" id="SearchDelegado" style="width: 25%;" onchange="tablekpi()" disabled>
-                    <option value=""></option>
-                    <option value="1">BC SYSTEMS</option>
-                    <option value="2">AB - ALBERT </option>
-                    <option value="3">APR - ANGEL </option>
-                    <option value="4">FELIX </option>
-                    <option value="5">E.F.C. </option>
-                    <option value="6">SANTOS INNOVA </option>
-                    <option value="7">JOAN </option>
-                    <option value="8">MISOYCA </option>
-                    <option value="9">DIONISIO AVILES </option>
-                    <option value="10">MMG - MIQUEL </option>
-                    <option value="11">JAVIER PEÑAS PIZARRO </option>
-                    <option value="12">AEY - ADRIAN </option>
-                    <option value="13">VITRIFRIGO </option>
-                    <option value="14">MERE - SRL </option>
-                    <option value="15">JORDI CLOTET </option>
-                    <option value="16">JOSÉ HERNÁNDEZ </option>
-                    <option value="17">NISHAL </option>
-                    <option value="18">18 </option>
-                    <option value="19">19 </option>
-                    <option value="20">20 </option>
-                    <option value="21">21 </option>
-                    <option value="22">22 </option>
-                    <option value="23">23 </option>
-                    <option value="24">24 </option>
-                    <option value="25">25 </option>
-                    <option value="26">26 </option>
-                    <option value="27">27 </option>
-                    <option value="28">28 </option>
-                    <option value="29">29 </option>
-                    <option value="30">30 </option>
-                </select>
-                <input type="text" style="width: 25%;" id="SearchCliente" onchange="tablekpi()"
-                    placeholder="Código cliente" disabled />
-                <input type="text" style="width: 25%;" id="FechaAltaCliente" onchange="tablekpi()"
-                    placeholder="Fecha alta cliente" disabled />
-            </div>
-            <div class="row">
-                <label style="width: 20%;">Periodo: </label>
-                <input type="text" style="width: 25%;" id="FechaInicio" onchange="tablekpi()" disabled />
-                <input type="text" style="width: 25%;" id="FechaFinal" onchange="tablekpi()" disabled />
-            </div>
-            <div class="row">
-                <input class="btn btn-primary" style="width: 35%;" type="button" id="MostrarCliente"
-                    value="Mostrar/ocultar cliente" onclick="MostrarCliente()">
-                <select class="form-select" id="Select_Provincia" style="width: 60%;" onchange="tablekpi()" disabled>
-                    <option value="">Provincia</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-1"> </div>
     </nav>
     <center>
         <table class="table table-striped" style="margin: 0;">
@@ -101,19 +103,21 @@
         <div class="position-absolute top-0 start-50 translate-middle">
             <button type="button" onclick="window.print();"> <i class="bi
                         bi-printer"> </i> </button>
-            <button type="button" onclick="LineEnable(0)"> <i class="bi
+            <button type="button" onclick="LineEnable(0,0)"> <i class="bi
                         bi-1-circle"> </i> </button>
-            <button type="button" onclick="LineEnable(1)"> <i class="bi
+            <button type="button" onclick="LineEnable(0,1)"> <i class="bi
                         bi-2-circle"> </i> </button>
-            <button type="button" onclick="LineEnable(2)"> <i class="bi
+            <button type="button" onclick="LineEnable(0,2)"> <i class="bi
                         bi-3-circle"> </i> </button>
-            <button type="button" onclick="LineEnable(3)"> <i class="bi
+            <button type="button" onclick="LineEnable(0,3)"> <i class="bi
+                        bi-4-circle"> </i> </button>
+            <button type="button" onclick="LineEnable(1,0)"> <i class="bi
                         bi-1-square"> </i> </button>
-            <button type="button" onclick="LineEnable(4)"> <i class="bi
+            <button type="button" onclick="LineEnable(1,1)"> <i class="bi
                         bi-2-square"> </i> </button>
-            <button type="button" onclick="LineEnable(5)"> <i class="bi
+            <button type="button" onclick="LineEnable(1,2)"> <i class="bi
                         bi-3-square"> </i> </button>
-            <button type="button" onclick="LineEnable(6)"> <i class="bi
+            <button type="button" onclick="LineEnable(1,3)"> <i class="bi
                         bi-4-square"> </i> </button>
         </div>
     </nav>
@@ -121,6 +125,7 @@
     <script src="../../functAux/Funct_Hash.js" async></script>
     <script src="./controller.js" async></script>
     <script src="../../functAux/Funct_Print.js" async></script>
+    <script src="../../functAux/Funct_Formate.js" async></script>
 </body>
 
 </html>

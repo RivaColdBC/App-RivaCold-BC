@@ -18,8 +18,8 @@
 
 <body>
   <div class="container text-center">
-    <img src="../../resources/BCSYSTEMS.png" style="height: 100px;width:auto;" />
-    <img src="../../resources/RIVACOLD.jpg" style="height: 100px;width:auto;" />
+    <img src="../../resources/A4-21 cm Logo nuevo+arbol.jpg" style="width: 100%;
+    height: auto;" />
     <hr class="hr4" />
     <table>
       <tr>
@@ -61,7 +61,7 @@
         </th>
         <th></th>
         <th>
-          <select class="form-select" id="List_MarcaB" onchange="Delta_T();SeleccionarModelo()" data-bs-toggle="tooltip"
+          <select class="form-select" id="List_MarcaB" onchange=";SeleccionarModelo()" data-bs-toggle="tooltip"
             data-bs-placement="top" data-bs-custom-class="custom-tooltip"
             data-bs-title="Seleccionar la marca que se quiera hacer la equivalencia."></select>
         </th>
@@ -100,7 +100,7 @@
                 Mostrar las potencias frigoríficas no disponibles.</label>
               <input type="text" placeholder="DT (K)" id="Delta_T" style="width:
           80px;text-align: center;padding: 0;height: 24px;font-size:
-          12px;vertical-align:text-top;" onchange="SeleccionarModelo()">
+          12px;vertical-align:text-top;" onchange="Delta_T();SeleccionarModelo();" value="0 K">
             </div>
           </div>
           <div class="col-5">
@@ -223,7 +223,7 @@
             none"></span>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="Aplicar1('FunctResultado');Delta_T();"
+        <button type="button" class="btn btn-primary" onclick="Aplicar1('FunctResultado');;"
           data-bs-dismiss="modal">
           Aplicar
         </button>
@@ -235,10 +235,10 @@
   </div>
 </div>
 
-<script async src="./controller.js" async></script>
-<script src="../functAux/Funct_Search.js" async></script>
-<script src="../functAux/Funct_tooltip.js" async></script>
-<script src="../functAux/Funct_Print.js" async></script>
-<script src="../functAux/Funct_Interpolacion.js" async></script>
+<script src="./controller.js"></script>
+<script src="./search.js"></script>
+<script src="../functAux/Funct_tooltip.js"></script>
+<script src="../functAux/Funct_Print.js"></script>
+<script src="../functAux/Funct_Interpolacion.js"></script>
 
 </html>

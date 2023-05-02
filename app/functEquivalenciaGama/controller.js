@@ -1,23 +1,24 @@
-const S_Marca_A = document.getElementById("S_Marca_A")
-const S_Marca_B = document.getElementById("S_Marca_B")
-const S_Tipo_A = document.getElementById("S_Tipo_A")
-const S_Tipo_B = document.getElementById("S_Tipo_B")
-const S_Gama_A = document.getElementById("S_Gama_A")
-const S_Gama_B = document.getElementById("S_Gama_B")
-const S_Aplicación_A = document.getElementById("S_Aplicación_A")
-const S_Aplicación_B = document.getElementById("S_Aplicación_B")
-const S_Refrigerante_A = document.getElementById("S_Refrigerante_A")
-const S_Refrigerante_B = document.getElementById("S_Refrigerante_B")
-const TablaEqBody = document.getElementById("Table_body")
-var DB_A
-var DB_B
+const S_Marca_A = document.getElementById("S_Marca_A");
+const S_Marca_B = document.getElementById("S_Marca_B");
+const S_Tipo_A = document.getElementById("S_Tipo_A");
+const S_Tipo_B = document.getElementById("S_Tipo_B");
+const S_Gama_A = document.getElementById("S_Gama_A");
+const S_Gama_B = document.getElementById("S_Gama_B");
+const S_Aplicación_A = document.getElementById("S_Aplicación_A");
+const S_Aplicación_B = document.getElementById("S_Aplicación_B");
+const S_Refrigerante_A = document.getElementById("S_Refrigerante_A");
+const S_Refrigerante_B = document.getElementById("S_Refrigerante_B");
+const TablaEqBody = document.getElementById("Table_body");
+var DB_A; var DB_B;
+var ArrayDB = [{ "Marca": [], "Aplicacion": [], "Refrigerante": [] }, { "Marca": [], "Aplicacion": [], "Refrigerante": [] }];
 const localforage = require("localforage");
 
 function SeleccionarMarca() {
-  return localforage.getItem("RivaCold" + S_Tipo_A.value).then(function (valueA) {
-    return localforage.getItem("RivaCold" + S_Tipo_B.value).then(function (valueB) {
-      DB_A = JSON.parse(valueA).sort().sort(function (a, b) { if (a.Ref > b.Ref) { return +1; } else { return -1; } }).sort(function (a, b) { if (a.Refrigerante > b.Refrigerante) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Aplicación > b.Aplicación) { return 1; } else { return -1; } }).sort(function (a) { if (a.Vol) { return -1; } })
-      DB_B = JSON.parse(valueB).sort().sort(function (a, b) { if (a.Ref > b.Ref) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Refrigerante > b.Refrigerante) { return 1; } else { return -1; } }).sort(function (a, b) { if (a.Aplicación > b.Aplicación) { return 1; } else { return -1; } }).sort(function (a) { if (a.Vol) { return -1; } })
+  S_Tipo_B.value = S_Tipo_A.value
+  return localforage.getItem(`RivaCold${S_Tipo_A.value}`).then(function (valueA) {
+    return localforage.getItem(`RivaCold${S_Tipo_B.value}`).then(function (valueB) {
+      DB_A = JSON.parse(valueA).sort(function (a, b) { if (a.Ref > b.Ref) { return +1; } else { return -1; } }).sort(function (a, b) { if (a.Refrigerante > b.Refrigerante) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Aplicación > b.Aplicación) { return 1; } else { return -1; } }).sort(function (a) { if (a.Volumen) { return -1; } })
+      DB_B = JSON.parse(valueB).sort(function (a, b) { if (a.Ref > b.Ref) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Refrigerante > b.Refrigerante) { return 1; } else { return -1; } }).sort(function (a, b) { if (a.Aplicación > b.Aplicación) { return 1; } else { return -1; } }).sort(function (a) { if (a.Volumen) { return -1; } })
       SeleccionarTipo("A")
       SeleccionarTipo("B")
       ListadoModelo()
@@ -26,8 +27,7 @@ function SeleccionarMarca() {
 }
 
 function SeleccionarTipo(Modelo) {
-  DBFilter = eval("DB_" + Modelo).map((item) => item.Marca);
-  DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index);
+  DBDuplicate = [...new Set(eval(`DB_${Modelo}`).map((item) => item.Marca))];
   eval("S_Marca_" + Modelo).innerHTML = "";
   for (Marca of DBDuplicate) {
     if (Marca != null) {
@@ -40,9 +40,8 @@ function SeleccionarTipo(Modelo) {
   SeleccionarGama(Modelo);
 }
 function SeleccionarGama(Modelo) {
-  document.getElementById("Delta_T").value = S_Marca_A.value == "RivaCold" ? S_Marca_B.value != "RivaCold" ? "3 K" : "0 K" : S_Marca_B.value == "RivaCold" ? "-3 K" : "0 K"
-  DBFilter = eval("DB_" + Modelo).filter((item) => item.Marca == eval("S_Marca_" + Modelo).value).map((item) => item.Gama);
-  DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index).sort()
+  ArrayDB[Modelo == "A" ? 0 : 1]["Marca"] = eval("DB_" + Modelo).filter((item) => item.Marca == eval("S_Marca_" + Modelo).value);
+  DBDuplicate = [...new Set(ArrayDB[Modelo == "A" ? 0 : 1]["Marca"].map((item) => item.Gama))].sort()
   eval("S_Gama_" + Modelo).innerHTML = "";
   for (Gama of DBDuplicate) {
     Opcion = document.createElement("option");
@@ -55,57 +54,67 @@ function SeleccionarGama(Modelo) {
 }
 
 function SeleccionarAplicación(Modelo) {
-  DBFilter = eval("DB_" + Modelo).filter((item) => item.Gama == eval("S_Gama_" + Modelo).value).map((item) => item.Aplicación);
-  DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index).sort();
+  ArrayDB[Modelo == "A" ? 0 : 1]["Aplicacion"] = ArrayDB[Modelo == "A" ? 0 : 1]["Marca"].filter((item) => item.Gama == eval("S_Gama_" + Modelo).value);
+  DBDuplicate = [...new Set(ArrayDB[Modelo == "A" ? 0 : 1]["Aplicacion"].map((item) => item.Aplicación))].sort();
   eval("S_Aplicación_" + Modelo).disabled = false;
   eval("S_Aplicación_" + Modelo).innerHTML = "";
-  if (eval("S_Tipo_" + Modelo).value == "Eq") {
-    for (Aplicacion of DBDuplicate) {
+  for (Aplicacion of DBDuplicate) {
+    if (Aplicacion != null) {
       Opcion = document.createElement("option");
       Opcion.text = Aplicacion;
       Opcion.value = Aplicacion;
       eval("S_Aplicación_" + Modelo).add(Opcion);
     }
-  } else { eval("S_Aplicación_" + Modelo).disabled = true; }
-  Opcion = document.createElement("option");
-  Opcion.text = "Aplicación";
-  Opcion.value = "0";
-  eval("S_Aplicación_" + Modelo).add(Opcion, eval("S_Aplicación_" + Modelo)[0]);
+  }
+  if (eval("S_Aplicación_" + Modelo).length == 0) {
+    eval("S_Aplicación_" + Modelo).disabled = true
+  } else if (eval("S_Aplicación_" + Modelo).length != 1) {
+    Opcion = document.createElement("option");
+    Opcion.text = "Aplicación";
+    Opcion.value = "0";
+    eval("S_Aplicación_" + Modelo).add(Opcion, eval("S_Aplicación_" + Modelo)[0]);
+  }
   eval("S_Aplicación_" + Modelo).selectedIndex = 0;
 }
 
 function SeleccionarFreon(Modelo) {
   eval("S_Refrigerante_" + Modelo).disabled = false;
   eval("S_Refrigerante_" + Modelo).innerHTML = "";
-  DBFilter = eval("DB_" + Modelo).filter((item) => item.Gama == eval("S_Gama_" + Modelo).value).map((item) => item.Refrigerante);
-  DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) == index);
+  DBDuplicate = [...new Set(ArrayDB[Modelo == "A" ? 0 : 1]["Aplicacion"].map((item) => item.Refrigerante))].sort()
   for (Refrigerante of DBDuplicate) {
-    Opcion = document.createElement("option");
-    Opcion.text = Refrigerante;
-    Opcion.value = Refrigerante;
-    eval("S_Refrigerante_" + Modelo).add(Opcion);
+    if (Refrigerante != null) {
+      Opcion = document.createElement("option");
+      Opcion.text = Refrigerante;
+      Opcion.value = Refrigerante;
+      eval("S_Refrigerante_" + Modelo).add(Opcion);
+    }
   }
-  eval("S_Refrigerante_" + Modelo).innerHTML == "" ? eval("S_Refrigerante_" + Modelo).disabled = true : null
-  Opcion = document.createElement("option");
-  Opcion.text = "Refrigerante";
-  Opcion.value = "0";
-  eval("S_Refrigerante_" + Modelo).add(Opcion, eval("S_Refrigerante_" + Modelo)[0]);
+  if (eval("S_Refrigerante_" + Modelo).length == 0) {
+    eval("S_Refrigerante_" + Modelo).disabled = true
+  } else if (eval("S_Refrigerante_" + Modelo).length > 1) {
+    Opcion = document.createElement("option");
+    Opcion.text = "Refrigerante";
+    Opcion.value = "0";
+    eval("S_Refrigerante_" + Modelo).add(Opcion, eval("S_Refrigerante_" + Modelo)[0]);
+  }
   eval("S_Refrigerante_" + Modelo).selectedIndex = 0;
+
 }
 
 function ListadoModelo() {
-  DBMarcaA = DB_A.filter((item) => item.Gama == S_Gama_A.value).filter((item) => item.Marca == S_Marca_A.value);
+  DBMarcaA = DB_A
+    .filter((item) => item.Gama == S_Gama_A.value)
+    .filter((item) => item.Marca == S_Marca_A.value).sort(function (a, b) { if (a.Ref > b.Ref) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Refrigerante > b.Refrigerante) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Aplicación > b.Aplicación) { return 1; } else { return -1; } })
   TablaEqBody.innerHTML = "";
   document.getElementById("Select_Tamb").innerHTML = ""
   PFField = Object.getOwnPropertyNames(DBMarcaA[0]).sort().reverse();
   Row = 0
   Select_Tamb = []
   for (i in DBMarcaA) {
-    if (S_Aplicación_A.value == DBMarcaA[i]["Aplicación"] || S_Tipo_A.value != "Eq" || S_Aplicación_A.value == "0") {
+    if (S_Aplicación_A.value == DBMarcaA[i]["Aplicación"] || S_Aplicación_A.value == "0" || S_Aplicación_A.disabled || DBMarcaA[i]["Aplicación"] == "DUAL" || DB_B[k]["Aplicación"] == "DUAL") {
       if (S_Refrigerante_A.value == DBMarcaA[i]["Refrigerante"] || S_Refrigerante_A.disabled || S_Refrigerante_A.value == "0") {
-        DB_BFilter = DB_B.filter(item => item.Gama == S_Gama_B.value)
-        DB_BFilter[0]["Config6"] == "Centrifugo" && DBMarcaA[i]["Centrifugo"] ? Precio = Precio + " + " + new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format((parseFloat(DBMarcaA[i]["Centrifugo"] * 0.85))) : null
-        TablaEqBody.insertAdjacentHTML('beforeend', "<tr id='Row_" + i + "'><th/><th>" + DBMarcaA[i]["Ref"] + "</th><th><select/></th><th id='S_PF_" + DBMarcaA[i]["Ref"] + "'/><th><select/></th><th/><th/><th></th><th/><th/></tr>")
+        DB_BFilter = DB_B.filter(item => item.Marca == S_Marca_B.value).filter(item => item.Gama == S_Gama_B.value)
+        TablaEqBody.insertAdjacentHTML('beforeend', `<tr id='Row_${i}'><th/><th>${DBMarcaA[i]["Ref"]}</th><th><select/></th><th id='S_PF_${DBMarcaA[i]["Ref"]}'></th><th><select/></th><th/><th/><th></th><th/><th/></tr>`)
         for (j in PFField) {
           if (PFField[j].startsWith("PC_") && DBMarcaA[i][PFField[j]] != null) {
             Opcion = document.createElement("option");
@@ -121,12 +130,12 @@ function ListadoModelo() {
             }
           }
         }
-        TablaEqBody.getElementsByTagName("tr")[Row].getElementsByTagName("th")[0].insertAdjacentHTML("afterbegin", "<button type='button' onclick='EliminarFila(" + Row + ")'><i class='bi bi-x-square' style='color:red'/></button>");
+        TablaEqBody.getElementsByTagName("tr")[Row].getElementsByTagName("th")[0].insertAdjacentHTML("afterbegin", "<button type='button' onclick='EliminarFila(" + i + ")'><i class='bi bi-x-square' style='color:red'/></button>");
         list_gama = TablaEqBody.getElementsByTagName("tr")[Row].getElementsByTagName("select")[1];
         list_gama.innerHTML = "";
         for (k in DB_B) {
-          if (DB_B[k]["Gama"] == S_Gama_B.value) {
-            if (S_Aplicación_B.value == DB_B[k]["Aplicación"] || S_Tipo_B.value != "Eq" || DB_B[k]["Aplicación"] == DBMarcaA[i]["Aplicación"] || DBMarcaA[i]["Aplicación"] == "Dual" || DB_B[k]["Aplicación"] == "Dual") {
+          if (DB_B[k]["Gama"] == S_Gama_B.value && DB_B[k]["Marca"] == S_Marca_B.value) {
+            if (((S_Aplicación_B.value == DB_B[k]["Aplicación"] || S_Aplicación_B.value == "0") && DB_B[k]["Aplicación"] == DBMarcaA[i]["Aplicación"]) || DBMarcaA[i]["Aplicación"] == "DUAL" || DB_B[k]["Aplicación"] == "DUAL" || S_Aplicación_B.disabled) {
               if (S_Refrigerante_B.value == DB_B[k]["Refrigerante"] || S_Refrigerante_B.disabled || S_Refrigerante_B.value == "0") {
                 Opcion = document.createElement("option");
                 Opcion.text = DB_B[k]["Ref"];
@@ -135,7 +144,8 @@ function ListadoModelo() {
               }
             }
           }
-        } Row += 1
+        }
+        Row += 1
       }
     }
   }
@@ -168,20 +178,24 @@ function MarcaB_Equivalencia() {
   return localforage.getItem("RivaCold" + S_Tipo_B.value, function (err, value) {
     MarcaBField = Object.getOwnPropertyNames(DB_B[0]);
     for (i = 0, len = TablaEqBody.getElementsByTagName("tr").length; i < len; i++) {
-      TablaEqBodyTri = TablaEqBody.getElementsByTagName("tr")[i]
-      TablaEqBodyTrith = TablaEqBodyTri.getElementsByTagName("th")
-      TablaEqBodyTriSelect = TablaEqBodyTri.getElementsByTagName("select")
-      Tamb = parseFloat(TablaEqBodyTriSelect[0].selectedOptions[0].innerHTML.split("  ")[0]) + DT;
-      Tcamara = parseFloat(TablaEqBodyTriSelect[0].selectedOptions[0].innerHTML.split("  ")[1]);
-      if (TablaEqBodyTriSelect[1].value) {
-        TablaEqBodyTrith[5].innerHTML = Interpol(Tamb, Tcamara, DB_B, MarcaBField, TablaEqBodyTriSelect[1].value);
-        TablaEqBodyTrith[6].innerHTML = ((parseFloat(TablaEqBodyTrith[3].innerHTML) / parseFloat(TablaEqBodyTrith[5].innerHTML) - 1) * 100).toFixed(0) + " %";
-        TablaEqBodyTrith[6].innerHTML == "NaN %" ? TablaEqBodyTrith[6].innerHTML = "-" : null
-        TablaEqBodyTrith[6].style.backgroundColor = Math.abs(parseFloat(TablaEqBodyTrith[6].innerHTML)) > 30 ? "darkorange" : ""
-        TablaEqBodyTrith[7].innerHTML = parseFloat(DBMarcaA[i]["Precio"]) ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format((parseFloat(DBMarcaA[i]["Precio"]) * DescuentoA)) : "-"
-        TablaEqBodyTrith[8].innerHTML = parseFloat(DB_B[TablaEqBodyTriSelect[1].value]["Precio"]) ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format((parseFloat(DB_B[TablaEqBodyTriSelect[1].value]["Precio"]) * Descuento)) : "-"
-        Precio_A = TablaEqBodyTrith[7].innerHTML.split("+").length > 1 ? parseFloat(TablaEqBodyTrith[7].innerHTML.replace(".", "")) + parseFloat(TablaEqBodyTrith[7].innerHTML.split("+")[1].replace(".", "")) : parseFloat(TablaEqBodyTrith[7].innerHTML.replace(".", ""))
-        TablaEqBodyTrith[9].innerHTML = parseFloat(Precio_A) && parseFloat(TablaEqBodyTrith[8].innerHTML) ? TablaEqBodyTrith[9].innerHTML = ((Precio_A / parseFloat(TablaEqBodyTrith[8].innerHTML.replace(".", "")) - 1) * 100).toFixed(0) + " %" : "-"
+      if (TablaEqBody.getElementsByTagName("tr")[i].getElementsByTagName("select")[1].length == 0) {
+        document.getElementById(TablaEqBody.getElementsByTagName("tr")[i].id).style.display = "none";
+      } else {
+        TablaEqBodyTri = TablaEqBody.getElementsByTagName("tr")[i]
+        TablaEqBodyTrith = TablaEqBodyTri.getElementsByTagName("th")
+        TablaEqBodyTriSelect = TablaEqBodyTri.getElementsByTagName("select")
+        Tamb = parseFloat(TablaEqBodyTriSelect[0].selectedOptions[0].innerHTML.split("  ")[0]) + DT;
+        Tcamara = parseFloat(TablaEqBodyTriSelect[0].selectedOptions[0].innerHTML.split("  ")[1]);
+        if (TablaEqBodyTriSelect[1].value) {
+          TablaEqBodyTrith[5].innerHTML = Interpol(Tamb, Tcamara, DB_B, MarcaBField, TablaEqBodyTriSelect[1].value);
+          TablaEqBodyTrith[6].innerHTML = ((parseFloat(TablaEqBodyTrith[3].innerHTML) / parseFloat(TablaEqBodyTrith[5].innerHTML) - 1) * 100).toFixed(0) + " %";
+          TablaEqBodyTrith[6].innerHTML == "NaN %" ? TablaEqBodyTrith[6].innerHTML = "-" : null
+          TablaEqBodyTrith[6].style.backgroundColor = Math.abs(parseFloat(TablaEqBodyTrith[6].innerHTML)) > 30 ? "darkorange" : ""
+          TablaEqBodyTrith[7].innerHTML = parseFloat(DBMarcaA[parseFloat(TablaEqBody.getElementsByTagName("tr")[i].id.split("_")[1])]["Precio"]) ? NumberFormatEUR(parseFloat(DBMarcaA[TablaEqBody.getElementsByTagName("tr")[i].id.split("_")[1]]["Precio"]) * DescuentoA) : "-"
+          TablaEqBodyTrith[8].innerHTML = parseFloat(DB_B[TablaEqBodyTriSelect[1].value]["Precio"]) ? NumberFormatEUR(parseFloat(DB_B[TablaEqBodyTriSelect[1].value]["Precio"]) * Descuento) : "-"
+          Precio_A = TablaEqBodyTrith[7].innerHTML.split("+").length > 1 ? parseFloat(TablaEqBodyTrith[7].innerHTML.replace(".", "")) + parseFloat(TablaEqBodyTrith[7].innerHTML.split("+")[1].replace(".", "")) : parseFloat(TablaEqBodyTrith[7].innerHTML.replace(".", ""))
+          TablaEqBodyTrith[9].innerHTML = parseFloat(Precio_A) && parseFloat(TablaEqBodyTrith[8].innerHTML) ? TablaEqBodyTrith[9].innerHTML = ((Precio_A / parseFloat(TablaEqBodyTrith[8].innerHTML.replace(".", "")) - 1) * 100).toFixed(0) + " %" : "-"
+        }
       }
     }
   })
@@ -224,7 +238,10 @@ function ListadoOptimizarTamb() {
       TablaSelect[0].selectedIndex = head
       PFHead = TablaSelect[0].getElementsByTagName("option")[head].innerHTML
       DB_Afilter = DB_A.filter(item => item.Ref == TablaFila.getElementsByTagName("th")[1].innerHTML)
-      Tcam = DB_Afilter[0]["Aplicación"] == "HBP" ? 12 : DB_Afilter[0]["Aplicación"] == "MBP" ? 0 : DB_Afilter[0]["Aplicación"] == "LBP" ? -20 : null
+
+      Tcam = S_Tipo_A.value == "Eq" ? DB_Afilter[0]["Aplicación"] == "HBP" ? 12 : DB_Afilter[0]["Aplicación"] == "MBP" ? 0 : DB_Afilter[0]["Aplicación"] == "LBP" ? -20 : 0
+        : S_Tipo_A.value == "Central" ? DB_Afilter[0]["Aplicación"] == "HBP" ? 0 : DB_Afilter[0]["Aplicación"] == "MBP" ? -10 : DB_Afilter[0]["Aplicación"] == "LBP" ? -30 : -10 : 0
+
       if (Tcam != null && parseFloat(PFHead.split("  ")[1]) == Tcam) {
         if (document.getElementById("Select_Tamb").value == parseFloat(PFHead.split("  ")[0])) {
           for (j = 0, TablaSelect1length = TablaSelect[1].length; j < TablaSelect1length; j++) {
@@ -253,7 +270,7 @@ function ListadoOptimizarTamb() {
 
 
 function EliminarFila(i) {
-  document.getElementById("Row_" + i).innerHTML = "";
+  document.getElementById(`Row_${i}`).innerHTML = "";
 }
 
 var DT = 0
@@ -266,18 +283,22 @@ function RegistroFavorito() {
   document.getElementById("accordion_Marca").innerHTML = ""
   ComparativaFilter = RivaColdComparativa.map((item) => item.Marca2);
   ComparativaDuplicate = ComparativaFilter.filter((item, index) => ComparativaFilter.indexOf(item) === index).sort()
-  for (j in ComparativaDuplicate) {
-    document.getElementById("accordion_Marca").insertAdjacentHTML("beforeend", `<div class="accordion-item"><h2 class="accordion-header" id="heading${ComparativaDuplicate[j]}" ><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${ComparativaDuplicate[j]}" aria-expanded="false" aria-controls="collapse${ComparativaDuplicate[j]}">${ComparativaDuplicate[j]}</button></h2><div id="collapse${ComparativaDuplicate[j]}" class="accordion-collapse collapse" aria-labelledby="heading${ComparativaDuplicate[j]}" data-bs-parent="#accordionExample"><div class="accordion-body"><table class="table"><thead><tr><th>Descripción</th><th>Marca A</th><th>Gama A</th><th>Apl.A</th><th>Refr.A</th><th>Marca B</th><th>Gama B</th><th>Apl.B</th><th>Refr.B</th><th>Aplicar</th></tr></thead><tbody></tbody></table></div></div></div>`)
-    RivaColdComparativaX = RivaColdComparativa.filter(item => item.Marca2 == ComparativaDuplicate[j])
-    for (i in RivaColdComparativaX) {
-      document.getElementById("accordion_Marca").getElementsByTagName("tbody")[j].insertAdjacentHTML("beforeend", `<tr><th>${RivaColdComparativaX[i]["Descripción"]}</th><th>${RivaColdComparativaX[i]["Marca1"]}</th><th>${RivaColdComparativaX[i]["Gama1"]}</th><th>${RivaColdComparativaX[i]["Aplicación1"]}</th><th>${RivaColdComparativaX[i]["Refrigerante1"]}</th><th>${RivaColdComparativaX[i]["Marca2"]}</th><th>${RivaColdComparativaX[i]["Gama2"]}</th><th>${RivaColdComparativaX[i]["Aplicación2"]}</th><th>${RivaColdComparativaX[i]["Refrigerante2"]}</th><th><button onclick='AplicarFavorito(${i})' data-bs-dismiss='modal'><i class='bi bi-subtract'/></button></th></tr>`)
+  HTMLComparativa = [], HTMLMarca = []
+  for (i in RivaColdComparativa) {
+    HTMLMarca[i] = RivaColdComparativa[i]["Marca2"]
+    HTMLComparativa[i] = `<tr><th>${RivaColdComparativa[i]["Descripción"]}</th><th>${RivaColdComparativa[i]["Marca1"]}</th><th>${RivaColdComparativa[i]["Gama1"]}</th><th>${RivaColdComparativa[i]["Aplicación1"]}</th><th>${RivaColdComparativa[i]["Refrigerante1"]}</th><th>${RivaColdComparativa[i]["Marca2"]}</th><th>${RivaColdComparativa[i]["Gama2"]}</th><th>${RivaColdComparativa[i]["Aplicación2"]}</th><th>${RivaColdComparativa[i]["Refrigerante2"]}</th><th><button onclick='AplicarFavorito(${i})' data-bs-dismiss='modal'><i class='bi bi-subtract'/></button></th></tr>`
+  }
+  for (Marca of ComparativaDuplicate) {
+    document.getElementById("accordion_Marca").insertAdjacentHTML("beforeend", `<div class="accordion-item"><h2 class="accordion-header" id="heading${Marca}" ><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${Marca}" aria-expanded="false" aria-controls="collapse${Marca}">${Marca}</button></h2><div id="collapse${Marca}" class="accordion-collapse collapse" aria-labelledby="heading${Marca}" data-bs-parent="#accordionExample"><div class="accordion-body"><table class="table"><thead><tr><th>Descripción</th><th>Marca A</th><th>Gama A</th><th>Apl.A</th><th>Refr.A</th><th>Marca B</th><th>Gama B</th><th>Apl.B</th><th>Refr.B</th><th>Aplicar</th></tr></thead><tbody></tbody></table></div></div></div>`)
+    for (i in HTMLComparativa) {
+      HTMLMarca[i] == Marca ? document.getElementById(`collapse${Marca}`).getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", HTMLComparativa[i]) : null
     }
   }
 }
 
 function AplicarFavorito(i) {
-  DT = RivaColdComparativa[i]["DT"]
-  document.getElementById("Delta_T").value = parseFloat(DT) + " K"
+  DT = parseFloat(RivaColdComparativa[i]["DT"])
+  document.getElementById("Delta_T").value = DT + " K"
   document.getElementById("Descuento_A_1").value = RivaColdComparativa[i]["Descuento1_1"] ? parseFloat(RivaColdComparativa[i]["Descuento1_1"]) + " %" : 0 + " %"
   document.getElementById("Descuento_A_2").value = RivaColdComparativa[i]["Descuento1_2"] ? parseFloat(RivaColdComparativa[i]["Descuento1_2"]) + " %" : 0 + " %"
   document.getElementById("Descuento_A_3").value = RivaColdComparativa[i]["Descuento1_3"] ? parseFloat(RivaColdComparativa[i]["Descuento1_3"]) + " %" : 0 + " %"

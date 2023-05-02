@@ -17,11 +17,12 @@
 </head>
 
 <body>
-
+    <img src="../../resources/A4-21 cm Logo nuevo+arbol.jpg" style="width: 100%;
+    height: auto;" />
     <table onchange="Unidad(),CalcPotencia()" class="table">
         <thead>
             <tr>
-                <th colspan="4"> PROPIEDAD DE CÁMARA Y CARGAS TÉRMICAS</th>
+                <th colspan="4"> CALCULADORA DE COP Y CONSUMO ELÉCTRICO</th>
             </tr>
         </thead>
         <tbody style="text-align: start;">
@@ -41,6 +42,11 @@
                 <th> <input type="text" class="form-control" name="W" id="Pf_2" value="955 W" /> </th>
             </tr>
             <tr>
+                <th class="bolder"> COP:</th>
+                <th> <input type="text" class="form-control" id="COP_1" /> </th>
+                <th> <input type="text" class="form-control" id="COP_2" /> </th>
+            </tr>
+            <tr>
                 <th class="bolder"> Coste eléctrica:</th>
                 <th> <input type="text" class="form-control" name="€/kWh" id="Ce_1" value="0.25 €/kWh" /> </th>
                 <th> <input type="text" class="form-control" name="€/kWh" id="Ce_2" value="0.25 €/kWh" /> </th>
@@ -50,11 +56,7 @@
                 <th> <input type="text" class="form-control" name="h" id="Tf_1" value="18 h" /> </th>
                 <th> <input type="text" class="form-control" name="h" id="Tf_2" value="18 h" /> </th>
             </tr>
-            <tr>
-                <th class="bolder"> COP:</th>
-                <th> <input type="text" class="form-control" id="COP_1" /> </th>
-                <th> <input type="text" class="form-control" id="COP_2" /> </th>
-            </tr>
+
             <tr>
                 <th class="bolder"> Consumo eléctrica diaria:</th>
                 <th> <input type="text" class="form-control" name="kWh" id="Ced_1" /> </th>
@@ -69,6 +71,10 @@
                 <th class="bolder"> Coste eléctrica anual:</th>
                 <th> <input type="text" class="form-control" name="€" id="Qea_1" /> </th>
                 <th> <input type="text" class="form-control" name="€" id="Qea_2" /> </th>
+            </tr>
+            <tr>
+                <th class="bolder"> Coste eléctrica anual:</th>
+                <th colspan="2"> <input type="text" class="form-control" name="€" id="Diff" /> </th>
             </tr>
         </tbody>
     </table>

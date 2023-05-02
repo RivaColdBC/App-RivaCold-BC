@@ -17,103 +17,97 @@
 </head>
 
 <body>
-    <center>
-        <div class="row">
-            <div class="col">
-                <div class="row">
-                    <img src="../../../resources/BCSYSTEMS.png" style="height:
-                            100px;width: auto;" />
-                    <img src="../../../resources/RIVACOLD.jpg" style="height:
-                            100px;width: auto;" />
-                </div>
-            </div>
-            <div class="col">
-                <div class="row">
-                    <label style="width: 50%;">Password: </label>
-                    <input type="password" id="Password" onchange="PasswordX()" placeholder="***********"
-                        style="width: 50%;" />
-                    <label style="width: 50%;">Año: </label>
-                    <input type="text" style="width: 50%;" id="FechaTabla" onchange="tablaEquipo()" disabled />
-                    <label style="width: 50%;">Ref: </label>
-                    <input type="text" style="width: 50%;" id="Ref" onchange="tablaEquipo()" disabled />
-                    <select class="form-select" id="SearchDelegado" style="width: 50%;" onchange="tablaEquipo()"
-                        disabled>
-                        <option value=""></option>
-                        <option value="AG">AGENCIA</option>
-                        <option value="DIST">DISTRIBUCION</option>
-                    </select>
-                </div>
+    <img src="../../../resources/A4-21 cm Logo nuevo+arbol.jpg" style="width: 100%;height: auto;" />
+    <div class="row justify-content-center">
+        <div class="col-5 align-self-center">
+            <div class="row justify-content-center">
+                <label style="width: 45%;">Password: </label>
+                <input type="password" id="Password" onchange="PasswordX()" placeholder="***********"
+                    style="width:45%;" />
+                <label style="width: 45%;">Año: </label>
+                <input type="text" style="width: 45%;" id="FechaTabla" onchange="tablaEquipo()" disabled />
             </div>
         </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <td style="width: 20%;">Ref
-                        <button type='button' onclick='Ordenar("Ref",null)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Ene
-                        <button type='button' onclick='Ordenar("month",1)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Feb
-                        <button type='button' onclick='Ordenar("month",2)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Mar
-                        <button type='button' onclick='Ordenar("month",3)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Abr
-                        <button type='button' onclick='Ordenar("month",4)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">May
-                        <button type='button' onclick='Ordenar("month",5)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Jun
-                        <button type='button' onclick='Ordenar("month",6)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Jul
-                        <button type='button' onclick='Ordenar("month",7)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Ago
-                        <button type='button' onclick='Ordenar("month",8)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Sep
-                        <button type='button' onclick='Ordenar("month",9)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Oct
-                        <button type='button' onclick='Ordenar("month",10)'>
-                            <i class='bi bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Nov
-                        <button type='button' onclick='Ordenar("month",11)'>
-                            <i class='bibi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 6%;">Dic
-                        <button type='button' onclick='Ordenar("month",12)'><i class='bi
+        <div class="col-5 align-self-center">
+            <div class="row justify-content-center">
+                <label style="width: 45%;">Ref: </label>
+                <input type="text" style="width: 45%;" id="Ref" onchange="tablaEquipo()" disabled />
+                <label style="width: 45%;">Delegación: </label>
+                <select class="form-select" id="SearchDelegado" style="width: 45%;height: 30px;"
+                    onchange="tablaEquipo()" disabled>
+                    <option value=""></option>
+                    <option value="AG">AGENCIA</option>
+                    <option value="DIST">DISTRIBUCION</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td style="width: 20%;">Ref
+                    <button type='button' onclick='Ordenar("Ref",null)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Ene
+                    <button type='button' onclick='Ordenar("month",1)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Feb
+                    <button type='button' onclick='Ordenar("month",2)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Mar
+                    <button type='button' onclick='Ordenar("month",3)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Abr
+                    <button type='button' onclick='Ordenar("month",4)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">May
+                    <button type='button' onclick='Ordenar("month",5)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Jun
+                    <button type='button' onclick='Ordenar("month",6)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Jul
+                    <button type='button' onclick='Ordenar("month",7)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Ago
+                    <button type='button' onclick='Ordenar("month",8)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Sep
+                    <button type='button' onclick='Ordenar("month",9)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Oct
+                    <button type='button' onclick='Ordenar("month",10)'>
+                        <i class='bi bi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Nov
+                    <button type='button' onclick='Ordenar("month",11)'>
+                        <i class='bibi-bar-chart'></i></button>
+                </td>
+                <td style="width: 6%;">Dic
+                    <button type='button' onclick='Ordenar("month",12)'><i class='bi
                                     bi-bar-chart'></i></button>
-                    </td>
-                    <td style="width: 8%;">Total
-                        <button type='button' onclick='Ordenar("Total",null)'><i class='bi
+                </td>
+                <td style="width: 8%;">Total
+                    <button type='button' onclick='Ordenar("Total",null)'><i class='bi
                                     bi-bar-chart'></i></button>
-                    </td>
-                </tr>
-            </thead>
-            <tbody id="div_table">
-            </tbody>
-        </table>
-        <label style="width: 100%; font: bolder 10pt Arial;" id="Carga">Realizando
-            carga desde GM, espere.</label>
-    </center>
-
-
+                </td>
+            </tr>
+        </thead>
+        <tbody id="div_table">
+        </tbody>
+    </table>
+    <label style="width: 100%; text-align: center;font: bolder 10pt Arial;" id="Carga">Realizando
+        carga desde GM, espere.</label>
     <nav class="navbar sticky-bottom">
         <div class="position-absolute top-0 start-50 translate-middle">
             <button type="button" onclick="window.print();">

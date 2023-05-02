@@ -18,9 +18,8 @@
 
 <body>
   <div class="container text-center">
-    <img src="../../resources/BCSYSTEMS.png" style="height: 100px;width:
-        auto;" />
-    <img src="../../resources/RIVACOLD.jpg" style="height: 100px;width: auto;" />
+    <img src="../../resources/A4-21 cm Logo nuevo+arbol.jpg" style="width: 100%;
+    height: auto;" />
     <table class="table table-striped">
       <thead>
         <tr>
@@ -30,13 +29,13 @@
               <option value="Eq">Equipo</option>
               <option value="Evap">Evaporador</option>
               <option value="Cond">Condensador</option>
-              <option value="Central">Central</option>
+              <option value="Central">Unidad y Central</option>
             </select>
             <select id="S_Marca_A" onchange="SeleccionarGama('A'),ListadoModelo()"></select>
             <select id="S_Gama_A" onchange="SeleccionarAplicación('A'),SeleccionarFreon('A'),ListadoModelo()"></select>
             <select id="S_Aplicación_A" onchange="ListadoModelo()" data-bs-toggle="tooltip" data-bs-placement="top"
               data-bs-custom-class="custom-tooltip" data-bs-title="Rango de
-                temperatura de aplicación. HBP: Alto,
+                temperatura de aplicación.  HBP: Alto,
                 MBP: Medio, LBP: Bajo."></select>
             <select id="S_Refrigerante_A" onchange="ListadoModelo()" data-bs-toggle="tooltip" data-bs-placement="top"
               data-bs-custom-class="custom-tooltip"
@@ -48,8 +47,8 @@
                 70px;text-align: center;padding: 0;height: 24px;font-size:
                 12px;vertical-align:text-top;" onchange="DescuentoX('A_2'),MarcaB_Equivalencia()">
             <input type="text" placeholder="Dto.(%)" id="Descuento_A_3" style="width:
-                70px;text-align: center;padding: 0;height: 24px;font-size:
-                12px;vertical-align:text-top;" onchange="DescuentoX('A_3'),MarcaB_Equivalencia()">
+            70px;text-align: center;padding: 0;height: 24px;font-size:
+            12px;vertical-align:text-top;" onchange="DescuentoX('A_3'),MarcaB_Equivalencia()">
           </th>
           <th class="none">
             <label style="font: bolder 10px Arial"> Ajuste T.ambiente</label>
@@ -59,11 +58,11 @@
           </th>
           <th class="none">
             Marca B
-            <select id="S_Tipo_B" onchange="SeleccionarMarca()">
+            <select id="S_Tipo_B" disabled>
               <option value="Eq">Equipo</option>
               <option value="Evap">Evaporador</option>
               <option value="Cond">Condensador</option>
-              <option value="Central">Central</option>
+              <option value="Central">Unidad y Central</option>
             </select>
             <select id="S_Marca_B" onchange="SeleccionarGama('B'),ListadoModelo()"></select>
             <select id="S_Gama_B" onchange="SeleccionarAplicación('B'),SeleccionarFreon('B'),ListadoModelo()"></select>
@@ -145,8 +144,9 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="./controller.js" async></script>
-<script src="../functAux/Funct_Print.js" async></script>
-<script src="../functAux/Funct_tooltip.js" async></script>
-<script src="../functAux/Funct_Interpolacion.js" async></script>
+<script src="../functAux/Funct_Print.js"></script>
+<script src="../functAux/Funct_tooltip.js"></script>
+<script src="../functAux/Funct_Interpolacion.js"></script>
+<script src="../functAux/Funct_Formate.js"></script>
 
 </html>

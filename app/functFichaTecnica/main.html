@@ -18,6 +18,8 @@
 
 <body>
   <div class="container text-center">
+    <img src="../../resources/A4-21 cm Logo nuevo+arbol.jpg" style="width: 100%;
+    height: auto;" />
     <hr class="hr4" />
     <div class="row">
       <div class="col-5">
@@ -26,11 +28,7 @@
       </div>
       <div class="col-7">
         <div class="row">
-          <div class="col">
-            <img src="../../resources/BCSYSTEMS.png" style="width: 100%;
-                height: auto;" />
-          </div>
-          <div class="col none">
+          <div class="col-6 none">
             <select class="form-select" id="list_type" onchange="SeleccionarGama()">
               <option value="Eq">Equipo</option>
               <option value="Evap">Evaporador</option>
@@ -38,6 +36,9 @@
               <option value="Central">Central</option>
             </select>
             <select class="form-select" id="list_marca" onchange="SeleccionarMarca()"></select>
+          </div>
+          <div class="col-6 none">
+
             <select class="form-select" id="list_gama" onchange="SeleccionarModelo()"></select>
             <select class="form-select" id="list_modelo" onchange="FichaTecnica()"></select>
           </div>
@@ -64,7 +65,7 @@
     <div class="position-absolute top-0 start-50 translate-middle">
       <button type="button" onclick="PrintFichaTecnica()"> <i class="bi   bi-printer"> </i> </button>
     </div>
-  </nav>  
+  </nav>
 </body>
 
 <script src="./controller.js" async></script>

@@ -21,15 +21,18 @@ async function SQL_Access_Connection(StringDB, connection) {
     try {
         var Query = await connection.query("SELECT * from " + StringDB)
         wait += 1;
-        document.getElementById("progressbar").style = "Width: " + wait * 100 / DB.length + "%";
-        document.getElementById("progressbar").innerText = "Cargando base de datos: " + parseFloat(document.getElementById("progressbar").style.width).toFixed(0) + "%";
     } catch (error) {
         console.log(error)
         SQL_Access_Connection(StringDB, connection);
     }
     let data = await Promise.all(Query);
     localforage.setItem(StringDB, JSON.stringify(data)).then(function () {
-        document.getElementById("progressbar").style.width == "100%" ? location.reload() : null
+        if (wait <= DB.length) {
+            SQL_Azure_Connection(DB[i], connection, wait)
+        } else {
+            fakeProgress.end()
+            setTimeout(document.getElementById("divprogressbar").style.display = "none", 2000)
+        }
     });
 }
 function SQL_Azure() {
@@ -52,20 +55,28 @@ function SQL_Azure_Connection(StringDB, connection, i) {
     requestSelect.on("requestCompleted", function () {
         localforage.setItem(StringDB, JSON.stringify(array)).then(function () {
             wait += 1;
-            document.getElementById("progressbar").style = "Width: " + wait * 100 / DB.length + "%";
-            document.getElementById("progressbar").innerText = "Cargando base de datos: " + parseFloat(document.getElementById("progressbar").style.width).toFixed(0) + "%";
-            wait <= DB.length ? SQL_Azure_Connection(DB[i], connection, wait) : location.reload()
+            if (wait <= DB.length) {
+                SQL_Azure_Connection(DB[i], connection, wait)
+            } else {
+                fakeProgress.end()
+                setTimeout(() => { document.getElementById("divprogressbar").style.display = "none" }, 2000)
+            }
         })
     });
     connection.execSql(requestSelect);
 }
 function SQL(SQL) {
+    document.getElementById("progressbar").style.width = "0%";
+    document.getElementById("progressbar").innerText = "Cargando base de datos: 0 %";
     localStorage.clear();
     localforage.clear();
-    wait = 0;
+    fakeProgress = new FakeProgress({ timeConstant: 2000, autoStart: true });
+    wait = 0
+    ProgressInterval = setInterval(function () {
+        document.getElementById("progressbar").style.width = fakeProgress.progress * 100 + "%";
+        document.getElementById("progressbar").innerText = "Cargando base de datos: " + parseInt(fakeProgress.progress * 100) + " %";
+    }, 1);
     document.getElementById("divprogressbar").style.display = "";
-    document.getElementById("progressbar").style.width = "0%";
-    document.getElementById("progressbar").innerText = "Cargando base de datos: 0%";
     SQL === "Servidor" || SQL === "Local" ? SQL_Access(SQL) : SQL === "AzureSQL" ? SQL_Azure() : null;
 }
 
@@ -82,6 +93,7 @@ const config = {
 };
 
 const os = require("os")
+const FakeProgress = require("fake-progress")
 if (os.userInfo().username != "YYZ") {
     connection = new Connection(config);
     connection.on("connect", function (err) {
@@ -93,3 +105,4 @@ if (os.userInfo().username != "YYZ") {
     connection.connect()
     connection.close()
 }
+

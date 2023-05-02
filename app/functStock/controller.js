@@ -11,6 +11,7 @@ const Table_Modelo_Head = Table_Modelo.getElementsByTagName("tr")[1].getElements
 const input_search = document.getElementById("FunctBusqueda")
 const Table_Recambio_body = document.getElementById("Table_Recambio_body");
 
+
 localforage.getItem("RivaColdStock").then(function (value) {
     DBStock = JSON.parse(value)
     localforage.getItem("RivaColdCompra").then(function (value) {
@@ -31,7 +32,7 @@ fs.existsSync("\\\\call-bc\\Carpetas Publicas\\") ? ActualizacionGoManage() : do
 
 function SeleccionarGama() {
     localforage.getItem("CustomEq").then(function (valueCustom) {
-        localforage.getItem("RivaCold" + List_Catalogo.value, function (err, valueRV) {
+        localforage.getItem(`RivaCold${List_Catalogo.value}`, function (err, valueRV) {
             let DBFilterGama
             if (List_Catalogo.value == "0") {
                 DBCustom = JSON.parse(valueCustom)
@@ -85,8 +86,9 @@ function SeleccionarCatalogo() {
 }
 function SeleccionarModelo() {
     Table_Recambio.getElementsByTagName("tbody")[0].innerHTML = ""
-    Table_Modelo_Head[0].innerText = ""; Table_Modelo_Head[1].innerText = ""; Table_Modelo_Head[2].innerText = ""
-    ImportacionCodigo = ""; ImportacionPrecio = ""; ImportacionDescripcion = ""; ImportacionUnidad = ""; ImportacionEvaporador = ""; ImportacionEvaporadorValv = ""; ImportacionCuadroPotencia = false; ImportacionCuadroPotenciaYGestion = false; ImportacionCuadroGestion = false
+    Table_Modelo_Head[0].innerText = Table_Modelo_Head[1].innerText = Table_Modelo_Head[2].innerText = ""
+    ImportacionCodigo = ImportacionPrecio = ImportacionDescripcion = ImportacionUnidad = ImportacionEvaporador = ImportacionEvaporadorValv = ImportacionEvaporadorEstatico = ImportacionResistencia = "";
+    ImportacionCuadroPotencia = ImportacionCuadroPotenciaYGestion = ImportacionCuadroGestion = false
     if (List_Catalogo.value == "0") {
         const DBFilter = DBCustom.filter((item) => item.Ref1 == List_Mod.value).filter((item) => item.Gama == List_Gama.value)
         Table_Modelo_Head[0].innerText = DBFilter[0]["Ref1"]
@@ -105,7 +107,7 @@ function SeleccionarModelo() {
         for (i in DBDuplicate) {
             DBFilter2 = DBFilter.filter((item) => item.Descripció2 == DBDuplicate[i]).sort();
             Opcional = DBFilter2[0]["Opcional"] ? " (OPCIONAL)" : ""
-            Table_Recambio.getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", "<tr><th/><th class='TagTipo'>" + DBDuplicate[i] + Opcional + "</th><th/><th/></tr>")
+            Table_Recambio.getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", `<tr><th/><th class='TagTipo'>${DBDuplicate[i]}${Opcional}</th><th/><th/></tr>`)
             for (j in DBFilter2) {
                 Check = false
                 for (k in DBTarifa) {
@@ -116,10 +118,11 @@ function SeleccionarModelo() {
                             StockDisp = StockDisp + parseFloat(Stock["Stock"])
                             StockRes = StockRes + parseFloat(Stock["Reserva"])
                         }
+                        Observación = DBTarifa[k]["Observación"] != null ? "<br>" + DBTarifa[k]["Observación"] : ""
                         StockRes < 0 ? StockRes = StockRes + " ?" : null
                         StockDisp < 0 ? StockDisp = StockDisp + " ?" : null
                         Price = DBTarifa[k]["Precio Venta"] ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(DBTarifa[k]["Precio Venta"])) : "-"
-                        Table_Recambio_body.insertAdjacentHTML("beforeend", "<tr><th>" + DBTarifa[k]["Ref"] + "</th><th>" + DBTarifa[k]["Descripción"] + "</th><th>" + "<div class='dropdown'><button id='buttondropdown_" + i + "_" + j + "' type='button' data-bs-toggle='dropdown' aria-expanded='false'>" + StockDisp + " & " + StockRes + "</button><ul class='dropdown-menu' id='dropdown_" + i + "_" + j + "'/></div>" + "</th><th>" + Price + "</th></tr>")
+                        Table_Recambio_body.insertAdjacentHTML("beforeend", `<tr><th>${DBTarifa[k]["Ref"]}</th><th>${DBTarifa[k]["Descripción"]}${Observación}</th><th><div class='dropdown'><button id='buttondropdown_${i}_${j}' type='button' data-bs-toggle='dropdown' aria-expanded='false'>${StockDisp} & ${StockRes}</button><ul class='dropdown-menu' id='dropdown_${i}_${j}'/></div></th><th>${Price}</th></tr>`)
                         Check = true
                         HeadStock = StockDisp > 0 ? 1 : null
                         DBCompraFilter = DBCompra.filter(item => parseFloat(item.Cod) === parseFloat(DBTarifa[k]["Ref2"]))
@@ -127,6 +130,10 @@ function SeleccionarModelo() {
                         DBDuplicate[i] == "UNIDAD CONDENSADORA" ? ImportacionUnidad += DBFilter2[j]["Ref2"] + "_A_" : null
                         DBDuplicate[i] == "EVAPORADOR" ? ImportacionEvaporador += DBFilter2[j]["Ref2"] + "_A_" : null
                         DBDuplicate[i] == "EVAPORADOR CON VÁLVULA EN DOTACIÓN" ? ImportacionEvaporadorValv += DBFilter2[j]["Ref2"] + "_A_" : null
+                        DBDuplicate[i] == "EVAPORADOR ESTÁTICO" ? ImportacionEvaporadorEstatico += DBFilter2[j]["Ref2"] + "_A_" : null
+                        DBDuplicate[i].startsWith("RESISTENCIA ") ? ImportacionResistencia += DBDuplicate[i] + " " + DBFilter2[j]["Ref2"] + "_A_" : null
+
+
                         break
                     }
                 }
@@ -138,6 +145,8 @@ function SeleccionarModelo() {
         }
     }
     else if (List_Catalogo.value == "Buscador") {
+        MostrarStock = false
+        document.getElementById("Table_Modelo_body").getElementsByTagName("th")[1].innerHTML = "<button type='button' class='btn btn-danger' onclick='MostrarXStock()'>Stock</button>"
         Busqueda()
     } else {
         DBFilter = DBCustom.filter(item => item.Gama == List_Gama.value)
@@ -267,11 +276,26 @@ function SQLrequestInsert2(j, data, connection) {
 }
 function Reload() { location.reload() }
 
+var MostrarStock = false
+
+function MostrarXStock() {
+    MostrarStock = MostrarStock ? false : true
+    document.getElementById("Table_Modelo_body").getElementsByTagName("th")[1].getElementsByTagName("button")[0].className = MostrarStock ? "btn btn-primary" : "btn btn-danger"
+    Busqueda()
+}
+
+
 function Busqueda() {
     sp = input_search.value.toUpperCase();
     Table_Recambio_body.innerHTML = "";
     if (sp) {
-        DBTarifaX = DBTarifa.filter(item => (item.Ref2 + item.Ref + item.Descripción + item.Observación).toUpperCase().indexOf(sp) > -1)
+        DBTarifaX = DBTarifa.filter(item => {
+            for (text of sp.split(" ")) {
+                if ((item.Ref2 + item.Ref + item.Descripción + item.Observación).toUpperCase().indexOf(text) == -1) {
+                    return false
+                }
+            } return true
+        })
         for (j in DBTarifaX) {
             StockDisp = 0
             StockRes = 0
@@ -280,36 +304,39 @@ function Busqueda() {
                 StockDisp = StockDisp + parseFloat(Stock["Stock"])
                 StockRes = StockRes + parseFloat(Stock["Reserva"])
             }
-            StockRes < 0 ? StockRes = StockRes + " ?" : null
-            StockDisp < 0 ? StockDisp = StockDisp + " ?" : null
-            Price = DBTarifaX[j]["Precio Venta"] ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(DBTarifaX[j]["Precio Venta"])) : "-"
-            Table_Recambio_body.insertAdjacentHTML("beforeend", "<tr><th>" + DBTarifaX[j]["Ref"] + "</th><th>" + DBTarifaX[j]["Descripción"] + "</th><th>" + "<div class='dropdown'><button id='buttondropdown_" + j + "' type='button' data-bs-toggle='dropdown' aria-expanded='false'>" + StockDisp + " & " + StockRes + "</button><ul class='dropdown-menu' id='dropdown_" + j + "'></ul></div>" + "</th><th>" + Price + "</th></tr>")
-            DBCompraFilter = DBCompra.filter(item => parseFloat(item.Cod) === parseFloat(DBTarifaX[j]["Ref2"]))
-            ButtonStock("buttondropdown_" + j, "dropdown_" + j)
+            if (!MostrarStock || DBStockFilter.length > 0) {
+                Observación = DBTarifaX[j]["Observación"] != null ? "<br>" + DBTarifaX[j]["Observación"] : ""
+                StockRes < 0 ? StockRes = StockRes + " ?" : null
+                StockDisp < 0 ? StockDisp = StockDisp + " ?" : null
+                Price = DBTarifaX[j]["Precio Venta"] ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(DBTarifaX[j]["Precio Venta"])) : "-"
+                Table_Recambio_body.insertAdjacentHTML("beforeend", "<tr><th>" + DBTarifaX[j]["Ref"] + "</th><th>" + DBTarifaX[j]["Descripción"] + Observación + "</th><th>" + "<div class='dropdown'><button id='buttondropdown_" + j + "' type='button' data-bs-toggle='dropdown' aria-expanded='false'>" + StockDisp + " & " + StockRes + "</button><ul class='dropdown-menu' id='dropdown_" + j + "'></ul></div>" + "</th><th>" + Price + "</th></tr>")
+                DBCompraFilter = DBCompra.filter(item => parseFloat(item.Cod) === parseFloat(DBTarifaX[j]["Ref2"]))
+                ButtonStock("buttondropdown_" + j, "dropdown_" + j)
+            }
         }
     }
 }
 
 function ButtonStock(button_id, dropdown_id) {
-    for (k in DBCompraFilter) {
-        (new Date() - new Date(DBCompraFilter[k]["Entrega"])) > 2000000000 ? FechaEntrega = "No disponible" : FechaEntrega = new Date(DBCompraFilter[k]["Entrega"]).toLocaleDateString('en-GB')
-        Pedido = parseFloat(DBCompraFilter[k]["Pedido"])
-        Servido = parseFloat(DBCompraFilter[k]["Servido"])
-        NumPedido = parseFloat(DBCompraFilter[k]["NumPedido"])
-        Disponible = Pedido - Servido
-        document.getElementById(dropdown_id).insertAdjacentHTML("beforeend", `<li><a class='dropdown-item'>Núm.Pedido: ${NumPedido} Plazo de salida fábrica: ${FechaEntrega} Disponible: ${Disponible} (Servido: ${Servido} Total: ${Pedido})</a></li>`)
-    }
     DBCompraFilter.length == 0 ? document.getElementById(button_id).outerHTML = `<button id='${button_id}' type='button'>${StockDisp} & ${StockRes}</button>` : null
     document.getElementById(button_id).className = DBCompraFilter.length > 0 ? StockDisp > 0 ? "btn btn-primary dropdown-toggle" : StockRes > 0 ? "btn btn-warning dropdown-toggle" : "btn btn-danger dropdown-toggle" : StockDisp > 0 ? "btn btn-primary" : StockRes > 0 ? "btn btn-warning" : "btn btn-danger"
-    for (k = 0, klen = DBCompraFilter.length - 1; k <= klen; k++) {
-        Disponible = parseFloat(DBCompraFilter[klen - k]["Pedido"]) - parseFloat(DBCompraFilter[klen - k]["Servido"])
-        document.getElementById(dropdown_id).getElementsByTagName("li")[klen - k].style.backgroundColor = StockRes >= Disponible ? "greenyellow" : StockRes > 0 ? "orange" : "red"
-        StockRes = StockRes - Disponible
+    lenk = DBCompraFilter.length
+    for (k in DBCompraFilter) {
+        klenk = parseFloat(lenk) - parseFloat(k) - 1;
+        (new Date() - new Date(DBCompraFilter[klenk]["Entrega"])) > 2000000000 ? FechaEntrega = "No disponible" : FechaEntrega = new Date(DBCompraFilter[klenk]["Entrega"]).toLocaleDateString('en-GB')
+        Pedido = parseFloat(DBCompraFilter[klenk]["Pedido"])
+        Servido = parseFloat(DBCompraFilter[klenk]["Servido"])
+        NumPedido = parseFloat(DBCompraFilter[klenk]["NumPedido"])
+        Pendiente = Pedido - Servido
+        Disponible = StockRes >= Pendiente ? Pendiente : StockRes > 0 ? StockRes : 0
+        document.getElementById(dropdown_id).insertAdjacentHTML("beforeend", `<li><a class='dropdown-item'>Núm.Pedido: ${NumPedido}; Plazo de salida fábrica: ${FechaEntrega};  Disponible: ${Disponible}; Pdte.Recibir: ${Pendiente}; Total: ${Pedido}</a></li>`)
+        document.getElementById(dropdown_id).getElementsByTagName("li")[k].style.backgroundColor = StockRes >= Pendiente ? "greenyellow" : StockRes > 0 ? "orange" : "red"
+        StockRes = StockRes - Pendiente
     }
 }
 
 const TextoParametro = [
-    "UNIDAD CONDENSADORA", "EVAPORADOR", "EVAPORADOR CON VÁLVULA INCORPORADA", "VÁLVULAS EXPANSIÓN Y SOLENOIDE EN DOTACIÓN", "CUADRO DE GESTIÓN EVAPORADOR", "CUADRO DE POTENCIA Y GESTIÓN EVAPORADOR"
+    "UNIDAD CONDENSADORA", "EVAPORADOR", "EVAPORADOR CON VÁLVULA INCORPORADA", "VÁLVULAS EXPANSIÓN Y SOLENOIDE EN DOTACIÓN", "CUADRO DE GESTIÓN EVAPORADOR", "CUADRO DE POTENCIA Y GESTIÓN EVAPORADOR", "EVAPORADOR ESTÁTICO", "BANDEJA DE DESAGÜE",
 ]
 function ImportHTML() {
     HTML = ImportacionCodigo + "," + ImportacionDescripcion + "," + ImportacionPrecio + ";"
@@ -319,19 +346,27 @@ function ImportHTML() {
         HTML += "&#10;" + "," + TextoParametro[1] + " " + ImportacionEvaporador.split("_A_")[i] + ",;"
     } for (i = 0; i < ImportacionEvaporadorValv.split("_A_").length - 1; i++) {
         HTML += "&#10;" + "," + TextoParametro[2] + " " + ImportacionEvaporadorValv.split("_A_")[i] + ",;"
+    } for (i = 0; i < ImportacionEvaporadorEstatico.split("_A_").length - 1; i++) {
+        HTML += "&#10;" + "," + TextoParametro[6] + " " + ImportacionEvaporadorEstatico.split("_A_")[i] + ",;"
+        HTML += "&#10;" + "," + TextoParametro[7]
+        HTML += "&#10;" + "," + ImportacionResistencia
     }
     HTML += "&#10;" + "," + TextoParametro[3] + ",;"
     ImportacionCuadroPotencia ? HTML += "&#10;" + "," + TextoParametro[4] + ",;" : null
     HTML += "&#10;" + "," + TextoParametro[5] + ",;"
     document.getElementById("textareaImportacion").innerHTML = HTML
     CopyHTML()
-    HTML = ImportacionCodigo + "&#10;" + ImportacionDescripcion + "&#10;" + ImportacionPrecio
+    HTML = ImportacionCodigo + "&#10;" + ImportacionPrecio + "&#10;" + ImportacionDescripcion
     for (i = 0; i < ImportacionUnidad.split("_A_").length - 1; i++) {
         HTML += "&#10;" + TextoParametro[0] + " " + ImportacionUnidad.split("_A_")[i]
     } for (i = 0; i < ImportacionEvaporador.split("_A_").length - 1; i++) {
         HTML += "&#10;" + TextoParametro[1] + " " + ImportacionEvaporador.split("_A_")[i]
     } for (i = 0; i < ImportacionEvaporadorValv.split("_A_").length - 1; i++) {
         HTML += "&#10;" + TextoParametro[2] + " " + ImportacionEvaporadorValv.split("_A_")[i]
+    } for (i = 0; i < ImportacionEvaporadorEstatico.split("_A_").length - 1; i++) {
+        HTML += "&#10;" + TextoParametro[6] + " " + ImportacionEvaporadorEstatico.split("_A_")[i]
+        HTML += "&#10;" + TextoParametro[7]
+        HTML += "&#10;" + ImportacionResistencia.split("_A_")[i]
     }
     HTML += "&#10;" + TextoParametro[3]
     ImportacionCuadroGestion && !ImportacionCuadroPotencia ? HTML += "&#10;" + TextoParametro[4] : null

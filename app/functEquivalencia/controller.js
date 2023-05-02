@@ -9,7 +9,7 @@ const localforage = require("localforage");
 
 function SeleccionarMarca() {
   return localforage.getItem(`RivaCold${List_Type.value}`).then(function (value) {
-    DB = JSON.parse(value).filter(item => item.Marca != null).sort(function (a) { if (a.Vol) { return -1; } else return +1 })
+    DB = JSON.parse(value).filter(item => item.Marca != null).sort(function (a) { if (a.Volumen) { return -1; } else return +1 })
     List_MarcaA.innerHTML = "";
     List_MarcaB.innerHTML = "";
     DBFilter = DB.map((item) => item.Marca);
@@ -59,7 +59,6 @@ function SeleccionarProveedor() {
     Opcion.value = Gama;
     List_Gama.add(Opcion);
   }
-  Delta_T()
   SeleccionarGama();
 }
 
@@ -75,9 +74,6 @@ function SeleccionarGama() {
   }
   TextoConfiguracion()
   SeleccionarModelo();
-}
-function Delta_T() {
-  document.getElementById("Delta_T").value = List_MarcaA.value == "RivaCold" ? List_MarcaB.value != "RivaCold" ? 3 : 0 : List_MarcaB.value == "RivaCold" ? -3 : 0
 }
 
 function TextoConfiguracion() {
@@ -101,16 +97,15 @@ function TextoConfiguracion() {
     Object.getOwnPropertyNames(DBFilterA[0]).includes(`Config${j}`) ? DBFilterA[0][`Config${j}`] ?
       ConfiguracionTexto = `${ConfiguracionTexto}<tr id='buttonConfig${j}'><th>${DBFilterA[0][`Config${j}`]}</th><th><button onclick='DisableConfig(buttonConfig${j})'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray[`buttonConfig${j}`] = true : ConfiguracionArray[`buttonConfig${j}`] = true;
   }
-  DBFilterA[0]["Aplicación"] ? ConfiguracionTexto += `<tr id='buttonAplicacion'><th>Aplicación:${DBFilterA[0]["Aplicación"]}</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonAplicacion"] = true
+  DBFilterA[0]["Aplicación"] ? ConfiguracionTexto += `<tr id='buttonAplicacion'><th>Aplicación: ${DBFilterA[0]["Aplicación"]}</th><th><button onclick='DisableConfig(buttonAplicacion)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonAplicacion"] = true
   ConfiguracionTexto += DBFilterA[0]["Refrigerante"] ? `<tr><th>Refrigerante: ${DBFilterA[0]["Refrigerante"]}</th><th></th></tr>` : ""
   ConfiguracionTexto += DBFilterA[0]["Ficha producto_Expansión"] ? `<tr><th>Expansión: ${DBFilterA[0]["Ficha producto_Expansión"]}</th><th></th></tr>` : ""
   ConfiguracionTexto += DBFilterA[0]["Desescarche_Tipo"] ? `<tr><th>Desescarche: ${DBFilterA[0]["Desescarche_Tipo"]}</th><th></th></tr>` : ""
-  DBFilterA[0]["Motoventilador_Núm#ventilador"] ? ConfiguracionTexto += `<tr><th>Núm de ventilador: ${DBFilterA[0]["Motoventilador_Núm#ventilador"]}</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonVentilador"] = true
+  DBFilterA[0]["Motoventilador_Número de ventilador"] ? ConfiguracionTexto += `<tr><th>Núm de ventilador: ${DBFilterA[0]["Motoventilador_Número de ventilador"]}</th><th><button onclick='DisableConfig(buttonVentilador)'><i class='bi bi-backspace'></i></button></th></tr>` : ConfiguracionArray["buttonVentilador"] = true
   document.getElementById("Table_Type_Body").innerHTML = ConfiguracionTexto
 
 }
 function SeleccionarModelo() {
-  document.getElementById("Delta_T").value = parseFloat(document.getElementById("Delta_T").value) + " K"
   List_Equiv.innerHTML = "";
   DBFilterA = DB.filter(item => item.Ref == List_Modelo.value)
   MarcaAField = Object.getOwnPropertyNames(DBFilterA[0]).sort().reverse();
@@ -139,25 +134,25 @@ function SeleccionarModelo() {
               (DBFilterB[j]["Aplicación"] == "Dual" && (DBFilterA[0]["Aplicación"] == "MBP" ||
                 DBFilterA[0]["Aplicación"] == "LBP"))) {
               if (ConfiguracionArray["buttonVentilador"] ||
-                DBFilterA[0]["Motoventilador_Núm#ventilador"] == DBFilterB[j]["Motoventilador_Núm#ventilador"] ||
-                !DBFilterB[j]["Motoventilador_Núm#ventilador"] || !DBFilterA[0]["Motoventilador_Núm#ventilador"]) {
+                DBFilterA[0]["Motoventilador_Número de ventilador"] == DBFilterB[j]["Motoventilador_Número de ventilador"] ||
+                !DBFilterB[j]["Motoventilador_Número de ventilador"] || !DBFilterA[0]["Motoventilador_Número de ventilador"]) {
                 Diff = ListadoEquivalencia(DBFilterA[0], DBFilterB, MarcaAField, MarcaBField, j);
                 if (parseFloat(Diff) >= 0) {
                   if (parseFloat(Diff) <= PDiffStorage) {
                     PDiffStorage = parseFloat(Diff)
                     PRefStorage = DBFilterB[j]["Ref"]
-                    PStockStorage = DBFilterB[j]["Ficha producto_Stock"] == "Si" ? true : false;
+                    PStockStorage = DBFilterB[j]["Ficha producto_Stock disponible"] == "Si" ? true : false;
                   }
                 } else {
                   if (parseFloat(Diff) >= NDiffStorage) {
                     NDiffStorage = parseFloat(Diff)
                     NRefStorage = DBFilterB[j]["Ref"]
-                    NStockStorage = DBFilterB[j]["Ficha producto_Stock"] == "Si" ? true : false;
+                    NStockStorage = DBFilterB[j]["Ficha producto_Stock disponible"] == "Si" ? true : false;
                   }
                 }
                 if (parseFloat(document.getElementById("RangoNeg").value) <= parseFloat(Diff) && parseFloat(document.getElementById("RangoPos").value) >= parseFloat(Diff)) {
                   option_modelo = document.createElement("option");
-                  DBFilterB[j]["Ficha producto_Stock"] == "Si" ? option_modelo.style.backgroundColor = "lime" : null
+                  DBFilterB[j]["Ficha producto_Stock disponible"] == "Si" ? option_modelo.style.backgroundColor = "lime" : null
                   option_modelo.text = DBFilterB[j]["Ref"] + " " + Diff;
                   List_Equiv.add(option_modelo);
                 }
@@ -206,27 +201,30 @@ function SeleccionarModelo() {
 function ListadoEquivalencia(DBFilterA, DBFilterB, MarcaAField, MarcaBField, j) {
   PFEq1 = 0; PFEq2 = 0; PFEq3 = 0;
   PFModelo1 = 0; PFModelo2 = 0; PFModelo3 = 0;
-  for (k in MarcaAField) {
-    if (MarcaAField[k].startsWith("PC_") && DBFilterA[MarcaAField[k]]) {
-      Tamb = parseFloat(MarcaAField[k].split("_")[1]);
-      Tcamara = parseFloat(MarcaAField[k].split("_")[2]);
-      Interp = Interpol(Tamb + parseFloat(document.getElementById("Delta_T").value), Tcamara, DBFilterB, MarcaBField, j);
+  for (MarcaFielditem of MarcaAField) {
+    if (MarcaFielditem.startsWith("PC_") && DBFilterA[MarcaFielditem]) {
+      Interp = Interpol(
+        parseFloat(MarcaFielditem.split("_")[1]) + parseFloat(document.getElementById("Delta_T").value),
+        parseFloat(MarcaFielditem.split("_")[2]),
+        DBFilterB,
+        MarcaBField,
+        j);
       if (parseFloat(Interp) > 0) {
         if (Interp.split(" ").length == 2) {
           PFEq1 = PFEq1 + parseFloat(Interp)
-          PFModelo1 = PFModelo1 + parseFloat(DBFilterA[MarcaAField[k]])
+          PFModelo1 = PFModelo1 + parseFloat(DBFilterA[MarcaFielditem])
         } else if (Interp.split(" ")[2] == "(*)") {
           PFEq2 = PFEq2 + parseFloat(Interp)
-          PFModelo2 = PFModelo2 + parseFloat(DBFilterA[MarcaAField[k]])
+          PFModelo2 = PFModelo2 + parseFloat(DBFilterA[MarcaFielditem])
         } else {
           PFEq3 = PFEq3 + parseFloat(Interp)
-          PFModelo3 = PFModelo3 + parseFloat(DBFilterA[MarcaAField[k]])
+          PFModelo3 = PFModelo3 + parseFloat(DBFilterA[MarcaFielditem])
         }
       }
     }
   }
-  if (PFEq1) { return ((PFEq1 / PFModelo1 - 1) * 100).toFixed(2) + "%"; }
-  else if (PFEq2) { return ((PFEq2 / PFModelo2 - 1) * 100).toFixed(2) + "%"; }
+  if (PFEq1 / PFModelo1) { return ((PFEq1 / PFModelo1 - 1) * 100).toFixed(2) + "%"; }
+  else if (PFEq2 / PFModelo2) { return ((PFEq2 / PFModelo2 - 1) * 100).toFixed(2) + "%"; }
   else { return ((PFEq3 / PFModelo3 - 1) * 100).toFixed(2) + "%"; }
 }
 
@@ -277,7 +275,7 @@ function DatosEquivalencia() {
     ArrayTable[i]["Tcamara"] = Tabla_PF_tbody_tr[i].getElementsByTagName("th")[1].textContent
     ArrayTable[i]["HTML"] = Tabla_PF_tbody_tr[i].innerHTML
   }
-  ArrayTable.sort(function (a, b) { if (a.Tamb > b.Tamb) { return -1 } else if (a.Tamb == b.Tamb) { if (parseFloat(a.Tcamara) > parseFloat(b.Tcamara)) { return 1 } else { return -1 } } else { return 1 } })
+  ArrayTable.sort(function (a, b) { if (a.Tamb > b.Tamb) { return -1 } else if (a.Tamb == b.Tamb) { if (+a.Tcamara > +b.Tcamara) { return 1 } else { return -1 } } else { return 1 } })
 
   for (i = 0, len = Tabla_PF_tbody_tr.length; i < len; i++) {
     Tabla_PF_tbody_tr[i].innerHTML = ArrayTable[i]["HTML"]
@@ -292,7 +290,10 @@ function RangoEq(Direccion, Rango) {
   SeleccionarModelo();
 }
 
+function Delta_T() {
+  document.getElementById("Delta_T").value = parseFloat(document.getElementById("Delta_T").value) ? parseFloat(document.getElementById("Delta_T").value) + " K" : "0 K"
 
+}
 function DisableConfig(id) {
   document.getElementById(id.id).outerHTML = ""
   ConfiguracionArray[id.id] = true
@@ -300,5 +301,4 @@ function DisableConfig(id) {
   SeleccionarModelo()
 }
 
-Delta_T()
 SeleccionarMarca();

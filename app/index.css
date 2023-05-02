@@ -3,10 +3,27 @@ img.card-img-top {
 }
 
 div.card {
-    width: 18rem;
-    margin: 5px
+    width: 15rem;
+    margin: 5px;
+    padding: 0;
+    border: 0;
 }
 
-img {
-    image-resolution: 50dpi;
+div.row {
+    margin: 0;
+}
+
+.progress {
+    padding: 0;
+}
+
+svg {
+    fill: #FAFBFC;
+}
+
+.buttonfunction {
+    text-align: center;
+    font: bolder 9pt Arial;
+    color: red;
+    font-weight:1000
 }

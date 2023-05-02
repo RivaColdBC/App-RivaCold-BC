@@ -3,30 +3,6 @@ const ArrayRivaCold = ["RivaColdEq", "RivaColdEvap", "RivaColdCond", "RivaColdCe
 const ArrayCliente = ["RivaColdCliente"];
 var DBSearch
 
-function Busqueda1(idsearch, idresult) {
-    Didresult = document.getElementById(idresult);
-    sp = document.getElementById(idsearch).value;
-    if (sp) {
-        Didresult.innerHTML = "";
-        function ArrayLocalforage(nl) {
-            return localforage.getItem(ArrayDB[nl], function (err, value) {
-                DBFilter = JSON.parse(value).filter(item => item.Ref != null).filter(item => ("x" + item.Ref).toLowerCase().indexOf(sp.toLowerCase()) > -1);
-                for (j = 0, jlen = DBFilter.length; j < jlen; j++) {
-                    option_modelo = document.createElement("option");
-                    option_modelo.text = DBFilter[j]["Ref"];
-                    option_modelo.value = nl + "_A_" + DBFilter[j]["Marca"] + "_A_" + DBFilter[j]["Gama"] + "_A_" + DBFilter[j]["Ref"];
-                    Didresult.add(option_modelo);
-                }
-                nl += 1
-                nl < ArrayDB.length ? ArrayLocalforage(nl) : null
-            })
-        }
-        ArrayLocalforage(0)
-    }
-}
-
-
-
 function Busqueda2(idsearch, idresult) {
     const Didresult = document.getElementById(idresult);
     sp = document.getElementById(idsearch).value;
@@ -40,18 +16,14 @@ function Busqueda2(idsearch, idresult) {
                 if ((DBFilter[j]["Ref2"] + DBFilter[j]["Ref"] + DBFilter[j]["Descripción"] + DBFilter[j]["RefAux"]).toUpperCase().indexOf(sp.toUpperCase()) > -1) {
                     option_modelo = document.createElement("option");
                     option_modelo.text = DBFilter[j]["Ref"];
-                    Didresult.add(option_modelo);
                     if (list_type.value === "Tarifa0000") {
-                        DBFilter[0]["Observación"] ? RegLocal1[j] = DBFilter[j]["Descripción"] + "\n" + DBFilter[0]["Observación"] : RegLocal1[j] = DBFilter[j]["Descripción"]
-                        RegLocal2[j] = parseFloat(DBFilter[j]["Precio Venta"]);
+                        option_modelo.value = DBFilter[j]["Ref"] + "_AA_" + DBFilter[j]["Descripción"] + "_AA_" + parseFloat(DBFilter[j]["Precio Venta"])
                     } else {
-                        RegLocal1[j] = DBFilter[j]["Descripción"]
-                        RegLocal2[j] = parseFloat(DBFilter[j]["Precio"]);
+                        option_modelo.value = DBFilter[j]["Ref"] + "_AA_" + DBFilter[j]["Descripción"] + "_AA_" + parseFloat(DBFilter[j]["Precio"])
                     }
+                    Didresult.add(option_modelo);
                 }
             }
-            sessionStorage.setItem("SearchRegister2_1", JSON.stringify(RegLocal1));
-            sessionStorage.setItem("SearchRegister2_2", JSON.stringify(RegLocal2));
         })
     }
 }
@@ -60,12 +32,18 @@ function Busqueda3(idsearch, idresult) {
     RegLocal = [];
     i = 0;
     document.getElementById(idresult).innerHTML = "";
-    sp = document.getElementById(idsearch).value;
+    sp = document.getElementById(idsearch).value.split(" ");
     return localforage.getItem(ArrayCliente[0], function (err, value) {
         DBSearch = JSON.parse(value).sort();
-        for (j = 0; j < DBSearch.length; j++) {
-            const list_modelo = document.getElementById(idresult);
-            if ((DBSearch[j]["Cliente"] + DBSearch[j]["C#I#F#"] + DBSearch[j]["Nombre"] + DBSearch[j]["Razón Social"] + parseFloat(DBSearch[j]["Teléfono"])).toUpperCase().indexOf(sp.toUpperCase()) > -1) {
+        for (j in DBSearch) {
+            check = true
+            for (item of sp) {
+                if ((DBSearch[j]["Cliente"] + DBSearch[j]["C#I#F#"] + DBSearch[j]["Nombre"] + DBSearch[j]["Razón Social"] + parseFloat(DBSearch[j]["Teléfono"])).toUpperCase().indexOf(item.toUpperCase()) == -1) {
+                    check = false
+                }
+            }
+            if (check) {
+                const list_modelo = document.getElementById(idresult);
                 option_modelo = document.createElement("option");
                 option_modelo.text = DBSearch[j]["Razón Social"];
                 list_modelo.add(option_modelo);
@@ -77,12 +55,9 @@ function Busqueda3(idsearch, idresult) {
     })
 }
 function Seleccionar2(idresult) {
-    Register1 = JSON.parse(sessionStorage.getItem("SearchRegister2_1"));
-    Register2 = JSON.parse(sessionStorage.getItem("SearchRegister2_2"));
-    i = document.getElementById(idresult).selectedIndex;
-    document.getElementById("RefModelo").value = document.getElementById(idresult).value;
-    document.getElementById("textoModelo").innerHTML = Register1[i]
-    document.getElementById("Precio").value = Register2[i] + "€";
+    document.getElementById("RefModelo").value = document.getElementById(idresult).value.split("_AA_")[0];
+    document.getElementById("textoModelo").value = document.getElementById(idresult).value.split("_AA_")[1];
+    document.getElementById("Precio").value = document.getElementById(idresult).value.split("_AA_")[2];
 }
 
 function Seleccionar3(idresult) {
@@ -99,26 +74,15 @@ function Seleccionar3(idresult) {
             + "\nC.P: " + DBSearch[j]["C#P"]
             + "\nPoblación: " + DBSearch[j]["Población"]
             + "\nProvincia: " + DBSearch[j]["Provincia"]
-            + "\nTeléfono: " + DBSearch[j]["Teléfono"]
+            + "\nTeléfono: " + (DBSearch[j]["Teléfono"] || "").toString().replace(/\W/gi, '').replace(/(.{3})/g, '$1 ')
+            + "\nFax: " + (DBSearch[j]["fax_telc"] || "").toString().replace(/\W/gi, '').replace(/(.{3})/g, '$1 ')
+            + "\nCorreo: " + DBSearch[j]["ema_telc"]
+            + "\nPara: " + DBSearch[j]["nom_telc"]
             + "\nPaís: " + DBSearch[j]["Pais"]
             + "\nForma de Pago: " + DBSearch[j]["nom_fpg"]
             + "\nObservación: " + DBSearch[j]["Observaciones"]
         document.getElementById("DatosCliente").rows = 0;
         document.getElementById("DatosCliente").rows = parseFloat(document.getElementById("DatosCliente").scrollHeight / 24).toFixed(0);
-    })
-}
-
-function Aplicar1(idresult) {
-    Didresult = document.getElementById(idresult).value
-    document.getElementById("List_Type").selectedIndex = Didresult.split("_A_")[0];
-    SeleccionarMarca().then(() => {
-        document.getElementById("List_MarcaA").value = Didresult.split("_A_")[1];
-        SeleccionarProveedor();
-        document.getElementById("List_Gama").value = Didresult.split("_A_")[2];
-        SeleccionarGama();
-        document.getElementById("List_Modelo").value = Didresult.split("_A_")[3];
-        TextoConfiguracion()
-        SeleccionarModelo();
     })
 }
 
@@ -134,8 +98,12 @@ function Aplicar2(idresult) {
         document.getElementById("Oferta_Dirección").value = DBSearch[j]["Dirección"].toUpperCase();
         document.getElementById("Oferta_CP").value = DBSearch[j]["C#P"] + " - " + DBSearch[j]["Población"].toUpperCase();
         document.getElementById("Oferta_Pais").value = DBSearch[j]["Provincia"].toUpperCase() + " - " + DBSearch[j]["Pais"].toUpperCase();
-        document.getElementById("Oferta_Telf").value = DBSearch[j]["Teléfono"];
-        document.getElementById("Oferta_Tel2").value = DBSearch[j]["Teléfono"];
+        document.getElementById("Oferta_Telf").value = (DBSearch[j]["Teléfono"] || "").toString().replace(/\W/gi, '').replace(/(.{3})/g, '$1 ').trim();
+        document.getElementById("Oferta_Tel2").value = (DBSearch[j]["Teléfono"] || "").toString().replace(/\W/gi, '').replace(/(.{3})/g, '$1 ').trim();
+        document.getElementById("Oferta_Fax").value = (DBSearch[j]["fax_telc"] || "").toString().replace(/\W/gi, '').replace(/(.{3})/g, '$1 ').trim();
+        document.getElementById("Oferta_Fax2").value = (DBSearch[j]["fax_telc"] || "").toString().replace(/\W/gi, '').replace(/(.{3})/g, '$1 ').trim();
+        document.getElementById("Oferta_Email").value = DBSearch[j]["ema_telc"];
+        document.getElementById("Oferta_Solicitante").value = (DBSearch[j]["nom_telc"] || "").toString().trim();
         document.getElementById("Oferta_Portes").value = DBSearch[j]["des_coe"];
         document.getElementById("Oferta_Dir1").value = DBSearch[j]["nom_cen1"];
         document.getElementById("Oferta_Dir2").value = DBSearch[j]["dir_cen1"];

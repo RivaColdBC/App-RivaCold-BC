@@ -9,6 +9,10 @@ body {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+div.col-6 {
+  padding: 0;
+}
+
 label {
   font-weight: bold;
   border: 0;
@@ -134,5 +138,4 @@ tbody::after {
   content: '';
   display: block;
   height: 0.5px;
-
 }

@@ -3,6 +3,7 @@ button {
   border: none;
   background: none;
 }
+
 .custom-tooltip {
   --bs-tooltip-bg: var(--bs-primary);
 }
@@ -77,4 +78,12 @@ table tbody th.TagTipo {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+}
+
+.col {
+  padding: 0;
+}
+
+.row {
+  margin: 0;
 }

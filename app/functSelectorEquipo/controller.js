@@ -10,7 +10,7 @@ function SeleccionarTipo() {
     FieldTable = []
     S_Tipo = document.querySelector('input[name=B_Tipo]:checked').value
     localforage.getItem("RivaCold" + S_Tipo, function (err, value) {
-        DB = JSON.parse(value).sort(function (a) { if (a.Vol) { return -1; } });
+        DB = JSON.parse(value).sort(function (a) { if (a.Volumen) { return -1; } });
         document.getElementById("Tabla_tbody").innerHTML = ""
         const DBField = Object.getOwnPropertyNames(DB[0]).sort().reverse();
         for (i = 0, len = Field.length; i < len; i++) {

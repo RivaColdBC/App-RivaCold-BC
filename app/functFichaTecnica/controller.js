@@ -7,7 +7,7 @@ const localforage = require("localforage");
 
 function SeleccionarGama() {
   return localforage.getItem("RivaCold" + List_Type.value, function (err, value) {
-    RivaColdDB = JSON.parse(value).sort(function (a) { if (a.Vol) { return -1; } else { return 1 } })
+    RivaColdDB = JSON.parse(value).sort(function (a) { if (a.Volumen) { return -1; } else { return 1 } })
     DBFilter = RivaColdDB.map((item) => item.Marca);
     DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index);
     List_Marca.innerHTML = "";
@@ -46,7 +46,7 @@ function SeleccionarModelo() {
 }
 
 const http = "https://select1.rivacold.com/media/immagini/"
-const Ignore = ["Foto", "Foto2", "Foto_Esquema1", "Foto_Esquema2", "Foto_Esquema3", "SSMA_TimeStamp", "Serie", "Ficha producto_Stock", "Vol"]
+const Ignore = ["Foto", "Foto2", "Foto_Esquema1", "Foto_Esquema2", "Foto_Esquema3", "SSMA_TimeStamp", "Serie", "Volumen", "id"]
 function FichaTecnica() {
   ClearTable("table_PC", 0);
   document.getElementById("table_FT").innerHTML = '<thead><tr><th colspan="2">Ficha técnica</th></tr></thead><tbody></tbody>'
@@ -70,12 +70,14 @@ function FichaTecnica() {
         CountPF += 1;
       } else {
         Propiedad = RivaColdField[j].split("_")
-        if (Propiedad[1]) {
+        if (Propiedad[0] == "Ficha producto") {
+          document.getElementById("table_FT").getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", `<th>${Propiedad[1]}</th><td>${RivaColdDBF[0][RivaColdField[j]]} ${Propiedad[2] || ""}</td>`)
+        } else if (Propiedad[1]) {
           if (!Placelabel.includes(Propiedad[0])) {
             document.getElementById("table_FT").insertAdjacentHTML("beforeend", `<thead><tr><th colspan="2">${Propiedad[0]}</th></tr></thead><tbody id="tbody_${Propiedad[0]}"></tbody>`)
             Placelabel.push(Propiedad[0])
           }
-          document.getElementById("tbody_" + Propiedad[0]).insertAdjacentHTML("beforeend", `<th>${Propiedad[1]}</th><td>${RivaColdDBF[0][RivaColdField[j]]}</td>`)
+          document.getElementById("tbody_" + Propiedad[0]).insertAdjacentHTML("beforeend", `<th>${Propiedad[1]}</th><td>${RivaColdDBF[0][RivaColdField[j]]} ${Propiedad[2] || ""}</td>`)
         } else {
           document.getElementById("table_FT").getElementsByTagName("tbody")[0].insertAdjacentHTML("beforeend", `<th>${RivaColdField[j]}</th><td>${RivaColdDBF[0][RivaColdField[j]]}</td>`)
         }

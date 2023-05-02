@@ -1,6 +1,6 @@
 {
   "name": "rivacoldselect",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "CompanyName": "Basic Conection Systems S.L.",
   "description": "RivaColdSelect Program from Basic Conection Systems",
   "main": "Main.js",
@@ -12,12 +12,12 @@
   "author": "Basic Conection Systems S.L.",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.32.1",
-    "electron": "^23.2.0",
+    "electron": "^24.1.2",
     "electron-builder": "^23.6.0",
     "yarn": "^1.22.19"
   },
   "dependencies": {
+    "fake-progress": "^1.0.4",
     "localforage": "^1.10.0",
     "node-adodb": "^5.0.3",
     "tedious": "^15.1.3"

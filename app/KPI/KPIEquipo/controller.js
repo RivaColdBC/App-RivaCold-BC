@@ -85,10 +85,12 @@ function tablaEquipo() {
 }
 
 var Orden = true
+var Point = null
 const dtable = document.getElementById("div_table")
 const dtabletr = dtable.getElementsByTagName("tr")
 
 function Ordenar(method, num) {
+    Point == method + num ? null : Orden = true
     arrayHTML = []
     for (i = 0, trlength = dtabletr.length; i < trlength; i++) {
         arrayHTML[i] = []
@@ -101,12 +103,13 @@ function Ordenar(method, num) {
             arrayHTML[i]["Order"] = parseFloat(dtabletr[i].getElementsByTagName("th")[13].innerHTML)
         }
     }
-    Orden ? arrayHTML.sort(function (a, b) { if (!a.Order) { return -1 } if (a.Order <= b.Order) { return 1 } return -1 }) :
-        arrayHTML.sort(function (a, b) { if (!a.Order) { return -1 } if (a.Order >= b.Order) { return 1 } return -1 })
+    Orden ? arrayHTML.sort(function (a, b) { if (a.Order <= b.Order) { return 1 } return -1 }) :
+        arrayHTML.sort(function (a, b) { if (a.Order >= b.Order) { return 1 } return -1 })
     for (i = 0, trlength = dtabletr.length; i < trlength; i++) {
         dtabletr[i].innerHTML = arrayHTML[i]["html"]
     }
     Orden = !Orden
+    Point = method + num
 }
 
 const localforage = require("localforage");

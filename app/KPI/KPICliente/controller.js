@@ -108,10 +108,10 @@ function tablekpi() {
                 DBClienteFilter[k]["Oferta" + Add + j] == 0 ? diff = "-" : diff = (DBClienteFilter[k]["Pedido" + Add + j] / DBClienteFilter[k]["Oferta" + Add + j] * 100).toFixed(1)
                 Simbolo = DBClienteFilter[k]["Pedido" + Add + j] - DBClienteFilter[k]["Pedido" + Add + (j - 1)] > 0 ? '<i class="bi bi-arrow-up-right"/>' : '<i class="bi bi-arrow-down-right"/>'
                 table_tbody_tr1.insertAdjacentHTML("beforeend", "<th></th>")
-                LineEnableArray[3] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(DBClienteFilter[k]["Pedido" + Add + j]) + "<br>") : null
-                LineEnableArray[4] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(DBClienteFilter[k]["Oferta" + Add + j]) + "<br>") : null
-                LineEnableArray[5] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", diff + " %" + "<br>") : null
-                LineEnableArray[6] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(DBClienteFilter[k]["Pedido" + Add + j] - DBClienteFilter[k]["Pedido" + Add + (j - 1)]) + " " + Simbolo) : null
+                LineEnableArray[1][0] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", NumberFormatEUR(DBClienteFilter[k]["Pedido" + Add + j]) + "<br>") : null
+                LineEnableArray[1][1] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", NumberFormatEUR(DBClienteFilter[k]["Oferta" + Add + j]) + "<br>") : null
+                LineEnableArray[1][2] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", diff + " %" + "<br>") : null
+                LineEnableArray[1][3] ? table_tbody_tr1.getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", NumberFormatEUR(DBClienteFilter[k]["Pedido" + Add + j] - DBClienteFilter[k]["Pedido" + Add + (j - 1)]) + " " + Simbolo) : null
                 DBClienteFilter[k]["Oferta" + Add + j] == 0 ? DBClienteFilter[k]["Pedido" + Add + j] == 0 ? table_tbody_tr1.getElementsByTagName("th")[colspan].style.backgroundColor = "white" : table_tbody_tr1.getElementsByTagName("th")[colspan].style.backgroundColor = "dodgerblue" : table_tbody_tr1.getElementsByTagName("th")[colspan].style.backgroundColor = "red"
                 parseFloat(diff) > 30 || parseFloat(DBClienteFilter[k]["Pedido" + Add + j]) > 5000 ? parseFloat(diff) > 0 ? table_tbody_tr1.getElementsByTagName("th")[colspan].style.backgroundColor = "green" : table_tbody_tr1.getElementsByTagName("th")[colspan].style.backgroundColor = "darkorange" : null
                 colspan += 1
@@ -139,9 +139,10 @@ function tablekpi() {
             for (j = FechaInicio; j <= FechaFinal; j++) {
                 Simbolo = TotalPedido[j] - TotalPedido[j - 1] > 0 ? '<i class="bi bi-arrow-up-right"/>' : '<i class="bi bi-arrow-down-right"/>'
                 document.getElementById("headTotal").insertAdjacentHTML("beforeend", "<th></th>")
-                LineEnableArray[0] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(TotalPedido[j]) + "<br>") : null
-                LineEnableArray[1] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(TotalOferta[j]) + "<br>") : null
-                LineEnableArray[2] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(TotalPedido[j] - TotalPedido[j - 1]) + " " + Simbolo) : null
+                LineEnableArray[0][0] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", NumberFormatEUR(TotalPedido[j]) + "<br>") : null
+                LineEnableArray[0][1] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", NumberFormatEUR(TotalOferta[j]) + "<br>") : null
+                LineEnableArray[0][2] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", PerCent(TotalPedido[j], TotalOferta[j], 1) + "<br>") : null
+                LineEnableArray[0][3] ? document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].insertAdjacentHTML("beforeend", NumberFormatEUR(TotalPedido[j] - TotalPedido[j - 1]) + " " + Simbolo) : null
                 document.getElementById("headTotal").getElementsByTagName("th")[j - FechaInicio].style.backgroundColor = TotalPedido[j] - TotalPedido[j - 1] > 0 ? "green" : "red"
             }
         }
@@ -199,9 +200,9 @@ function OrdenarCliente(method, year) {
     }
 }
 
-var LineEnableArray = [true, true, true, true, true, true, true];
-function LineEnable(id) {
-    LineEnableArray[id] = !LineEnableArray[id]
+var LineEnableArray = [[true, true, true, true], [true, true, true, true],];
+function LineEnable(id1, id2) {
+    LineEnableArray[id1][id2] = !LineEnableArray[id1][id2]
     tablekpi()
 }
 

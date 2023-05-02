@@ -156,20 +156,34 @@
             </div>
         </div>
         <div class="row">
-            <table>
-                <tbody class="table-group-divider">
-                    <tr>
-                        <td>
-                            <label style="font: bold 7.5pt">CONDICIONES:
-                            </label>
-                            <label style="font: normal 5.5pt Arial;"> (no indicadas, ver condiciones generales de venta)
-                            </label>
-                            <input style="font: bold 6.5pt Arial;text-align:right;width: 15%;" type="text"
-                                value="AC: 0001">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="col-6">
+                <table>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td>
+                                <label style="font: bold 7.5pt">CONDICIONES:
+                                </label>
+                                <label style="font: normal 5.5pt Arial;"> (no indicadas, ver condiciones generales de
+                                    venta)
+                                </label>
+                                <input style="font: bold 6.5pt Arial;text-align:right;width: 15%;" type="text"
+                                    value="AC: 0001">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <table style="width:100%">
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="row detalle">
             <div class="col-6">
@@ -218,9 +232,9 @@
                             </tr>
                             <tr>
                                 <td><label>Telf: </label>
-                                    <input type="text" style="width: auto;" id="Oferta_Tel2">
+                                    <input type="text" style="width: 40%;" id="Oferta_Tel2">
                                     <label>Fax: </label>
-                                    <input type="text" style="width: auto;" id="Oferta_Fax2">
+                                    <input type="text" style="width: 40%;" id="Oferta_Fax2">
                                 </td>
                             </tr>
                         </tbody>
@@ -427,11 +441,6 @@
                         <tr> <input id="RefModelo" class="form-control">
                         </tr>
                         <tr> <textarea class="form-control" id="textoModelo"></textarea> </tr>
-                        <tr> <button type="button" class="btn btn-success" onclick="AñadirComplemento()">Añadir
-                                complemento
-                            </button>
-                            <div id="ComplementoModelo"> </div>
-                        </tr>
                     </tbody>
                 </table>
                 <table onchange="CalculoPrecio()">
@@ -509,7 +518,8 @@
                             onchange="DisableInput('EntregaInmediata','PlazoEntrega')"> Entrega Inmediata
                     </div>
                     <input type="text" class="form-control" id="PlazoEntrega" placeholder="Plazo de entrega">
-                </div>Portes:
+                </div>
+                <label for="list_Portes"> Portes: </label>
                 <select class="form-select" id="list_Portes">
                     <option>0DE DEBIDOS</option>
                     <option selected>0PA PAGADOS</option>
@@ -530,7 +540,8 @@
                     <option>FAS FRANCO A PIE DE BUQUE</option>
                     <option>FCA FRANCO TRANSPORTISTA</option>
                     <option>FOB FRANCO A BORDO</option>
-                </select>Embalaje:
+                </select>
+                <label for="list_Embalaje"> Embalaje: </label>
                 <select class="form-select" id="list_Embalaje">
                     <option selected>Tipo estándar incluido</option>
                     <option>BL - Blister</option>
@@ -554,57 +565,58 @@
                     <option>RL - Rollo</option>
                     <option>RT - Rotoli</option>
                     <option>UN - Unidad</option>
-                </select>Forma de Pago:
+                </select>
+                <label for="list_FormadePago">Forma de Pago:</label>
                 <select class="form-select" id="list_FormadePago">
                     <option selected>La habitual</option>
                     <option>001 Contado</option>
-                    <option>002 Giro 30 dias</option>
+                    <option>002 Giro 30 días</option>
                     <option>003 Giro 45 días</option>
                     <option>004 GIRO</option>
-                    <option>005 Giro 60 dias</option>
+                    <option>005 Giro 60 días</option>
                     <option>006 Giro 60 días</option>
-                    <option>007 Giro 60 dias</option>
-                    <option>008 Giro 30-60 dias</option>
+                    <option>007 Giro 60 días</option>
+                    <option>008 Giro 30-60 días</option>
                     <option>009 Giro 30,60 días</option>
                     <option>010 Giro a la vista</option>
-                    <option>011 Pagare 180 dias</option>
-                    <option>012 Pagare 33 dias</option>
-                    <option>013 Pagare 60 dias</option>
-                    <option>014 Pagare 60 dias</option>
-                    <option>015 Pagare 90 dias</option>
-                    <option>016 Pagare 150 dias</option>
+                    <option>011 Pagare 180 días</option>
+                    <option>012 Pagare 33 días</option>
+                    <option>013 Pagare 60 días</option>
+                    <option>014 Pagare 60 días</option>
+                    <option>015 Pagare 90 días</option>
+                    <option>016 Pagare 150 días</option>
                     <option>017 Pagare</option>
                     <option>018 Pagaré 30-60-90</option>
                     <option>019 PAGARE</option>
-                    <option>020 talon 30 dias</option>
-                    <option>021 Talon 60 dias</option>
-                    <option>022 Talon 60 dias</option>
-                    <option>023 TALON 15 DIAS</option>
-                    <option>024 Giro 15 dias</option>
+                    <option>020 talon 30 días</option>
+                    <option>021 Talon 60 días</option>
+                    <option>022 Talon 60 días</option>
+                    <option>023 TALON 15 días</option>
+                    <option>024 Giro 15 días</option>
                     <option>025 Talón</option>
-                    <option>026 TRANSFER.150 DIAS</option>
+                    <option>026 TRANSFER.150 días</option>
                     <option>027 LETRA ACEPTADA 60 D</option>
                     <option>028 Giro 30,60,90 días</option>
                     <option>029 Giro 60 días</option>
                     <option>030 transferencia</option>
                     <option>031 Transferencia 15 d</option>
-                    <option>032 tranferencia 30 dias</option>
+                    <option>032 tranferencia 30 días</option>
                     <option>033 Transferencia</option>
                     <option>034 Transferencia 60 d</option>
-                    <option>035 Transf. 120 dias</option>
-                    <option>036 Giro 150 dias</option>
+                    <option>035 Transf. 120 días</option>
+                    <option>036 Giro 150 días</option>
                     <option>037 Pagaré 30/60 día</option>
                     <option>038 Giro 60 días</option>
                     <option>039 Pago Dom. 60 días</option>
                     <option>040 Giro 6 meses 1x mes</option>
                     <option>041 Transferencia 45 dia</option>
-                    <option>042 Giro Vist y 30 dias</option>
+                    <option>042 Giro Vist y 30 días</option>
                     <option>043 Anticipo y Giro 60</option>
                     <option>044 Giro vista y 30,60</option>
                     <option>045 ANTICIPO</option>
                     <option>046 Antic. 50% y Giro 60</option>
                     <option>047 Confirming 150 días</option>
-                    <option>048 Pagare 60 dias</option>
+                    <option>048 Pagare 60 días</option>
                     <option>049 Swift 90 y 120</option>
                     <option>050 SEPTIEMBRE</option>
                     <option>051 Anticipo y Trans. 60</option>
@@ -613,13 +625,13 @@
                     <option>054 Giro 120 días</option>
                     <option>055 Antic. y Giro 60</option>
                     <option>056 Giro 30-60-90-120</option>
-                    <option>057 GIRO 90-120 DIAS</option>
-                    <option>058 GIRO 30 Y 60 DIAS</option>
+                    <option>057 GIRO 90-120 días</option>
+                    <option>058 GIRO 30 Y 60 días</option>
                     <option>059 Transferencia 90 d.</option>
-                    <option>060 30% ANTIC/GIRO 90 DI</option>
+                    <option>060 30% ANTIC/GIRO 90 DÍAS</option>
                     <option>061 GIRO 6 MESES</option>
                     <option>062 SERVIDO FABRICA</option>
-                    <option>063 Confirming 45 dias</option>
+                    <option>063 Confirming 45 días</option>
                     <option>064 Transferencia 70 d</option>
                     <option>065 CONT+TRANSF. A 30 FF</option>
                     <option>066 EFECTIVO</option>
@@ -627,29 +639,30 @@
                     <option>069 TALON 60 DÍAS</option>
                     <option>071 Giro 60 días</option>
                     <option>072 Giro 60 días</option>
-                    <option>074 Confirmnig 60 dias</option>
+                    <option>074 Confirmnig 60 días</option>
                     <option>075 Giro</option>
                     <option>076 GIRO 60-90-120</option>
                     <option>077 Confirming 90</option>
                     <option>078 Transferencia 90</option>
-                    <option>079 Giro 30-60 dias</option>
+                    <option>079 Giro 30-60 días</option>
                     <option>080 Transf vista,30 y 60</option>
                     <option>081 Giro</option>
-                    <option>082 Confirming 120 dias</option>
+                    <option>082 Confirming 120 días</option>
                     <option>083 VARIABLE</option>
                     <option>084 SEGUN ACUERDO</option>
                     <option>085 TRANS. Y DOCUM.</option>
-                    <option>086 Giro 45 dias</option>
+                    <option>086 Giro 45 días</option>
                     <option>087 Pago Dom. 30-60-90</option>
                     <option>088 Confirming 210 días</option>
                     <option>093 20/11/2014</option>
-                    <option>094 talon 60 dias</option>
-                    <option>095 Confirming 60 dí</option>
+                    <option>094 talon 60 días</option>
+                    <option>095 Confirming 60 días</option>
                     <option>096 TARJETA AB</option>
                     <option>097 CONTRAREEMBOLSO</option>
-                    <option>098 COMPENSACION</option>
-                    <option>099 COMPENSACION</option>
-                </select>Dirección de Entrega:
+                    <option>098 COMPENSACIÓN</option>
+                    <option>099 COMPENSACIÓN</option>
+                </select>
+                <label for="list_DireccionEnvio">Dirección de Entrega: </label>
                 <select class="form-select" id="list_DireccionEnvio">
                     <option selected>Dirección habitual</option>
                     <option>Pendiente de confirmar</option>
@@ -729,5 +742,7 @@
 <script src="../functAux/Funct_Search.js" async></script>
 <script src="../functAux/Funct_Print.js" async></script>
 <script src="../functAux/Funct_tooltip.js" async></script>
+<script src="../functAux/Funct_Formate.js" async></script>
+
 
 </html>

@@ -29,7 +29,6 @@ function Display_DescuentoPP() {
   document.getElementById("DescuentoPPC").style.display = document.getElementById("DescuentoPPC").style.display == "none" ? "" : "none"
   document.getElementById("tdDescuentoPP").style.display = document.getElementById("tdDescuentoPP").style.display == "none" ? "" : "none"
 }
-
 function Display_Portes() {
   document.getElementById("Coste_Portes").style.display = document.getElementById("Coste_Portes").style.display == "none" ? "" : "none"
   document.getElementById("label_Portes").style.display = document.getElementById("label_Portes").style.display == "none" ? "" : "none"
@@ -57,7 +56,7 @@ function DisableInput(idcheck, iddisable) {
 
 function SeleccionarModelo() {
   localforage.getItem("RivaCold" + list_type.value, function (err, value) {
-    RivaColdDB = JSON.parse(value).sort(function (a) { if (a.Vol) { return -1; } else { return +1 } })
+    RivaColdDB = JSON.parse(value).sort(function (a) { if (a.Volumen) { return -1; } else { return +1 } })
     list_type.value == "Tarifa0000" ? DBFilter = RivaColdDB.map((item) => item.Gama) : DBFilter = RivaColdDB.filter(item => item.Marca == "RivaCold").map((item) => item.Gama);
     DBDuplicate = DBFilter.filter((item, index) => DBFilter.indexOf(item) === index).sort();
     list_gama.innerHTML = "";
@@ -92,7 +91,6 @@ function SeleccionarProducto() {
     document.getElementById("Precio").value = list_type.value == "Tarifa0000" ? DBFilter[0]["Precio Venta"] : DBFilter[0]["Precio"]
     document.getElementById("textoModelo").innerHTML = list_type.value === "Tarifa0000" && DBFilter[0]["Observación"] ? DBFilter[0]["Descripción"] + "\n" + DBFilter[0]["Observación"] : DBFilter[0]["Descripción"]
   }
-  document.getElementById("ComplementoModelo").innerHTML = "";
   CalculoPrecio();
 }
 
@@ -100,26 +98,20 @@ const Ddto1 = document.getElementById("dto1")
 const Ddto2 = document.getElementById("dto2")
 const Ddto3 = document.getElementById("dto3")
 const DdtoF = document.getElementById("dto.Final")
-var dto1, dto2, dto3;
+const DPrecio = document.getElementById("Precio")
 
 function CalculoDescuento() {
-  dto1 = parseFloat(Ddto1.value) / 100;
-  dto2 = parseFloat(Ddto2.value) / 100;
-  dto3 = parseFloat(Ddto3.value) / 100;
-  Ddto1.value = isNaN(dto1) ? dto1 = 0 : (dto1 * 100).toFixed(2) + "%"
-  Ddto2.value = isNaN(dto2) ? dto2 = 0 : (dto2 * 100).toFixed(2) + "%"
-  Ddto3.value = isNaN(dto3) ? dto3 = 0 : (dto3 * 100).toFixed(2) + "%"
-  DdtoF.value = ((1 - (1 - dto1) * (1 - dto2) * (1 - dto3)) * 100).toFixed(2) + "%";
-  parseFloat(DdtoF.value) > 100 || parseFloat(DdtoF.value) < 0 ? DdtoF.value = "100.00%" : null
+  Ddto1.value = PerCent1(Ddto1.value, 2)
+  Ddto2.value = PerCent1(Ddto2.value, 2)
+  Ddto3.value = PerCent1(Ddto3.value, 2)
+  DdtoF.value = PerCent1((1 - (1 - Ddto1.value) * (1 - Ddto2.value) * (1 - Ddto3.value)), 2)
+  parseFloat(DdtoF.value) > 100 || parseFloat(DdtoF.value) < 0 ? DdtoF.value = PerCent2(100, 2) : DdtoF.value = PerCent2(0, 2)
   CalculoPrecio();
 }
 
-const inp = document.getElementById("ComplementoModelo").getElementsByTagName("input");
-const DPrecio = document.getElementById("Precio")
-
 function IGIC() {
   document.getElementById("Placelabel_IVA").innerHTML = document.getElementById("Placelabel_IVA").innerHTML == "IGIC" ? "IVA" : "IGIC"
-  document.getElementById("IVA").value = document.getElementById("Placelabel_IVA").innerHTML == "IGIC" ? "7.00%" : "21.00%"
+  document.getElementById("IVA").value = document.getElementById("Placelabel_IVA").innerHTML == "IGIC" ? PerCent2(7, 2) : PerCent2(21, 2)
   GuardarDatos()
   ModifTable()
 }
@@ -133,9 +125,6 @@ function CalculoPrecio() {
   } else {
     DPrecio.value = parseFloat(DPrecio.value).toFixed(2) + " €";
     Precio = parseFloat(DPrecio.value);
-    for (i = 0, len = inp.length / 2; i < len; i++) {
-      inp[2 * i + 1].value != "" ? Precio += parseFloat(inp[2 * i + 1].value) : null
-    }
     dPrecioNeto.value = (Precio * (1 - parseFloat(DdtoF.value) / 100)).toFixed(2) + " €";
     !isNaN(parseFloat(dCantidad.value)) ? document.getElementById("PrecioNetoTotal").value = (parseFloat(dPrecioNeto.value) * parseFloat(dCantidad.value)).toFixed(2) + " €" : null
   }
@@ -160,9 +149,6 @@ function RegistrarModelo() {
     document.getElementById("PrecioNetoTotal").value,
   ];
   Reference[j] = document.getElementById("textoModelo").value;
-  for (i = 0, len = inp.length / 2; i < len; i++) {
-    Reference[j] = Reference[j] + "\r" + inp[2 * i].value;
-  }
   localStorage.setItem("TableOferta", JSON.stringify(Table));
   localStorage.setItem("TextoModelo", JSON.stringify(Reference));
   PushDB();
@@ -178,45 +164,44 @@ function PushDB() {
   ClearTable();
   let TotalOfertaPrecio = 0;
   let itemCount = "001";
-  if (Table) {
-    for (i = 0, Tablelen = Table.length; i < Tablelen; i++) {
-      if (Table[i][0]) {
-        item = itemCount;
-        itemCount = ("000" + (parseFloat(itemCount) + 1)).slice(-3);
-      } else {
-        item = "";
-        Table[i][1] = ""
-        Table[i][2] = ""
-        Table[i][3] = ""
-        Table[i][4] = ""
-        Table[i][5] = ""
-      }
-      Table_Detalle_tbody.insertRow().innerHTML = "<th>" + item + "</th><td><input></td><td><textarea></textarea></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td>";
-      Table_Detalle_th[i + 8].insertAdjacentHTML("beforeend", `<button><i class='bi bi-x-octagon'style='color:red;font-size:15px;vertical-align:bottom' onclick='BorrarLinea(${i})'></i></button>`);
-      if (i) {
-        document.getElementById("Table_Detalle").getElementsByTagName("td")[7 * i + 1].insertAdjacentHTML(
-          "beforeend", `<button><i class='bi bi-arrow-up-square'style='color: green;font-size:15px;margin-right:10px' onclick='MoveItem(${i},+1)'/></button>`);
-      }
-      for (j = 0; j < 6; j++) { Table_Detalle_input[j + 6 * i].value = Table[i][j] }
-      if (!isNaN(parseFloat(Table[i][5]))) { TotalOfertaPrecio += parseFloat(Table[i][5]) }
-      Table_Detalle_textarea[i].innerHTML = Reference[i];
-      Table_Detalle_textarea[i].rows = 0;
-      Table_Detalle_textarea[i].rows = parseFloat(document.getElementById("Table_Detalle").getElementsByTagName("textarea")[i].textContent.split("\n").length + 1
-      );
-      Table[i][0] ? CheckStock(i) : null
+  for (i = 0, Tablelen = Table.length; i < Tablelen; i++) {
+    if (Table[i][0]) {
+      item = itemCount;
+      itemCount = ("000" + (parseFloat(itemCount) + 1)).slice(-3);
+    } else {
+      item = ""; Table[i] = ""
     }
+    Table_Detalle_tbody.insertRow().innerHTML = "<th>" + item + "</th><td><input></td><td><textarea></textarea></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td>";
+    Table_Detalle_th[i + 8].insertAdjacentHTML("beforeend", `<button><i class='bi bi-x-octagon'style='color:red;font-size:15px;vertical-align:bottom' onclick='BorrarLinea(${i})'></i></button>`);
+    if (i) {
+      document.getElementById("Table_Detalle").getElementsByTagName("td")[7 * i + 1].insertAdjacentHTML(
+        "beforeend", `<button><i class='bi bi-arrow-up-square'style='color: green;font-size:15px;margin-right:10px' onclick='MoveItem(${i},+1)'/></button>`);
+    }
+    for (j = 0; j < 6; j++) {
+      Table_Detalle_input[j + 6 * i].value = Table[i][j]
+    }
+    if (!isNaN(parseFloat(Table[i][5]))) {
+      TotalOfertaPrecio += parseFloat(Table[i][5])
+    }
+    Table_Detalle_textarea[i].innerHTML = Reference[i];
+    Table_Detalle_textarea[i].rows = 0;
+    Table_Detalle_textarea[i].rows = parseFloat(document.getElementById("Table_Detalle").getElementsByTagName("textarea")[i].textContent.split("\n").length + 1
+    );
+    Table[i][0] ? CheckStock(i) : null
   }
-  !dDescuentoPP.value ? dDescuentoPP.value = 0 + "%" : null
-  !dIVA.value ? dIVA.value = 21 + "%" : null
+  !dDescuentoPP.value ? dDescuentoPP.value = PerCent2(0, 2) : null
+  !dIVA.value ? dIVA.value = PerCent2(21, 2) : null
 
   if (parseFloat(dCoste_Portes.value) > 0) {
     dCoste_Portes.value = parseFloat(dCoste_Portes.value).toFixed(2) + " €"
     TotalOfertaPrecio += parseFloat(document.getElementById("Coste_Portes").value)
+    document.getElementById("Coste_Portes").style.display = ""
+    document.getElementById("label_Portes").style.display = ""
   } else {
     dCoste_Portes.value = "0 €"
+    document.getElementById("Coste_Portes").style.display = "none"
+    document.getElementById("label_Portes").style.display = "none"
   }
-  TotalOfertaPrecio < 300 ? document.getElementById("Coste_Portes").style.display = "" : "none"
-  TotalOfertaPrecio < 300 ? document.getElementById("label_Portes").style.display = "" : "none"
   dDescuentoPP.value = parseFloat(dDescuentoPP.value).toFixed(2) + "%";
   dIVA.value = parseFloat(dIVA.value).toFixed(0) + "%";
   document.getElementById("TotalOferta").textContent = TotalOfertaPrecio.toFixed(2) + " €";
@@ -321,14 +306,6 @@ function ModifTable() {
 function AñadirComplemento() {
   document.getElementById("ComplementoModelo").insertAdjacentHTML("afterbegin", "<div class='row' id='RowComplemento'><div class='col-6'><input type='text' class='form-control' placeholder='Complemento'/></div><div class='col-6'><input onchange='ModifComplemento()' type='text' class='form-control' placeholder='Precio (€ o %)'></div></div>");
   ModifComplemento();
-}
-
-const Complementoinput = document.getElementById("ComplementoModelo").getElementsByTagName("input");
-function ModifComplemento() {
-  for (i = 0, len = Complementoinput.length; i < len / 2; i++) {
-    Complementoinput[2 * i + 1].value == "" ? null : Complementoinput[2 * i + 1].value.endsWith("%") ? document.getElementById("Precio").value != "" ? Complementoinput[2 * i + 1].value = ((parseFloat(Complementoinput[2 * i + 1].value) / 100) * parseFloat(document.getElementById("Precio").value)).toFixed(2) + " €" : null : Complementoinput[2 * i + 1].value = parseFloat(Complementoinput[2 * i + 1].value) + " €";
-  }
-  CalculoPrecio();
 }
 
 function CondicionEntrega() {
