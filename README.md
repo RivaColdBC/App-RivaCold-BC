@@ -2,7 +2,7 @@
 
 ![Contribution guidelines for this project](resources/BCSYSTEMS%2BRIVACOD.jpg)
 
-## Plataforma de aplicación de escriptorio
+## Plataforma de aplicación de escritorio
 
 *Plataforma creado mediante NodeJS, ElectronJS y JavaScript.*
 
