@@ -157,6 +157,21 @@ function DescuentoX(Modelo) {
   document.getElementById("Descuento_" + Modelo).value = (parseFloat(document.getElementById("Descuento_" + Modelo).value) || 0) + " %"
 }
 
+function Ordenar() {
+  OrderArray = []
+  for (i = 0, len = TablaEqBody.getElementsByTagName("tr").length; i < len; i++) {
+    OrderArray[i] = []
+    OrderArray[i]["HTML"] = TablaEqBody.getElementsByTagName("tr")[i].outerHTML
+    OrderArray[i]["Potencia"] = parseFloat(TablaEqBody.getElementsByTagName("tr")[i].getElementsByTagName("th")[3].innerHTML)
+  }
+  OrderArray.sort(function (a, b) { if (a.Potencia > b.Potencia) { return +1; } else { return -1; } })
+  for (i = 0, len = TablaEqBody.getElementsByTagName("tr").length; i < len; i++) {
+    TablaEqBody.getElementsByTagName("tr")[i].outerHTML = OrderArray[i]["HTML"]
+  }
+}
+
+
+
 function MarcaA_CondTrabajo() {
   for (i = 0, len = TablaEqBody.getElementsByTagName("tr").length; i < len; i++) {
     TablaEqBody.getElementsByTagName("tr")[i].getElementsByTagName("th")[3].innerHTML = parseFloat(TablaEqBody.getElementsByTagName("tr")[i].getElementsByTagName("select")[0].value).toFixed(0) + " W"
@@ -270,7 +285,7 @@ function ListadoOptimizarTamb() {
 
 
 function EliminarFila(i) {
-  document.getElementById(`Row_${i}`).innerHTML = "";
+  document.getElementById(`Row_${i}`).outerHTML = "";
 }
 
 var DT = 0

@@ -90,15 +90,17 @@
       <thead>
         <tr>
           <th></th>
-          <th>Modelo<br>A</th>
-          <th>T.Ambiente<br>T.Cámara</th>
-          <th>Potencia<br>A</th>
-          <th>Modelo<br>B</th>
-          <th>Potencia<br>B</th>
-          <th>Potencia<br>A/B</th>
-          <th>Precio<br>A</th>
-          <th>Precio<br>B</th>
-          <th>Precio<br>A/B</th>
+          <th> Modelo <br> A </th>
+          <th> T.Ambiente <br>T.Cámara</th>
+          <th> Potencia <br> A
+            <button type="button"> <i class="bi bi-bar-chart-steps" onclick=" Ordenar()" title="Ordenar"> </i> </button>
+          </th>
+          <th> Modelo <br> B </th>
+          <th> Potencia <br> B </th>
+          <th> Potencia <br> A/B </th>
+          <th> Precio <br> A </th>
+          <th> Precio <br> B </th>
+          <th> Precio <br> A/B </th>
         </tr>
       </thead>
       <tbody id="Table_body" onchange="MarcaA_CondTrabajo(),MarcaB_Equivalencia()"></tbody>
@@ -138,7 +140,6 @@
       <i class="bi bi-sunrise" onclick="ListadoOptimizarTamb()"> </i>
       <select style="vertical-align:super;height: 30px;" id="Select_Tamb" onchange="ListadoOptimizarTamb()"></select>
     </button>
-
   </div>
 </nav>
 
