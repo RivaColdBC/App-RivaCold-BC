@@ -104,7 +104,7 @@ function SeleccionarFreon(Modelo) {
 function ListadoModelo() {
   DBMarcaA = DB_A
     .filter((item) => item.Gama == S_Gama_A.value)
-    .filter((item) => item.Marca == S_Marca_A.value).sort(function (a, b) { if (a.Ref > b.Ref) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Refrigerante > b.Refrigerante) { return -1; } else { return +1; } }).sort(function (a, b) { if (a.Aplicación > b.Aplicación) { return 1; } else { return -1; } })
+    .filter((item) => item.Marca == S_Marca_A.value)
   TablaEqBody.innerHTML = "";
   document.getElementById("Select_Tamb").innerHTML = ""
   PFField = Object.getOwnPropertyNames(DBMarcaA[0]).sort().reverse();
@@ -180,6 +180,7 @@ function MarcaA_CondTrabajo() {
 
 function MarcaB_Equivalencia() {
   DBMarcaA = DB_A.filter((item) => item.Gama == S_Gama_A.value).filter((item) => item.Marca == S_Marca_A.value);
+  console.log(DBMarcaA)
   DescuentoA = 1
   Dto1 = 1 - (parseFloat(document.getElementById("Descuento_A_1").value) || 0) / 100
   Dto2 = 1 - (parseFloat(document.getElementById("Descuento_A_2").value) || 0) / 100

@@ -17,10 +17,10 @@
     "yarn": "^1.22.19"
   },
   "dependencies": {
-    "fake-progress": "^1.0.4",
-    "localforage": "^1.10.0",
-    "node-adodb": "^5.0.3",
-    "tedious": "^16.0.0"
+      "fake-progress": "^1.0.4",
+      "localforage": "^1.10.0",
+      "node-adodb": "^5.0.3",
+      "tedious": "^16.0.0"
   },
   "build": {
     "appId": "com.electron.rivacoldselect",
