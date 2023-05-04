@@ -7,7 +7,6 @@ const list_gama = document.getElementById("list_Gama");
 const list_type = document.getElementById("list_type");
 const list_modelo = document.getElementById("list_modelo");
 
-
 function Display_Tabla(Table, j) {
   dTable = document.getElementById(Table)
   len = dTable.getElementsByTagName("textarea").length;
@@ -179,7 +178,7 @@ function PushDB() {
         "beforeend", `<button><i class='bi bi-arrow-up-square'style='color: green;font-size:15px;margin-right:10px' onclick='MoveItem(${i},+1)'/></button>`);
     }
     for (j = 0; j < 6; j++) {
-      Table_Detalle_input[j + 6 * i].value = Table[i][j]
+      Table_Detalle_input[j + 6 * i].value = Table[i][j] || ""
     }
     if (!isNaN(parseFloat(Table[i][5]))) {
       TotalOfertaPrecio += parseFloat(Table[i][5])
@@ -375,192 +374,8 @@ function AltaTexto() {
   PushDB();
 }
 
-const table_registro_oferta_tbody = document.getElementById("table_registro_oferta").getElementsByTagName("tbody")[0]
-const table_registro_oferta_td = document.getElementById("table_registro_oferta").getElementsByTagName("td")
-function RegistroOferta() {
-  table_registro_oferta_tbody.innerHTML = "";
-  const Count = 5;
-  let j = -1;
-  if (Registro.length > 1) {
-    for (i = 0; i < Registro.length; i++) {
-      if (i == 0 || Registro[i - 1]["NOferta"] != Registro[i]["NOferta"]) {
-        table_registro_oferta_tbody.insertRow().innerHTML = "<td scope='row'/><td/><td/><td/><td style='text-align:center'/>";
-        j += 1;
-        table_registro_oferta_td[j * Count + 0].innerText = j + 1;
-        table_registro_oferta_td[j * Count + 1].innerText = Registro[i]["Cabecera"].split(";")[0];
-        table_registro_oferta_td[j * Count + 2].innerText = Registro[i]["Cabecera"].split(";")[13];
-        table_registro_oferta_td[j * Count + 3].innerText = Registro[i]["Cabecera"].split(";")[3];
-        // table_registro_oferta_td[j * Count + 4].insertAdjacentHTML("beforeend", "<button><i class='bi bi-clipboard-plus'style='color:green;font-size:15px;' onclick='AccederRegistro(" + JSON.stringify(Registro[i]["Cabecera"].split(";")[0]) + ")'></i></button><label style='width:30%'></label><button><i class='bi bi-backspace'style='color:red;font-size:15px' onclick='BorrarRegistro(" + JSON.stringify(Registro[i]["Cabecera"].split(";")[0]) + ")'></i></button>"
-        table_registro_oferta_td[j * Count + 4].insertAdjacentHTML("beforeend", "<button><i class='bi bi-clipboard-plus'style='color:green;font-size:15px;' onclick='AccederRegistro(" + JSON.stringify(Registro[i]["Cabecera"].split(";")[0]) + ")' data-bs-dismiss='modal'/></button>"
-        );
-      }
-    }
-  }
-}
 
-function BorrarRegistro(j) {
-  if (document.getElementById("AzureSQL").checked) {
-    const { Connection, Request, TYPES } = require("tedious");
-    const config = {
-      authentication: {
-        options: { userName: "gestorbcloud", password: "BCSYSTEMS&bccloud08918" },
-        type: "default",
-      },
-      server: "bccloud.database.windows.net",
-      options: { database: "bccloud", encrypt: true },
-    };
-    var connection = new Connection(config);
-    connection.on("connect", function () {
-      requestDelete = new Request(
-        "DELETE FROM dbo.RegOferta WHERE NOferta = @Cabecera",
-        (err) => { if (err) { throw err; } }
-      );
-      requestDelete.addParameter("Cabecera", TYPES.VarChar, j)
-      requestDelete.on("requestCompleted", function () {
-        SQL(TypeDB())
-      });
-      connection.execSql(requestDelete);
-    });
-    connection.connect();
-  } else if (document.getElementById("Servidor").checked) {
-    const oledb = require("node-adodb");
-    oledb.PATH = "./resources/adodb.js";
-    var connection = oledb.open(
-      "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\\\call-bc\\Carpetas Publicas\\TECNIC\\RivaColdSelect\\RivaColdSelect.accdb;", process.arch.includes("64"));
-    connection.execute('DELETE FROM RegOferta WHERE NOferta="' + j + '"');
-  } else if (document.getElementById("Local").checked) {
-    Directorio = __dirname.replace("\\app.asar", "");
-    var connection = oledb.open("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + Directorio + "\\BaseDatos\\RivaColdSelect.accdb;", process.arch.includes("64"));
-    connection.execute('DELETE FROM RegOferta WHERE NOferta="' + j + '"');
-  }
-}
-
-function AccederRegistro(NOferta) {
-  for (i = 0; i < Registro.length; i++) {
-    if (Registro[i]["NOferta"] == NOferta) {
-      for (n = 0; n < Campo.length; n++) {
-        document.getElementById([Campo[n]]).value =
-          Registro[i]["Cabecera"].split(";")[n];
-      }
-    }
-  }
-  var Count = 0;
-  Table = [];
-  Reference = [];
-  for (i = 0; i < Registro.length; i++) {
-    if (Registro[i]["NOferta"] == NOferta) {
-      Table[Count] = [];
-      for (j = 0; j < 6; j++) {
-        Table[Count][j] = Registro[i]["Oferta"].split(";")[j];
-      }
-      Reference[Count] = Registro[i]["Oferta"].split(";")[6];
-      Count += 1;
-    }
-  }
-  localStorage.setItem("TableOferta", JSON.stringify(Table));
-  localStorage.setItem("TextoModelo", JSON.stringify(Reference));
-  PushDB();
-  GuardarDatos();
-}
-
-function GuardarRegistro() {
-  if (document.getElementById("AzureSQL").checked) {
-    const { Connection, Request, TYPES } = require("tedious");
-    const config = {
-      authentication: {
-        options: { userName: "gestorbcloud", password: "BCSYSTEMS&bccloud08918" },
-        type: "default",
-      },
-      server: "bccloud.database.windows.net",
-      options: { database: "bccloud", encrypt: true },
-    };
-    var connection = new Connection(config);
-    connection.on("connect", function () {
-      requestDelete = new Request(
-        "DELETE FROM dbo.RegOferta WHERE NOferta = @Cabecera",
-        (err) => {
-          if (err) {
-            throw err;
-          }
-        }
-      );
-      requestDelete.addParameter("Cabecera", TYPES.VarChar, Cabecera[0]);
-      requestDelete.on("requestCompleted", function () {
-        if (Table && Reference && Cabecera) {
-          var i = 0;
-          FunctrequestInsert(connection, i, Table, Reference, Cabecera);
-        }
-      });
-      connection.execSql(requestDelete);
-    });
-    connection.connect();
-    connection.close();
-  } else {
-    const oledb = require("node-adodb");
-    oledb.PATH = "./resources/adodb.js";
-    if (document.getElementById("Servidor").checked) {
-      var connection = oledb.open(
-        "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\\\call-bc\\Carpetas Publicas\\TECNIC\\RivaColdSelect\\RivaColdSelect.accdb;",
-        process.arch.includes("64")
-      );
-    } else if (document.getElementById("Local").checked) {
-      Directorio = __dirname.replace("\\app.asar", "");
-      var connection = oledb.open(
-        "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
-        Directorio +
-        "\\BaseDatos\\RivaColdSelect.accdb;",
-        process.arch.includes("64")
-      );
-    }
-    connection.execute(
-      'DELETE FROM RegOferta WHERE NOferta="' + Cabecera[0] + '"'
-    );
-    if (Table && Reference && Cabecera) {
-      for (i = 0; i < Table.length; i++) {
-        dCabecera = Cabecera[0]
-        for (j = 1, Campolen = Campo.length; j < Campolen; j++) {
-          dCabecera += ";" + Cabecera[j]
-        }
-        connection.execute(
-          'INSERT INTO RegOferta (NOferta,Cabecera,Oferta) VALUES ("' + Cabecera[0] + '","' + dCabecera + '","' + Table[i][0] + ";" + Table[i][1] + ";" + Table[i][2] + ";" + Table[i][3] + ";" + Table[i][4] + ";" + Table[i][5] + ";" + Reference[i] + '")');
-      }
-    }
-  }
-}
-function FunctrequestInsert(connection, i, Table, Reference, Cabecera) {
-  const { Request, TYPES } = require("tedious");
-  requestInsert = new Request(
-    "INSERT INTO dbo.RegOferta (NOferta,Cabecera,Oferta) VALUES (@Cabecera,@TextCabecera,@TextOferta)",
-    function (error) { error ? console.log(error) : null });
-  TextCabecera = Cabecera[0]
-  for (j = 1, Campolen = Campo.length; j < Campolen; j++) {
-    TextCabecera += ";" + Cabecera[j]
-  }
-  const TextOferta = Table[i][0] + ";" + Table[i][1] + ";" + Table[i][2] + ";" + Table[i][3] + ";" + Table[i][4] + ";" + Table[i][5] + ";" + Reference[i];
-  requestInsert.addParameter("Cabecera", TYPES.VarChar, Cabecera[0]);
-  requestInsert.addParameter("TextCabecera", TYPES.VarChar, TextCabecera);
-  requestInsert.addParameter("TextOferta", TYPES.VarChar, TextOferta);
-  requestInsert.on("requestCompleted", function () {
-    if (i < Reference.length - 1) {
-      i += 1;
-      FunctrequestInsert(connection, i, Table, Reference, Cabecera);
-    } else {
-      SQL(TypeDB())
-    }
-  });
-  connection.execSql(requestInsert);
-}
-
-function TypeDB() {
-  if (document.getElementById("Local").checked) {
-    return "Local";
-  } else if (document.getElementById("Servidor").checked) {
-    return "Servidor";
-  } else if (document.getElementById("AzureSQL").checked) {
-    return "AzureSQL";
-  }
-}
-
+const localforage = require("localforage");
 localforage.getItem("RivaColdStock").then(function (value) {
   DBStock = JSON.parse(value)
   localforage.getItem("RivaColdTarifa0000").then(function (value) {

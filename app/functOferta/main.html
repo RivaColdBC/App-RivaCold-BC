@@ -338,23 +338,7 @@
                 <button type="button" class="bi bi-x-lg" style="font-size:25px;" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="btn-group" role="group" style="width: 100%;align-self: center;">
-                    <input type="radio" class="btn-check" name="btnradio" id="Servidor" autocomplete="off" disabled>
-                    <label class="btn btn-outline-primary" for="Servidor">Servidor Oficina</label>
-                    <input type="radio" class="btn-check" name="btnradio" id="Local" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="Local">Local Offline</label>
-                    <input type="radio" class="btn-check" name="btnradio" id="AzureSQL" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="AzureSQL">AzureSQL</label>
-                </div>
-                <div class="progress" id="divprogressbar" style="height:
-                        30px; margin: 0px;padding: 0px;display: none;">
-                    <div class="spinner-border text-success" role="status" style="text-align: end;"></div>
-                    <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated"
-                        role="progressbar" aria-label="SQL Conection Load Progress" style="width: 0%;">0%</div>
-                </div>
-                <div id="GuardarDB" style="display: none;text-align:center;color: red;">
-                    Guarda completa, actualice el base de datos en el inicio para refrescar.
-                </div>
+                <div id="MensajeRegistro" style="text-align:center;color: red;"> </div>
                 <table class="table" style="width: 100%;" id="table_registro_oferta">
                     <thead>
                         <tr>
@@ -692,10 +676,12 @@
         <button onclick="AltaTexto()">
             <i data-bs-title="Alta linea de texto" class="bi bi-receipt" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
+
         </button> <button data-bs-toggle="modal" data-bs-target="#Registro" onclick="RegistroOferta()">
             <i data-bs-title="Base de datos de oferta" class="bi bi-globe2" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
         </button> <br>
+
         <button data-bs-toggle="modal" data-bs-target="#AñadirRef">
             <i data-bs-title="Alta linea de articulo" class="bi
                     bi-plus-square" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -737,12 +723,11 @@
         </button>
     </div>
 </nav>
-<script src="../functAux/Funct_SQL.js" async></script>
 <script src="./controller.js" async></script>
+<script src="./registro.js" async></script>
 <script src="../functAux/Funct_Search.js" async></script>
 <script src="../functAux/Funct_Print.js" async></script>
 <script src="../functAux/Funct_tooltip.js" async></script>
 <script src="../functAux/Funct_Formate.js" async></script>
-
 
 </html>
