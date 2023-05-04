@@ -104,14 +104,15 @@ function CalculoDescuento() {
   Ddto1.value = PerCent1(Ddto1.value, 2)
   Ddto2.value = PerCent1(Ddto2.value, 2)
   Ddto3.value = PerCent1(Ddto3.value, 2)
-  DdtoF.value = PerCent1((1 - (1 - Ddto1.value) * (1 - Ddto2.value) * (1 - Ddto3.value)), 2)
-  parseFloat(DdtoF.value) > 100 || parseFloat(DdtoF.value) < 0 ? DdtoF.value = PerCent2(100, 2) : DdtoF.value = PerCent2(0, 2)
+  DdtoF.value = PerCent1((1 - (1 - parseFloat(Ddto1.value) / 100) * (1 - parseFloat(Ddto2.value) / 100) * (1 - parseFloat(Ddto3.value) / 100)) * 100, 2)
+  console.log(parseFloat(DdtoF.value))
+  parseFloat(DdtoF.value) > 100 ? DdtoF.value = PerCent1(100, 2) : parseFloat(DdtoF.value) < 0 ? DdtoF.value = PerCent1(0, 2) : null
   CalculoPrecio();
 }
 
 function IGIC() {
   document.getElementById("Placelabel_IVA").innerHTML = document.getElementById("Placelabel_IVA").innerHTML == "IGIC" ? "IVA" : "IGIC"
-  document.getElementById("IVA").value = document.getElementById("Placelabel_IVA").innerHTML == "IGIC" ? PerCent2(7, 2) : PerCent2(21, 2)
+  document.getElementById("IVA").value = document.getElementById("Placelabel_IVA").innerHTML == "IGIC" ? PerCent1(7, 2) : PerCent1(21, 2)
   GuardarDatos()
   ModifTable()
 }
@@ -189,8 +190,8 @@ function PushDB() {
     );
     Table[i][0] ? CheckStock(i) : null
   }
-  !dDescuentoPP.value ? dDescuentoPP.value = PerCent2(0, 2) : null
-  !dIVA.value ? dIVA.value = PerCent2(21, 2) : null
+  !dDescuentoPP.value ? dDescuentoPP.value = PerCent1(0, 2) : null
+  !dIVA.value ? dIVA.value = PerCent1(21, 2) : null
 
   if (parseFloat(dCoste_Portes.value) > 0) {
     dCoste_Portes.value = parseFloat(dCoste_Portes.value).toFixed(2) + " €"

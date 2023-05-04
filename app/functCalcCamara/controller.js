@@ -171,7 +171,7 @@ function CalcPotencia() {
     dAbatimiento.checked ? dSelect_Trafico3.value = "75_110_110" : null
     Select_Trafico3 = dSelect_Trafico3.value
     //Distancia entre el evaporador y la unidad condensadora
-    DistanciaEVUC = parseFloat(dDistanciaEVUC.value) * 0.003 < 0.06 ? 0 : parseFloat(dDistanciaEVUC.value) * 0.003
+    DistanciaEVUC = parseFloat(dDistanciaEVUC.value) * 0.003 < 0.06 ? 1 : 1 - parseFloat(dDistanciaEVUC.value) * 0.003
     //Sumatorio total de las potencias
     Carga_Resp = Temp_Camara > Temp_Cong ? Select_Prederminado == 2 ? CP_Resp * Densidad * Volumen * Vol_Util * (24 / Time_Cong) / 50 : CP_Resp * Densidad * Volumen * Vol_Util * (24 / Time_Cong) : 0;
     Carga_Interna = Length_A_C * Length_B_D * TablaPrederminado[Select_Prederminado][4]
@@ -187,9 +187,9 @@ function CalcPotencia() {
     Carga_Producto = (PesoDiario * CargaProducto + PesoDiario * Envoltorio * CP_Envoltorio * (Temp_Carga - Temp_Camara)) / (24 * 3600) * (24 / Time_Cong) * (24 / Time_Comp)
     Carga_Aire = (Puerta_Check1 * (Puerta_Ancho1 * Math.pow(Puerta_Altura1, 1.5) * Select_Trafico1.toString().split("_")[Select_Prederminado]) + Puerta_Check2 * (Puerta_Ancho2 * Math.pow(Puerta_Altura2, 1.5) * Select_Trafico2.toString().split("_")[Select_Prederminado]) + Puerta_Check3 * (Puerta_Ancho3 * Math.pow(Puerta_Altura3, 1.5) * Select_Trafico3.toString().split("_")[Select_Prederminado])) * (AirAmb[1] / AirAmb[0] - AirCamara[1] / AirCamara[0]) / (24 * 3600)
     Carga_Fan = Volumen * 5
-    Carga_Total = (parseFloat(Carga_Termica) + parseFloat(Carga_Interna) + parseFloat(Carga_Producto) + parseFloat(Carga_Aire) + parseFloat(Carga_Resp) + parseFloat(Carga_Fan)) * (1 + Otras_Cargas + DistanciaEVUC)
-    Carga_Otra = Carga_Total / (1 + Otras_Cargas + DistanciaEVUC) * (Otras_Cargas + DistanciaEVUC)
-    dCarga_Termica.value = Carga_Termica.toFixed(0)
+    Carga_Total = (parseFloat(Carga_Termica) + parseFloat(Carga_Interna) + parseFloat(Carga_Producto) + parseFloat(Carga_Aire) + parseFloat(Carga_Resp) + parseFloat(Carga_Fan)) * (1 + Otras_Cargas) / DistanciaEVUC
+    Carga_Otra = Carga_Total * Otras_Cargas / DistanciaEVUC
+    dCarga_Termica.value = Carga_Termica.toFixed(0) 
     dCarga_Interna.value = Carga_Interna.toFixed(0)
     dCarga_Producto.value = Carga_Producto.toFixed(0)
     dCarga_Aire.value = Carga_Aire.toFixed(0)
@@ -208,8 +208,8 @@ function CalcPotencia() {
     document.getElementById("Suelo_Aislamiento_Check").checked ? RivaColdCamaraFilter = RivaColdCamara.filter(item => item.Suelo == "NO") : RivaColdCamaraFilter = RivaColdCamara.filter(item => item.Suelo == "SI")
     CamaraColdkit(RivaColdCamaraFilter, 10, 0)
     //Control de los equipos segun seleccion.
-    Select_Prederminado == 0 ? Aplicacion = "LBP" : Select_Prederminado == 1 ? Aplicacion = "MBP" : Select_Prederminado == 2 ? Aplicacion = "HBP" : null
-    RivaColdEqFilter = RivaColdEq.filter(item => item.Marca == "RivaCold").filter(item => item["Ficha producto_Stock"] == "Si").filter(item => item.Aplicación == Aplicacion)
+    Aplicacion = Select_Prederminado == 0 ? "LBP" : Select_Prederminado == 1 ? "MBP" : Select_Prederminado == 2 ? "HBP" : null
+    RivaColdEqFilter = RivaColdEq.filter(item => item.Marca == "RivaCold").filter(item => item["Ficha producto_Stock disponible"] == "Si").filter(item => item.Aplicación == Aplicacion)
     dTable_seleccion_equipo.style.display = "none"
     dSeleccion_equipo.style.display = "none"
     ddropdown_equipo.innerHTML = ""
