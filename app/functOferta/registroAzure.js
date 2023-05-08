@@ -1,14 +1,14 @@
-const config = {
-    authentication: {
-        options: { userName: "gestorbcloud", password: "BCSYSTEMS&bccloud08918" },
-        type: "default",
-    },
-    server: "bccloud.database.windows.net",
-    options: { database: "bccloud", encrypt: true },
-};
+
 function GuardarRegistro() {
     const { Connection, Request, TYPES } = require("tedious");
-
+    const config = {
+        authentication: {
+            options: { userName: "gestorbcloud", password: "BCSYSTEMS&bccloud08918" },
+            type: "default",
+        },
+        server: "bccloud.database.windows.net",
+        options: { database: "bccloud", encrypt: true },
+    };
     var connection = new Connection(config);
     connection.on("connect", function () {
         requestDelete = new Request("DELETE FROM dbo.RegOferta WHERE NOferta = @Cabecera", err => err);

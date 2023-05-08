@@ -13,7 +13,7 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="./style.css">
-    <title>RivaColdSelect - Plantilla de Oferta</title>
+    <title> App RivaCold BC - Plantilla de Oferta </title>
 </head>
 <header>
     <img src="../../resources/WebEco.png" style="height:1.8cm;width:auto;display:inline-block">
@@ -277,7 +277,8 @@
                 <div class="col-1"> </div>
                 <div class="col-2" style="text-align: center;">
                     <h7 style="margin-top: 20px; display:none" id="label_Portes"><br>Portes:</h7>
-                    <input type="text" style="text-align:center;display:none" value="0 €" id="Coste_Portes">
+                    <input class="Money€" type="text" style="text-align:center;display:none" value="0 €"
+                        id="Coste_Portes">
                 </div>
                 <div class="col-4"> </div>
                 <div class="col-5">
@@ -289,7 +290,7 @@
             <div class="row">
                 <div class="col-9">
                     <table id="Table_Impuesto" style="width:
-                            100%;vertical-align:middle; margin-top: 5px;height: 100%;">
+100%;vertical-align:middle; margin-top: 5px;height: 100%;">
                         <thead>
                             <tr style="vertical-align:middle;text-align:center">
                                 <th id="DescuentoPPC" style="width: 20%;">Dto. P.P.</th>
@@ -324,11 +325,11 @@
         <div class="table-group-divider"></div>
     </div>
     <dt style="font-size:x-small;text-align: center;">
-        Reg. Merc. de Barcelona, Tomo 35098, Folio 204, hoja B-260853, Inscripción 1 - NIF: ESB63034227</dt>
+        Reg. Merc. de Barcelona, Tomo 35098, Folio 204, hoja B-260853, Inscripción 1 - NIF: ES-B63034227</dt>
 </footer>
 
-
-<div class="modal fade" id="Registro" tabindex="-1" aria-hidden="true">
+<!-- Modal Registro de oferta -->
+<div class="modal fade" id="RegistroAzure" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -356,7 +357,36 @@
         </div>
     </div>
 </div>
-
+<!-- Modal Registro de oferta Local -->
+<div class="modal fade" id="RegistroLocal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro Oferta</h5>
+                <input type="radio" class="btn-check" name="btnradio" autocomplete="off" id="Buton_RegistrarOferta">
+                <label class="btn btn-outline-primary" onclick="BorrarRegistroLocal()">Borrar Registro Local</label>
+                <button type="button" class="bi bi-x-lg" style="font-size:25px;" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table" style="width: 100%;" id="table_registro_oferta_local">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Num.Oferta</th>
+                            <th>Referencia</th>
+                            <th>Cliente</th>
+                            <th>Version</th>
+                            <th style="text-align: center;">Recuperar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Ficha cliente -->
 <div class="modal fade" id="FichaCliente" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -379,7 +409,7 @@
         </div>
     </div>
 </div>
-
+<!-- Modal Referencia de articulo -->
 <div class="modal fade" id="AñadirRef" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -459,13 +489,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" class="form-control" id="dto1" value="0.00 %">
+                                <input type="text" class="form-control" id="dto1" value="0,00 %">
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="dto2" value="0.00 %">
+                                <input type="text" class="form-control" id="dto2" value="0,00 %">
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="dto3" value="0.00 %">
+                                <input type="text" class="form-control" id="dto3" value="0,00 %">
                             </td>
                         </tr>
                         <tr>
@@ -475,7 +505,7 @@
                         </tr>
                         <tr>
                             <td colspan="3">
-                                <input type="text" class="form-control" value="0.00 %" id="dto.Final" readonly>
+                                <input type="text" class="form-control" value="0,00 %" id="dto.Final" readonly>
                             </td>
                         </tr>
                     </tbody>
@@ -488,7 +518,7 @@
         </div>
     </div>
 </div>
-
+<!-- Modal Condicion de entrega -->
 <div class="modal fade" id="CondEntrega" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -666,65 +696,66 @@
     <div class="position-fixed top-50 start-0 translate-middle-y">
         <button data-bs-toggle="modal" data-bs-target="#CondEntrega">
             <i data-bs-title="Ajustar condición de entrega" class="bi
-                    bi-box-seam" data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="custom-tooltip"> </i>
+bi-box-seam" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
         </button> <button type="button" data-bs-toggle="modal" data-bs-target="#FichaCliente">
             <i data-bs-title="Acceder a la ficha de cliente" class="bi
-                    bi-person" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip">
+bi-person" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip">
             </i>
         </button> <br>
         <button onclick="AltaTexto()">
             <i data-bs-title="Alta linea de texto" class="bi bi-receipt" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
-
-        </button> <button data-bs-toggle="modal" data-bs-target="#Registro" onclick="RegistroOferta()">
-            <i data-bs-title="Base de datos de oferta" class="bi bi-globe2" data-bs-toggle="tooltip"
-                data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
-        </button> <br>
+        </button>
 
         <button data-bs-toggle="modal" data-bs-target="#AñadirRef">
             <i data-bs-title="Alta linea de articulo" class="bi
-                    bi-plus-square" data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="custom-tooltip"> </i>
-        </button>
+bi-plus-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
+        </button> <br>
         <button onclick="PrintOferta()">
             <i class="bi bi-printer"> </i>
-        </button><br>
+        </button> <button onclick="ClearDB(),GuardarDatos()">
+            <i data-bs-title="Nueva oferta" class="bi bi-backspace" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-custom-class="custom-tooltip"> </i>
+        </button>
+        <br><br><br>
         <button onclick="Display_Tabla('Table_Detalle', 5)">
             <i data-bs-title="Ocultar descuento" class="bi bi-percent" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-custom-class="custom-tooltip"> </i>
         </button>
-        <button onclick="ClearDB(),GuardarDatos()">
-            <i data-bs-title="Nueva oferta" class="bi bi-backspace" data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="custom-tooltip"> </i>
-        </button> <br>
         <button onclick="Display_Tabla('Table_Detalle', 4)">
             <i data-bs-title="Ocultar precio de venta" class="bi
-                    bi-currency-euro" data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="custom-tooltip"> </i>
+bi-currency-euro" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
         </button> <br>
         <button onclick="Display_Impuesto()">
             <i data-bs-title="Ocultar Inpuesto" class="bi
-                    bi-airplane-engines" data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="custom-tooltip"> </i>
-        </button> <br>
+bi-airplane-engines" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
+        </button>
         <button id="button_DescuentoPP" onclick="Display_DescuentoPP()">
             <i data-bs-title="Ocultar dto. pronto pago" class="bi
-                    bi-piggy-bank" data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-custom-class="custom-tooltip"> </i>
+bi-piggy-bank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
         </button> <br>
         <button id="button_IGIC" onclick="IGIC()">
             <i class="bi bi-globe-europe-africa" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-custom-class="custom-tooltip" data-bs-title="IVA/IGIC"> </i>
-        </button> <br>
+        </button>
         <button id="button_Porte" onclick="Display_Portes()">
             <i class="bi bi-truck" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-custom-class="custom-tooltip" data-bs-title="Portes"> </i>
         </button>
+        <br><br><br>
+        <button data-bs-toggle="modal" data-bs-target="#RegistroAzure" onclick="RegistroOferta()">
+            <i data-bs-title="Base de datos Online" class="bi bi-globe2" data-bs-toggle="tooltip"
+                data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
+        </button>
+        <button onclick="RegistroOfertaLocal()" data-bs-toggle="modal" data-bs-target="#RegistroLocal">
+            <i data-bs-title="Historico de oferta" class="bi bi-clock-history" data-bs-toggle="tooltip"
+                data-bs-placement="top" data-bs-custom-class="custom-tooltip"> </i>
+        </button>
     </div>
 </nav>
 <script src="./controller.js" async></script>
-<script src="./registro.js" async></script>
+<script src="./registroAzure.js" async></script>
+<script src="./registroLocal.js" async></script>
 <script src="../functAux/Funct_Search.js" async></script>
 <script src="../functAux/Funct_Print.js" async></script>
 <script src="../functAux/Funct_tooltip.js" async></script>
