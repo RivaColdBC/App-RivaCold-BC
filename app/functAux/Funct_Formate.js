@@ -1,5 +1,7 @@
 function NumberFormatEUR(num) {
     return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(ParseNumber(num))
+} function FormatEUR(num) {
+    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(parseFloat(num))
 }
 
 function ParseNumber(num) {
@@ -15,10 +17,15 @@ function PerCent(A, B, Fixed) {
 }
 
 function PerCent1(A, Fixed) {
-    return (ParseNumber(A)).toFixed(Fixed) + " %"
+    if (A) {
+        return (ParseNumber(A)).toFixed(Fixed) + " %"
+    } return ((0).toFixed(Fixed) + " %")
+
 }
 
 function PerCent1coma(A, Fixed) {
-    return ((ParseNumber(A)).toFixed(Fixed) + " %").replace(".", ",")
+    if (A) {
+        return ((ParseNumber(A)).toFixed(Fixed) + " %").replace(".", ",")
+    } return ((0).toFixed(Fixed) + " %").replace(".", ",")
 }
 
