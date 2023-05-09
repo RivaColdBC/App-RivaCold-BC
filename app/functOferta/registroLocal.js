@@ -30,10 +30,13 @@ function AccederRegistroLocal(NOferta) {
     for (i = 0; i < RegLocalDatos.length; i++) {
         if (RegLocalDatos[i][7] == NOferta) {
             Table[Count] = [];
-            for (j = 0; j < 6; j++) {
-                Table[Count][j] = RegLocalDatos[i][j];
-            }
-            Reference[Count] = RegLocalDatos[i][6];
+            Table[Count][0] = RegLocalDatos[i][0] || ""
+            Table[Count][1] = parseFloat(RegLocalDatos[i][1]).toFixed(0) || ""
+            Table[Count][2] = parseFloat(RegLocalDatos[i][2]) || ""
+            Table[Count][3] = parseFloat(RegLocalDatos[i][3]) || ""
+            Table[Count][4] = Table[Count][2] * (1 - Table[Count][3] / 100) || ""
+            Table[Count][5] = Table[Count][4] * Table[Count][1] || ""
+            Reference[Count] = RegLocalDatos[i][6]
             Count += 1;
         }
     }
@@ -45,7 +48,6 @@ function AccederRegistroLocal(NOferta) {
 
 function SaveRegisterLocal(cab, tab, ref) {
     if (cab[0]) {
-
         date = new Date();
         Today = ("00" + date.getDate()).slice(-2) + "/" + ("00" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
         if (tab.length && ref.length) {

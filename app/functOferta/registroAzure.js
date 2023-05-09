@@ -102,15 +102,17 @@ function AccederRegistro(NOferta) {
     for (i = 0; i < Registro.length; i++) {
         if (Registro[i]["NOferta"] == NOferta) {
             Table[Count] = [];
-            for (j = 0; j < 6; j++) {
-                Table[Count][j] = Registro[i]["Oferta"].split(";")[j];
-            }
-            Reference[Count] = Registro[i]["Oferta"].split(";")[6];
+            Table[Count][0] = Registro[i]["Oferta"].split(";")[0] || ""
+            Table[Count][1] = parseFloat(Registro[i]["Oferta"].split(";")[1]).toFixed(0) || ""
+            Table[Count][2] = parseFloat(Registro[i]["Oferta"].split(";")[2]) || ""
+            Table[Count][3] = parseFloat(Registro[i]["Oferta"].split(";")[3]) || ""
+            Table[Count][4] = Table[Count][2] * (1 - Table[Count][3] / 100) || ""
+            Table[Count][5] = Table[Count][4] * Table[Count][1] || ""
+            Reference[Count] = Registro[i]["Oferta"].split(";")[6]
             Count += 1;
         }
     }
     localStorage.setItem("TableOferta", JSON.stringify(Table));
     localStorage.setItem("TextoModelo", JSON.stringify(Reference));
-    PushDB();
-    GuardarDatos();
+    PushDB(); ModifTable(); GuardarDatos();
 }

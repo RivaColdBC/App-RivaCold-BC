@@ -168,20 +168,23 @@ function PushDB() {
       item = itemCount;
       itemCount = ("000" + (ParseNumber(itemCount) + 1)).slice(-3);
     } else {
-      item = ""; Table[i] = ""
+      item = "";
     }
-    Table_Detalle_tbody.insertRow().innerHTML = "<th>" + item + "</th><td><input></td><td><textarea></textarea></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td><td><input style='text-align:center'></td>";
+    Table_Detalle_tbody.insertRow().innerHTML =
+      `<th>${item}</th>
+      <td><input value="${Table[i][0] || ""}"></td>
+      <td><textarea></textarea></td>
+      <td><input style='text-align:center' value="${Table[i][0] ? parseFloat(Table[i][1]) || "1" : ""}"></td>
+      <td><input style='text-align:center' value="${Table[i][0] ? FormatEUR(Table[i][2]) : ""}"></td>
+      <td><input style='text-align:center' value="${Table[i][0] ? PerCent1coma(Table[i][3], 2) || "0.00 %" : ""}"></td>
+      <td><input style='text-align:center' value="${Table[i][0] ? FormatEUR(Table[i][4]) : ""}"></td>
+      <td><input style='text-align:center' value="${Table[i][0] ? FormatEUR(Table[i][5]) : ""}"></td>`
     Table_Detalle_th[i + 8].insertAdjacentHTML("beforeend", `<button><i class='bi bi-x-octagon'style='color:red;font-size:15px;vertical-align:bottom' onclick='BorrarLinea(${i})'></i></button>`);
     if (i) {
       document.getElementById("Table_Detalle").getElementsByTagName("td")[7 * i + 1].insertAdjacentHTML(
         "beforeend", `<button><i class='bi bi-arrow-up-square'style='color: green;font-size:15px;margin-right:10px' onclick='MoveItem(${i},+1)'/></button>`);
     }
-    for (j = 0; j < 6; j++) {
-      Table_Detalle_input[j + 6 * i].value = Table[i][j] || ""
-    }
-    if (!isNaN(ParseNumber(Table[i][5]))) {
-      TotalOfertaPrecio += ParseNumber(Table[i][5])
-    }
+    TotalOfertaPrecio += Table[i][5]
     Table_Detalle_textarea[i].innerHTML = Reference[i];
     Table_Detalle_textarea[i].rows = 0;
     Table_Detalle_textarea[i].rows = ParseNumber(document.getElementById("Table_Detalle").getElementsByTagName("textarea")[i].textContent.split("\n").length + 1
@@ -203,10 +206,10 @@ function PushDB() {
   }
   dDescuentoPP.value = PerCent1coma(dDescuentoPP.value, 0);
   dIVA.value = PerCent1coma(dIVA.value, 0);
-  document.getElementById("TotalOferta").textContent = NumberFormatEUR(TotalOfertaPrecio);
-  dBaseImponible.textContent = NumberFormatEUR(TotalOfertaPrecio * (1 - ParseNumber(dDescuentoPP.value) / 100));
-  dImpuestoIVA.textContent = NumberFormatEUR(ParseNumber(dBaseImponible.textContent) * (ParseNumber(dIVA.value) / 100));
-  dTotalOfertaIVA.textContent = NumberFormatEUR(ParseNumber(dBaseImponible.textContent) * (1 + ParseNumber(dIVA.value) / 100));
+  document.getElementById("TotalOferta").textContent = FormatEUR(TotalOfertaPrecio);
+  dBaseImponible.textContent = FormatEUR(TotalOfertaPrecio * (1 - ParseNumber(dDescuentoPP.value) / 100));
+  dImpuestoIVA.textContent = FormatEUR(ParseNumber(dBaseImponible.textContent) * (ParseNumber(dIVA.value) / 100));
+  dTotalOfertaIVA.textContent = FormatEUR(ParseNumber(dBaseImponible.textContent) * (1 + ParseNumber(dIVA.value) / 100));
   Display_Tabla('Table_Detalle', 4)
   Display_Tabla('Table_Detalle', 4)
   Display_Tabla('Table_Detalle', 5)
@@ -289,14 +292,12 @@ function ClearTable() { for (i = 2, len = Table_Detalle.rows.length; i < len; i+
 function ModifTable() {
   if (Table_Detalle.rows.length > 2 && Table) {
     for (i = 0; i < Table.length; i++) {
-      for (j = 0; j < 6; j++) {
-        Table[i][j] = Table_Detalle_input[j + 6 * i].value;
-      }
-      Table[i][1] = Table[i][1] ? ParseNumber(Table[i][1]) : null;
-      Table[i][2] = Table[i][2] ? NumberFormatEUR(Table[i][2]) : null;
-      Table[i][3] = Table[i][3] ? PerCent1coma(Table[i][3], 0) : null;
-      Table[i][4] = Table[i][4] ? NumberFormatEUR(ParseNumber(Table[i][2]) * (1 - ParseNumber(Table[i][3]) / 100)) : null;
-      Table[i][5] = Table[i][5] ? NumberFormatEUR(ParseNumber(Table[i][4]) * ParseNumber(Table[i][1])) : null;
+      Table[i][0] = Table_Detalle_input[6 * i].value || ""
+      Table[i][1] = parseFloat(Table_Detalle_input[1 + 6 * i].value).toFixed(0) || ""
+      Table[i][2] = ParseNumber(Table_Detalle_input[2 + 6 * i].value) || ""
+      Table[i][3] = ParseNumber(Table_Detalle_input[3 + 6 * i].value) > 100 ? 100 : ParseNumber(Table_Detalle_input[3 + 6 * i].value) || ""
+      Table[i][4] = Table[i][2] * (1 - Table[i][3] / 100) || ""
+      Table[i][5] = Table[i][4] * Table[i][1] || ""
       Reference[i] = Table_Detalle_textarea[i].value;
     }
   }
