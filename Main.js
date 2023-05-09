@@ -12,7 +12,7 @@ function createWindow(url) {
     });
     !process.defaultApp && os.userInfo().username != "YYZ" ? win.removeMenu() : null
     win.maximize();
-    win.setTitle("RivaColdSelect");
+    win.setTitle("App-RivaCold-BC");
     url ? win.loadFile(url) : win.loadFile("./app/index.html");
     return
 }
@@ -25,11 +25,3 @@ app.on('ready', () => {
 })
 
 app.on("window-all-closed", () => { app.quit() });
-
-async function checkfs() {
-    const fs = require("fs");
-    if (fs.existSync("\\\\call-bc\\Carpetas Publicas\\TECNIC\\RivaColdSelect\\rivacoldselect Setup 1.2.9.exe")) {
-        options = { message: 'Actualización disponible en \\\\call-bc\\Carpetas Publicas\\TECNIC\\RivaColdSelect.', };
-        dialog.showMessageBox(null, options);
-    }
-}
