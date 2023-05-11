@@ -1,0 +1,42 @@
+{
+  "productName": "App-RivaCold-BC",
+  "appId": "com.app.rivacold.bc.electron",
+  "artifactName": "${productName}-setup-${version}.${ext}",
+  "publish": {
+    "provider": "github",
+    "repo": "https://github.com/Hu1a1a/App-RivaCold-BC.git",
+    "token": "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"
+  },
+  "asar": true,
+  "directories": {
+    "output": "release/"
+  },
+  "files": [
+    "**/*",
+    "!**/*.ts",
+    "!*.map",
+    "!package.json",
+    "!package-lock.json",
+    {
+      "from": "../dist",
+      "filter": ["**/*"]
+    }
+  ],
+  "win": {
+    "icon": "./resources/icono RIVA.jpg",
+    "target": ["portable"]
+  },
+  "portable": {
+    "splashImage": "./resources/electron.bmp"
+  },
+  "mac": {
+    "target": "dmg",
+    "icon": "./resources/icono.tif"
+  },
+  "extraResources": [
+    {
+      "from": "./node_modules/node-adodb/lib/adodb.js",
+      "to": "adodb.js"
+    }
+  ]
+}

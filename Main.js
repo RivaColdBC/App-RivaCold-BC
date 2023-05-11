@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const os = require("os")
 
 function createWindow(url) {
@@ -7,21 +7,17 @@ function createWindow(url) {
         webPreferences: {
             plugins: true, nodeIntegration: true,
             enableRemoteModule: true, contextIsolation: false,
-            backgroundThrottling: false, webSecurity: false
+            backgroundThrottling: false, webSecurity: false, sandbox: false
         },
     });
     !process.defaultApp && os.userInfo().username != "YYZ" ? win.removeMenu() : null
     win.maximize();
     win.setTitle("App-RivaCold-BC");
     url ? win.loadFile(url) : win.loadFile("./app/index.html");
-    return
 }
-ipcMain.on('newWindow', function (event, data) {
-    createWindow(data)
-})
 
-app.on('ready', () => {
-    createWindow()
-})
 
-app.on("window-all-closed", () => { app.quit() });
+
+ipcMain.on('newWindow', (event, data) => createWindow(data))
+app.on('ready', () => createWindow())
+app.on("window-all-closed", () => app.quit());

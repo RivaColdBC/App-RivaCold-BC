@@ -162,11 +162,11 @@ const dTotalOfertaIVA = document.getElementById("TotalOfertaIVA")
 function PushDB() {
   ClearTable();
   let TotalOfertaPrecio = 0;
-  let itemCount = "001";
+  let itemCount = "01";
   for (i = 0, Tablelen = Table.length; i < Tablelen; i++) {
     if (Table[i][0]) {
       item = itemCount;
-      itemCount = ("000" + (ParseNumber(itemCount) + 1)).slice(-3);
+      itemCount = ("00" + (ParseNumber(itemCount) + 1)).slice(-3);
     } else {
       item = "";
     }
