@@ -45,20 +45,32 @@ function Display_Portes() {
       : "none";
 }
 
-function Display_Impuesto() {
-  if (document.getElementById("Table_Impuesto").style.display == "none") {
+function Display_Impuesto(Display) {
+  function DTrue() {
     document.getElementById("Table_Impuesto").style.display = "";
     document.getElementById("PrecioTotalIva").style.display = "";
     document.getElementById("LineaDivisionImpuesto").style.visibility = "";
     document.getElementById("button_DescuentoPP").style.display = "";
     document.getElementById("button_IGIC").style.display = "";
-  } else {
+  }
+  function Dfalse() {
     document.getElementById("Table_Impuesto").style.display = "none";
     document.getElementById("PrecioTotalIva").style.display = "none";
     document.getElementById("LineaDivisionImpuesto").style.visibility =
       "hidden";
     document.getElementById("button_DescuentoPP").style.display = "none";
     document.getElementById("button_IGIC").style.display = "none";
+  }
+  if (Display == 0) {
+    DTrue();
+  } else if (Display == 1) {
+    Dfalse();
+  } else {
+    if (document.getElementById("Table_Impuesto").style.display == "none") {
+      DTrue();
+    } else {
+      Dfalse();
+    }
   }
 }
 
@@ -560,6 +572,28 @@ function GuardarDatos() {
   for (i = 0; i < Campo.length; i++) {
     Cabecera[i] = document.getElementById([Campo[i]]).value.replace(";", "");
   }
+  if (
+    DBCliente.map((item) => item.Cliente).indexOf(
+      parseFloat(document.getElementById("Oferta_NCliente").value)
+    ) != -1
+  ) {
+    if (
+      DBCliente[
+        DBCliente.map((item) => item.Cliente).indexOf(
+          parseFloat(document.getElementById("Oferta_NCliente").value)
+        )
+      ]["Pais"] == "ES"
+    ) {
+      document.getElementById("IVA").value = "21 %";
+      Display_Impuesto(0);
+    } else {
+      document.getElementById("IVA").value = "0 %";
+      Display_Impuesto(1);
+    }
+  } else {
+    document.getElementById("IVA").value = "21 %";
+    Display_Impuesto(0);
+  }
   localStorage.setItem("DatosOferta", JSON.stringify(Cabecera));
   SaveRegisterLocal(Cabecera, Table, Reference);
 }
@@ -582,15 +616,18 @@ localforage.getItem("RivaColdStock").then(function (value) {
       DBGama = JSON.parse(value);
       localforage.getItem("RegOferta").then(function (value) {
         Registro = JSON.parse(value);
-        if (!Table || Table.length < 0) {
-          ClearDB();
+        localforage.getItem("RivaColdCliente").then(function (value) {
+          DBCliente = JSON.parse(value);
+          if (!Table || Table.length < 0) {
+            ClearDB();
+            GuardarDatos();
+            OF();
+          }
+          SeleccionarModelo();
+          DatosCabecera();
+          ModifTable();
           GuardarDatos();
-          OF();
-        }
-        SeleccionarModelo();
-        DatosCabecera();
-        ModifTable();
-        GuardarDatos();
+        });
       });
     });
   });

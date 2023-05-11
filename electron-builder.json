@@ -25,7 +25,7 @@
     "icon": "./resources/icono RIVA.jpg",
     "target": [
       {
-        "target": "nsis",
+        "target": "portable",
         "arch": "x64"
       }
     ],

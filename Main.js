@@ -28,13 +28,11 @@ function createWindow(url) {
 ipcMain.on("newWindow", (event, data) => createWindow(data));
 app.on("window-all-closed", () => app.quit());
 app.on("ready", () => {
-  if (process.env.NODE_ENV === "production") {
-    autoUpdater.checkForUpdates();
-  }
+  // if (process.env.NODE_ENV === "production") {    autoUpdater.checkForUpdates();  }
   createWindow();
 });
 
-const { autoUpdater } = require("electron-updater");
+/*const { autoUpdater } = require("electron-updater");
 autoUpdater.logger = require("electron-log");
 autoUpdater.logger.transports.file.level = "info";
 autoUpdater.on("update-downloaded", () => {
@@ -57,3 +55,4 @@ autoUpdater.on("update-downloaded", () => {
     }
   );
 });
+*/
