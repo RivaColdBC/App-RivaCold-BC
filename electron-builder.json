@@ -25,11 +25,19 @@
     "icon": "./resources/icono RIVA.jpg",
     "target": [
       {
-        "target": "portable",
+        "target": "nsis",
         "arch": "x64"
       }
     ],
     "verifyUpdateCodeSignature": false
+  },
+  "nsis": {
+    "artifactName": "${productName}-Setup-${version}.${ext}",
+    "oneClick": true,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": false,
+    "runAfterFinish": true,
+    "deleteAppDataOnUninstall": true
   },
   "portable": {
     "splashImage": "./resources/electron.bmp"

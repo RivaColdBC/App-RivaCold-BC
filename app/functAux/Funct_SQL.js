@@ -49,8 +49,8 @@ async function SQL_Access_Connection(StringDB, connection) {
   }
   let data = await Promise.all(Query);
   localforage.setItem(StringDB, JSON.stringify(data)).then(function () {
-    if (wait <= DB.length) {
-      SQL_Azure_Connection(DB[i], connection, wait);
+    if (wait < DB.length) {
+      SQL_Azure_Connection(DB[wait], connection);
     } else {
       fakeProgress.end();
       setTimeout(
