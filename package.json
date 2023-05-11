@@ -1,13 +1,13 @@
 {
   "name": "app-rivacold-bc",
-  "version": "1.3.0",
+  "version": "1.3.5",
   "CompanyName": "Basic Conection Systems S.L.",
   "description": "RivaColdSelect Program from Basic Conection Systems",
   "main": "main.js",
   "copyright": "Copyright © 2023 Basic Conection Systems S.L.",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --publish always"
+    "dist": "electron-builder --p always"
   },
   "author": "Basic Conection Systems S.L.",
   "license": "ISC",
@@ -17,12 +17,16 @@
     "yarn": "^1.22.19"
   },
   "dependencies": {
+    "electron-log": "^4.4.8",
     "electron-updater": "^5.3.0",
     "fake-progress": "^1.0.4",
     "localforage": "^1.10.0",
     "node-adodb": "^5.0.3",
     "tedious": "^16.0.0"
   },
-  "repository": "https://github.com/Hu1a1a/App-RivaCold-BC.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hu1a1a/App-RivaCold-BC.git"
+  },
   "homepage": "https://github.com/Hu1a1a/"
 }

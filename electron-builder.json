@@ -4,13 +4,13 @@
   "artifactName": "${productName}-setup-${version}.${ext}",
   "publish": {
     "provider": "github",
-    "repo": "https://github.com/Hu1a1a/App-RivaCold-BC.git",
-    "token": "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"
+    "token": "[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]"
   },
   "asar": true,
   "directories": {
     "output": "release/"
   },
+  "generateUpdatesFilesForAllChannels": true,
   "files": [
     "**/*",
     "!**/*.ts",
@@ -24,7 +24,8 @@
   ],
   "win": {
     "icon": "./resources/icono RIVA.jpg",
-    "target": ["portable"]
+    "target": "nsis",
+    "verifyUpdateCodeSignature": false
   },
   "portable": {
     "splashImage": "./resources/electron.bmp"

@@ -2,3 +2,4 @@ node_modules
 dist
 localforage.txt
 release
+electron-builder.json
