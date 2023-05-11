@@ -1,15 +1,18 @@
 {
   "name": "app-rivacold-bc",
-  "version": "1.3.5",
+  "version": "1.3.9",
   "CompanyName": "Basic Conection Systems S.L.",
   "description": "RivaColdSelect Program from Basic Conection Systems",
   "main": "main.js",
   "copyright": "Copyright © 2023 Basic Conection Systems S.L.",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --p always"
+    "dist": "electron-builder build --win --p always"
   },
-  "author": "Basic Conection Systems S.L.",
+  "author": {
+    "name": "Yang Ye",
+    "email": "yang.ye.1@hotmail.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "electron": "^24.1.3",

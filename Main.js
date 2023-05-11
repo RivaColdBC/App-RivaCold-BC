@@ -29,9 +29,8 @@ ipcMain.on("newWindow", (event, data) => createWindow(data));
 app.on("window-all-closed", () => app.quit());
 app.on("ready", () => {
   if (process.env.NODE_ENV === "production") {
+    autoUpdater.checkForUpdates();
   }
-  autoUpdater.checkForUpdates();
-  autoUpdater.checkForUpdatesAndNotify();
   createWindow();
 });
 
@@ -39,25 +38,22 @@ const { autoUpdater } = require("electron-updater");
 autoUpdater.logger = require("electron-log");
 autoUpdater.logger.transports.file.level = "info";
 autoUpdater.on("update-downloaded", () => {
-  console.log("update-downloaded lats quitAndInstall");
-  if (process.env.NODE_ENV === "production") {
-    dialog.showMessageBox(
-      {
-        type: "info",
-        title: "Found Updates",
-        message: "Found updates, do you want update now?",
-        buttons: ["Sure", "No"],
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          const isSilent = true;
-          const isForceRunAfter = true;
-          autoUpdater.quitAndInstall(isSilent, isForceRunAfter);
-        } else {
-          updater.enabled = true;
-          updater = null;
-        }
+  dialog.showMessageBox(
+    {
+      type: "info",
+      title: "Found Updates",
+      message: "Found updates, do you want update now?",
+      buttons: ["Sure", "No"],
+    },
+    (buttonIndex) => {
+      if (buttonIndex === 0) {
+        const isSilent = true;
+        const isForceRunAfter = true;
+        autoUpdater.quitAndInstall(isSilent, isForceRunAfter);
+      } else {
+        updater.enabled = true;
+        updater = null;
       }
-    );
-  }
+    }
+  );
 });

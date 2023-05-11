@@ -4,13 +4,12 @@
   "artifactName": "${productName}-setup-${version}.${ext}",
   "publish": {
     "provider": "github",
-    "token": "[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]"
+    "token": "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"
   },
   "asar": true,
   "directories": {
     "output": "release/"
   },
-  "generateUpdatesFilesForAllChannels": true,
   "files": [
     "**/*",
     "!**/*.ts",
@@ -24,7 +23,12 @@
   ],
   "win": {
     "icon": "./resources/icono RIVA.jpg",
-    "target": "nsis",
+    "target": [
+      {
+        "target": "portable",
+        "arch": "x64"
+      }
+    ],
     "verifyUpdateCodeSignature": false
   },
   "portable": {
